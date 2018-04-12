@@ -10,15 +10,17 @@ import UIKit
 
 class CurrencyCell: UITableViewCell {
 
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        // Initialization code
-    }
 
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
+  @IBOutlet weak var currencyImage: UIImageView!
+  @IBOutlet weak var currencyName: UILabel!
+  @IBOutlet weak var currencyDescription: UILabel!
+  
+  func configeureCell(currencyName: String, currencyDescription: String, currencyImage: UIImage) {
 
-        // Configure the view for the selected state
-    }
+    self.currencyImage.image = currencyImage
+    self.currencyName.text = currencyName
+    self.currencyDescription.text = currencyDescription
+    
+  }
 
 }
