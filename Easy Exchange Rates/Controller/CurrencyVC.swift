@@ -27,7 +27,7 @@ class CurrencyVC: UIViewController {
   var toCompare = ["USD", "CAD", "RUR", "EUR", "GBP"]
   var currencyArray: [Currencies] = []
   
-
+ var numbers = [Double]()
   
   
   override func viewDidLoad() {
@@ -38,8 +38,9 @@ class CurrencyVC: UIViewController {
     
     currencyTableView.delegate = self
     currencyTableView.dataSource = self
-    setChartValues()
     
+    numbers = [12.2, 56.14, 454.1]
+    updateGraph()
     for item in CurrencyData.currencyItems() {
       currencyArray.append(contentsOf: item.item)
     }
@@ -49,18 +50,36 @@ class CurrencyVC: UIViewController {
     pickerviewVIEW.isHidden = false
   }
   
-  func setChartValues(_ count : Int = 20) {
-    let values = (0..<count).map { (i) -> ChartDataEntry in
-      let val = Double(arc4random_uniform(UInt32(count)) + 3)
-      return ChartDataEntry(x: Double(i), y: val)
+
+  func updateGraph(){
+    var lineChartEntry  = [ChartDataEntry]() //this is the Array that will eventually be displayed on the graph.
+    
+    
+    
+    //here is the for loop
+    for i in 0..<numbers.count {
+      
+      let value = ChartDataEntry(x: Double(i), y: numbers[i]) // here we set the X and Y status in a data chart entry
+      
+      lineChartEntry.append(value) // here we add it to the data set
     }
     
-    let set1 = LineChartDataSet(values: values, label: "DataSet 1")
-    let data = LineChartData(dataSet: set1)
+    let line1 = LineChartDataSet(values: lineChartEntry, label: "Number") //Here we convert lineChartEntry to a LineChartDataSet
     
-    self.chartView.data = data
+    line1.colors = [NSUIColor.blue] //Sets the colour to blue
+    
+    
+    let data = LineChartData() //This is the object that will be added to the chart
+    
+    data.addDataSet(line1) //Adds the line to the dataSet
+    
+    
+    chartView.data = data //finally - it adds the chart data to the chart and causes an update
+    
+    chartView.chartDescription?.text = "My awesome chart" // Here we set the description for the grap
     
   }
+
   
 
 }
