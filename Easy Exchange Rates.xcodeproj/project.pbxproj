@@ -7,21 +7,27 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		744B5CE8207FA741009E5F56 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 744B5CE7207FA741009E5F56 /* Assets.xcassets */; };
+		744B5CEA207FB9BD009E5F56 /* CurrencyCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 744B5CE9207FB9BD009E5F56 /* CurrencyCell.swift */; };
 		7482D63D207F965800B21612 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7482D63C207F965800B21612 /* AppDelegate.swift */; };
-		7482D63F207F965800B21612 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7482D63E207F965800B21612 /* ViewController.swift */; };
+		7482D63F207F965800B21612 /* CurrencyVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7482D63E207F965800B21612 /* CurrencyVC.swift */; };
 		7482D642207F965800B21612 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7482D640207F965800B21612 /* Main.storyboard */; };
-		7482D644207F965900B21612 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7482D643207F965900B21612 /* Assets.xcassets */; };
 		7482D647207F965900B21612 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7482D645207F965900B21612 /* LaunchScreen.storyboard */; };
+		99D2A582E6CF2FAECC7AA108 /* Pods_Easy_Exchange_Rates.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C8CD3719265A64F55FE95151 /* Pods_Easy_Exchange_Rates.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		744B5CE7207FA741009E5F56 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		744B5CE9207FB9BD009E5F56 /* CurrencyCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyCell.swift; sourceTree = "<group>"; };
 		7482D639207F965800B21612 /* Easy Exchange Rates.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Easy Exchange Rates.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		7482D63C207F965800B21612 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		7482D63E207F965800B21612 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		7482D63E207F965800B21612 /* CurrencyVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyVC.swift; sourceTree = "<group>"; };
 		7482D641207F965800B21612 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		7482D643207F965900B21612 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		7482D646207F965900B21612 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		7482D648207F965900B21612 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		773B33927BAD3EF5552CF0F2 /* Pods-Easy Exchange Rates.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Easy Exchange Rates.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Easy Exchange Rates/Pods-Easy Exchange Rates.debug.xcconfig"; sourceTree = "<group>"; };
+		A087EB40A501D07EDCB9EA33 /* Pods-Easy Exchange Rates.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Easy Exchange Rates.release.xcconfig"; path = "Pods/Target Support Files/Pods-Easy Exchange Rates/Pods-Easy Exchange Rates.release.xcconfig"; sourceTree = "<group>"; };
+		C8CD3719265A64F55FE95151 /* Pods_Easy_Exchange_Rates.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Easy_Exchange_Rates.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -29,6 +35,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				99D2A582E6CF2FAECC7AA108 /* Pods_Easy_Exchange_Rates.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -40,6 +47,8 @@
 			children = (
 				7482D63B207F965800B21612 /* Easy Exchange Rates */,
 				7482D63A207F965800B21612 /* Products */,
+				9184C0F5491B08C2788A97E0 /* Pods */,
+				F22D5DC27C0975E0A88912C2 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -54,14 +63,56 @@
 		7482D63B207F965800B21612 /* Easy Exchange Rates */ = {
 			isa = PBXGroup;
 			children = (
-				7482D63C207F965800B21612 /* AppDelegate.swift */,
-				7482D63E207F965800B21612 /* ViewController.swift */,
-				7482D640207F965800B21612 /* Main.storyboard */,
-				7482D643207F965900B21612 /* Assets.xcassets */,
-				7482D645207F965900B21612 /* LaunchScreen.storyboard */,
+				7482D651207F967400B21612 /* Model */,
+				7482D650207F967100B21612 /* View */,
+				7482D64E207F966800B21612 /* Controller */,
 				7482D648207F965900B21612 /* Info.plist */,
 			);
 			path = "Easy Exchange Rates";
+			sourceTree = "<group>";
+		};
+		7482D64E207F966800B21612 /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				7482D63E207F965800B21612 /* CurrencyVC.swift */,
+				7482D63C207F965800B21612 /* AppDelegate.swift */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		7482D650207F967100B21612 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				744B5CE7207FA741009E5F56 /* Assets.xcassets */,
+				7482D640207F965800B21612 /* Main.storyboard */,
+				7482D645207F965900B21612 /* LaunchScreen.storyboard */,
+				744B5CE9207FB9BD009E5F56 /* CurrencyCell.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		7482D651207F967400B21612 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		9184C0F5491B08C2788A97E0 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				773B33927BAD3EF5552CF0F2 /* Pods-Easy Exchange Rates.debug.xcconfig */,
+				A087EB40A501D07EDCB9EA33 /* Pods-Easy Exchange Rates.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
+		F22D5DC27C0975E0A88912C2 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				C8CD3719265A64F55FE95151 /* Pods_Easy_Exchange_Rates.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -71,9 +122,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 7482D64B207F965900B21612 /* Build configuration list for PBXNativeTarget "Easy Exchange Rates" */;
 			buildPhases = (
+				909E3E37D8DAA5F831C322AB /* [CP] Check Pods Manifest.lock */,
 				7482D635207F965800B21612 /* Sources */,
 				7482D636207F965800B21612 /* Frameworks */,
 				7482D637207F965800B21612 /* Resources */,
+				EDD57B1517492A75DE45D409 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -123,19 +176,65 @@
 			buildActionMask = 2147483647;
 			files = (
 				7482D647207F965900B21612 /* LaunchScreen.storyboard in Resources */,
-				7482D644207F965900B21612 /* Assets.xcassets in Resources */,
+				744B5CE8207FA741009E5F56 /* Assets.xcassets in Resources */,
 				7482D642207F965800B21612 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		909E3E37D8DAA5F831C322AB /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Easy Exchange Rates-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		EDD57B1517492A75DE45D409 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-Easy Exchange Rates/Pods-Easy Exchange Rates-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
+				"${BUILT_PRODUCTS_DIR}/Charts/Charts.framework",
+				"${BUILT_PRODUCTS_DIR}/SVProgressHUD/SVProgressHUD.framework",
+				"${BUILT_PRODUCTS_DIR}/SwiftyJSON/SwiftyJSON.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alamofire.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Charts.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SVProgressHUD.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftyJSON.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Easy Exchange Rates/Pods-Easy Exchange Rates-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		7482D635207F965800B21612 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7482D63F207F965800B21612 /* ViewController.swift in Sources */,
+				744B5CEA207FB9BD009E5F56 /* CurrencyCell.swift in Sources */,
+				7482D63F207F965800B21612 /* CurrencyVC.swift in Sources */,
 				7482D63D207F965800B21612 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -278,6 +377,7 @@
 		};
 		7482D64C207F965900B21612 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 773B33927BAD3EF5552CF0F2 /* Pods-Easy Exchange Rates.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
@@ -296,6 +396,7 @@
 		};
 		7482D64D207F965900B21612 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = A087EB40A501D07EDCB9EA33 /* Pods-Easy Exchange Rates.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
