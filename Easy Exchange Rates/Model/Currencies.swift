@@ -12,11 +12,13 @@ class Currencies {
   
   var code: String
   var description: String
+  var rate: [Double]
   var image: UIImage
   
-  init(code: String, description: String, image: UIImage){
+  init(code: String, description: String, image: UIImage, rate: [Double]){
     self.code = code
     self.description = description
     self.image = image
+    self.rate = rate
   }
 }

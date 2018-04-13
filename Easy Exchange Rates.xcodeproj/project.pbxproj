@@ -11,8 +11,10 @@
 		744B5CEA207FB9BD009E5F56 /* CurrencyCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 744B5CE9207FB9BD009E5F56 /* CurrencyCell.swift */; };
 		744B5CEC207FC8A1009E5F56 /* Currencies.swift in Sources */ = {isa = PBXBuildFile; fileRef = 744B5CEB207FC8A1009E5F56 /* Currencies.swift */; };
 		744B5CEE207FC9F5009E5F56 /* Data.swift in Sources */ = {isa = PBXBuildFile; fileRef = 744B5CED207FC9F5009E5F56 /* Data.swift */; };
+		744B5CF220803590009E5F56 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 744B5CF120803590009E5F56 /* Extensions.swift */; };
+		744B5CF6208101EB009E5F56 /* CurrencyVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 744B5CF5208101EA009E5F56 /* CurrencyVC.swift */; };
 		7482D63D207F965800B21612 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7482D63C207F965800B21612 /* AppDelegate.swift */; };
-		7482D63F207F965800B21612 /* CurrencyVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7482D63E207F965800B21612 /* CurrencyVC.swift */; };
+		7482D63F207F965800B21612 /* CryptoVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7482D63E207F965800B21612 /* CryptoVC.swift */; };
 		7482D642207F965800B21612 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7482D640207F965800B21612 /* Main.storyboard */; };
 		7482D647207F965900B21612 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7482D645207F965900B21612 /* LaunchScreen.storyboard */; };
 		99D2A582E6CF2FAECC7AA108 /* Pods_Easy_Exchange_Rates.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C8CD3719265A64F55FE95151 /* Pods_Easy_Exchange_Rates.framework */; };
@@ -23,9 +25,11 @@
 		744B5CE9207FB9BD009E5F56 /* CurrencyCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyCell.swift; sourceTree = "<group>"; };
 		744B5CEB207FC8A1009E5F56 /* Currencies.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Currencies.swift; sourceTree = "<group>"; };
 		744B5CED207FC9F5009E5F56 /* Data.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Data.swift; sourceTree = "<group>"; };
+		744B5CF120803590009E5F56 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		744B5CF5208101EA009E5F56 /* CurrencyVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CurrencyVC.swift; sourceTree = "<group>"; };
 		7482D639207F965800B21612 /* Easy Exchange Rates.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Easy Exchange Rates.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		7482D63C207F965800B21612 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		7482D63E207F965800B21612 /* CurrencyVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyVC.swift; sourceTree = "<group>"; };
+		7482D63E207F965800B21612 /* CryptoVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CryptoVC.swift; sourceTree = "<group>"; };
 		7482D641207F965800B21612 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		7482D646207F965900B21612 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		7482D648207F965900B21612 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -46,6 +50,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		744B5CF020803577009E5F56 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				744B5CF120803590009E5F56 /* Extensions.swift */,
+			);
+			path = "Supporting Files";
+			sourceTree = "<group>";
+		};
 		7482D630207F965800B21612 = {
 			isa = PBXGroup;
 			children = (
@@ -67,6 +79,7 @@
 		7482D63B207F965800B21612 /* Easy Exchange Rates */ = {
 			isa = PBXGroup;
 			children = (
+				744B5CF020803577009E5F56 /* Supporting Files */,
 				7482D651207F967400B21612 /* Model */,
 				7482D650207F967100B21612 /* View */,
 				7482D64E207F966800B21612 /* Controller */,
@@ -78,7 +91,8 @@
 		7482D64E207F966800B21612 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
-				7482D63E207F965800B21612 /* CurrencyVC.swift */,
+				744B5CF5208101EA009E5F56 /* CurrencyVC.swift */,
+				7482D63E207F965800B21612 /* CryptoVC.swift */,
 				7482D63C207F965800B21612 /* AppDelegate.swift */,
 			);
 			path = Controller;
@@ -242,8 +256,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				744B5CEA207FB9BD009E5F56 /* CurrencyCell.swift in Sources */,
+				744B5CF220803590009E5F56 /* Extensions.swift in Sources */,
 				744B5CEE207FC9F5009E5F56 /* Data.swift in Sources */,
-				7482D63F207F965800B21612 /* CurrencyVC.swift in Sources */,
+				744B5CF6208101EB009E5F56 /* CurrencyVC.swift in Sources */,
+				7482D63F207F965800B21612 /* CryptoVC.swift in Sources */,
 				744B5CEC207FC8A1009E5F56 /* Currencies.swift in Sources */,
 				7482D63D207F965800B21612 /* AppDelegate.swift in Sources */,
 			);

@@ -1,34 +1,34 @@
 //
-//  CurrencyVC.swift
+//  CryptoVC.swift
 //  Easy Exchange Rates
 //
-//  Created by Timofei Sopin on 2018-04-13.
+//  Created by Timofei Sopin on 2018-04-12.
 //  Copyright © 2018 Timofei Sopin. All rights reserved.
 //
 
 import UIKit
+import Charts
 import Alamofire
 import SwiftyJSON
 
-class CurrencyVC: UIViewController {
 
+
+class CryptoVC: UIViewController {
   
-  @IBOutlet weak var chooseView: UIView!
-  @IBOutlet weak var pickerView: UIPickerView!
+  
+  
+  @IBOutlet weak var picker: UIPickerView!
+  @IBOutlet weak var pickerviewVIEW: UIView!
+  @IBOutlet weak var oneUnitLabel: UILabel!
+  @IBOutlet weak var currentRateLabel: UILabel!
+  @IBOutlet weak var compareToLabel: UILabel!
+  
+  @IBOutlet weak var chartView: LineChartView!
   @IBOutlet weak var currencyTableView: UITableView!
-  @IBOutlet weak var imageView: UIImageView!
-  @IBOutlet weak var codeLabel: UILabel!
-  @IBAction func getRatesButton(_ sender: Any) {
-    
-  }
   
-  @IBAction func chooseBaseButton(_ sender: Any) {
-    chooseView.isHidden = false
-  }
   var toCompare = ["USD", "CAD", "RUR", "EUR", "GBP"]
   var currencyArray: [Currencies] = []
   var exchangeRate = String()
-  
   
   
   
@@ -41,10 +41,10 @@ class CurrencyVC: UIViewController {
   
   override func viewDidLoad() {
     super.viewDidLoad()
-    chooseView.isHidden = true
-    pickerView.dataSource = self
-    pickerView.delegate = self
-    codeLabel.pushTransition(0.2)
+    pickerviewVIEW.isHidden = true
+    picker.dataSource = self
+    picker.delegate = self
+    oneUnitLabel.pushTransition(0.2)
     
     firstCode = "USD"
     firstCode = "USD"
@@ -59,7 +59,7 @@ class CurrencyVC: UIViewController {
     
   }
   @IBAction func compareToButton(_ sender: Any) {
-    chooseView.isHidden = false
+    pickerviewVIEW.isHidden = false
   }
   
   func getCurrencyData(cryptoCode: String, marketCode: String) {
@@ -95,23 +95,55 @@ class CurrencyVC: UIViewController {
     }
     
     print(" EXCHANGE \(exchangeRate)")
+    currentRateLabel.text = "\(exchangeRate.rounded(toPlaces: 3))"
     
     
   }
-
+  
+  
+  
+  
+  func updateGraph(){
+    var lineChartEntry  = [ChartDataEntry]() //this is the Array that will eventually be displayed on the graph.
+    
+    //here is the for loop
+    for i in 0..<numbers.count {
+      
+      let value = ChartDataEntry(x: Double(i), y: numbers[i]) // here we set the X and Y status in a data chart entry
+      
+      lineChartEntry.append(value) // here we add it to the data set
+    }
+    
+    let line1 = LineChartDataSet(values: lineChartEntry, label: "Number") //Here we convert lineChartEntry to a LineChartDataSet
+    line1.mode = .cubicBezier
+    line1.cubicIntensity = 0.2
+    line1.lineWidth = 5.0
+    
+    line1.colors = [NSUIColor.blue] //Sets the colour to blue
+    chartView.animate(xAxisDuration: 1.0 , yAxisDuration: 1.0, easingOption: .easeInBounce)
+    chartView.xAxis.drawGridLinesEnabled = false
+    chartView.xAxis.drawAxisLineEnabled = false
+    let data = LineChartData() //This is the object that will be added to the chart
+    
+    data.addDataSet(line1) //Adds the line to the dataSet
+    
+    
+    chartView.data = data //finally - it adds the chart data to the chart and causes an update
+    chartView.backgroundColor = UIColor.gray
+    chartView.doubleTapToZoomEnabled = false
+    //    chartView.isUserInteractionEnabled = false
+    chartView.resetZoom()
+  }
+  
+  
   
 }
 //MARK: TableView
-extension CurrencyVC: UITableViewDelegate, UITableViewDataSource {
+extension CryptoVC: UITableViewDelegate, UITableViewDataSource {
   
-  func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-    return "Compare to"
-  }
   
-  func numberOfSections(in tableView: UITableView) -> Int {
-    return 1
-    
-  }
+  
+  
   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
     return currencyArray.count
   }
@@ -123,14 +155,15 @@ extension CurrencyVC: UITableViewDelegate, UITableViewDataSource {
     return cell
   }
   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-    codeLabel.pushTransition(0.2)
-    codeLabel.text = "\(currencyArray[indexPath.row].code)"
+    oneUnitLabel.pushTransition(0.2)
+    oneUnitLabel.text = "1 \(currencyArray[indexPath.row].code) ="
     numbers = currencyArray[indexPath.row].rate
     firstCode = currencyArray[indexPath.row].code
     
     getCurrencyData(cryptoCode: firstCode, marketCode: secondCode)
+    currentRateLabel.text = exchangeRate
     
-   
+    updateGraph()
   }
   
 }
@@ -144,7 +177,7 @@ extension CurrencyVC: UITableViewDelegate, UITableViewDataSource {
 
 
 //MARK: PickerView
-extension CurrencyVC: UIPickerViewDelegate, UIPickerViewDataSource  {
+extension CryptoVC: UIPickerViewDelegate, UIPickerViewDataSource  {
   
   func numberOfComponents(in pickerView: UIPickerView) -> Int {
     return 1
@@ -159,11 +192,12 @@ extension CurrencyVC: UIPickerViewDelegate, UIPickerViewDataSource  {
   }
   
   func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-    codeLabel.text = toCompare[row]
+    compareToLabel.text = toCompare[row]
     secondCode = toCompare[row]
     getCurrencyData(cryptoCode: firstCode, marketCode: secondCode)
     
-    chooseView.isHidden = true
+    pickerviewVIEW.isHidden = true
   }
   
 }
+
