@@ -11,97 +11,133 @@ import Alamofire
 import SwiftyJSON
 
 class CurrencyVC: UIViewController {
+  
+  //  MARK: Variables
+  var blurEffect: UIVisualEffect!
+  var baseCurrencyArray = ["USD", "CAD", "RUB", "EUR", "GBP"]
+  var currencyArray = [Currencies]()
+  
 
-  
-  @IBOutlet weak var chooseView: UIView!
-  @IBOutlet weak var pickerView: UIPickerView!
-  @IBOutlet weak var currencyTableView: UITableView!
-  @IBOutlet weak var imageView: UIImageView!
-  @IBOutlet weak var codeLabel: UILabel!
-  @IBAction func getRatesButton(_ sender: Any) {
-    
-  }
-  
-  @IBAction func chooseBaseButton(_ sender: Any) {
-    chooseView.isHidden = false
-  }
-  var toCompare = ["USD", "CAD", "RUR", "EUR", "GBP"]
-  var currencyArray: [Currencies] = []
   var exchangeRate = String()
-  
-  
-  
-  
-  let API_KEY = "ZVN9XKF9SYW4N1FB"
-  var firstCode = String()
-  var secondCode = String()
+  var pickedBaseCurrency = String()
+  var selectedBaseCurrency = String()
+  var compareToCurrency = [String]()
   
   var numbers = [Double]()
   
+  //  MARK: Outlets
+  @IBOutlet weak var doneBtnOutlet: UIButton!
+  @IBOutlet weak var baseVIew: UIView!
+  @IBOutlet weak var basePicker: UIPickerView!
+  @IBOutlet weak var blurView: UIVisualEffectView!
+  @IBOutlet weak var chartView: UIView!
+  @IBOutlet weak var currencyTableView: UITableView!
   
-  override func viewDidLoad() {
-    super.viewDidLoad()
-    chooseView.isHidden = true
-    pickerView.dataSource = self
-    pickerView.delegate = self
-    codeLabel.pushTransition(0.2)
-    
-    firstCode = "USD"
-    firstCode = "USD"
-    currencyTableView.delegate = self
-    currencyTableView.dataSource = self
-    
-    numbers = [12.2, 56.14, 454.1, 212.34, 100.1]
-    //    updateGraph()
-    for item in CurrencyData.currencyItems() {
-      currencyArray.append(contentsOf: item.item)
-    }
-    
-  }
-  @IBAction func compareToButton(_ sender: Any) {
-    chooseView.isHidden = false
-  }
   
-  func getCurrencyData(cryptoCode: String, marketCode: String) {
+  override func viewWillAppear(_ animated: Bool) {
+    super.viewWillAppear(animated)
+
+    let jsonUrl = "https://currencyconverterapi.com/api/v5/convert?q=USD_USD,USD_CAD,USD_RUB,USD_EUR,USD_GBP&compact=ultra&apiKey=8ad20f84-95b2-495f-95e4-1c7bb1f46b11"
+    let urrl = URL(string: jsonUrl)
     
-    let url = "https://www.alphavantage.co/query?function=CURRENCY_EXCHANGE_RATE&from_currency=\(cryptoCode)&to_currency=\(marketCode)&apikey=\(API_KEY)"
-    Alamofire.request(url, method: .get).responseJSON { (response) in
-      if response.result.isSuccess {
-        print("SUCCESS")
-        let currencyData : JSON = JSON(response.result.value!)
-        print(" DATA \(url)")
-        self.updateCurrencyData(json: currencyData)
-        
-        
-      } else {
-        //        print("ERROR \(response.result.error)")
+    URLSession.shared.dataTask(with: urrl!){(data, response, error) in
+      
+      
+      do {
+        self.currencyArray = try JSONDecoder().decode([Currencies].self, from: data!)
+        for eachCurrency in self.currencyArray {
+          print(eachCurrency.code)
+          
+        }
       }
-    }
-    
-  }
-  
-  func updateCurrencyData(json: JSON) {
-    
-    var exchangeRate = json["Realtime Currency Exchange Rate"]["5. Exchange Rate"].doubleValue
-    let toRur = json["Realtime Currency Exchange Rate"]["3. To_Currency Code"].stringValue
-    let fromRur = json["Realtime Currency Exchange Rate"]["1. From_Currency Code"].stringValue
-    
-    print("FROM \(fromRur) TO \(toRur)")
-    
-    if fromRur != "RUR" && toRur == "RUR"  {
-      exchangeRate = (exchangeRate)/1000
-    } else if fromRur == "RUR" && toRur != "RUR" {
-      exchangeRate = (exchangeRate)*1000
-    }
-    
-    print(" EXCHANGE \(exchangeRate)")
-    
+      catch {
+        print("error")
+      }
+      
+      
+    }.resume()
     
   }
 
+  override func viewDidLoad() {
+    super.viewDidLoad()
+    blurEffect = blurView.effect
+    blurView.effect = nil
+    basePicker.dataSource = self
+    basePicker.delegate = self
+    
+    currencyTableView.delegate = self
+    currencyTableView.dataSource = self
+
+  }
+  
+  
+  
+  
+  func animateIn()  {
+    self.view.addSubview(baseVIew)
+    baseVIew.center = self.view.center
+    baseVIew.transform = CGAffineTransform.init(scaleX: 1.3, y: 1.3)
+    baseVIew.alpha = 0
+    
+    UIView.animate(withDuration: 0.2) {
+      self.blurView.effect = self.blurEffect
+      self.baseVIew.alpha = 0.8
+      self.doneBtnOutlet.isEnabled = false
+      self.baseVIew.layer.cornerRadius = 20
+      
+      self.baseVIew.transform = CGAffineTransform.identity
+    }
+    
+  }
+  
+  func animateOut() {
+    UIView.animate(withDuration: 0.2, animations: {
+      self.baseVIew.transform = CGAffineTransform.init(scaleX: 1.3, y: 1.3)
+      self.baseVIew.alpha = 0
+      self.blurView.effect = nil
+    }) { (success: Bool) in
+      self.baseVIew.removeFromSuperview()
+      
+    }
+    
+  }
+  
+  let API_KEY = "8ad20f84-95b2-495f-95e4-1c7bb1f46b11"
+  
+  
+ 
+  
+  
+  
+  //  MARK: Actions
+  @IBAction func dismissBaseView(_ sender: Any) {
+    animateOut()
+  }
+  
+  @IBAction func chooseBaseButton(_ sender: Any) {
+    animateIn()
+  }
+  
+  @IBAction func addNewCurrencyToListButton(_ sender: Any) {
+  }
+  
+  @IBAction func baseDoneButton(_ sender: Any) {
+    
+    selectedBaseCurrency = pickedBaseCurrency
+    self.navigationItem.leftBarButtonItem?.title = selectedBaseCurrency
+
+    animateOut()
+  }
+  func changetitle() {
+    let item = self.navigationItem.leftBarButtonItem!
+    let button = item.customView as! UIButton
+    button.setTitle("Change", for: .normal)
+  }
+  
   
 }
-//MARK: TableView
+//MARK: Extension TableView
 extension CurrencyVC: UITableViewDelegate, UITableViewDataSource {
   
   func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
@@ -113,31 +149,20 @@ extension CurrencyVC: UITableViewDelegate, UITableViewDataSource {
     
   }
   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    return currencyArray.count
+    return CurrencyData.instance.getCurrencies().count
   }
   
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
     let cell = currencyTableView.dequeueReusableCell(withIdentifier: "currencyCell") as! CurrencyCell
-    
-    cell.configeureCell(currencyName: currencyArray[indexPath.row].code, currencyDescription: currencyArray[indexPath.row].description, currencyImage: currencyArray[indexPath.row].image)
     return cell
   }
   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-    codeLabel.pushTransition(0.2)
-    codeLabel.text = "\(currencyArray[indexPath.row].code)"
-    numbers = currencyArray[indexPath.row].rate
-    firstCode = currencyArray[indexPath.row].code
     
-    getCurrencyData(cryptoCode: firstCode, marketCode: secondCode)
+    compareToCurrency = [currencyArray[indexPath.row].code]
     
-   
   }
   
 }
-
-
-
-
 
 
 
@@ -151,19 +176,37 @@ extension CurrencyVC: UIPickerViewDelegate, UIPickerViewDataSource  {
   }
   
   func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-    return toCompare.count
+    return baseCurrencyArray.count
   }
   
   func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-    return toCompare[row]
+    return baseCurrencyArray[row]
   }
   
   func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-    codeLabel.text = toCompare[row]
-    secondCode = toCompare[row]
-    getCurrencyData(cryptoCode: firstCode, marketCode: secondCode)
-    
-    chooseView.isHidden = true
+    self.doneBtnOutlet.isEnabled = true
+    pickedBaseCurrency = baseCurrencyArray[row]
+
   }
   
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

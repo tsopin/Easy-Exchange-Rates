@@ -7,15 +7,18 @@
 //
 
 import UIKit
+import SwiftyJSON
 
-class Currencies {
+
+class Currencies: Codable {
   
   var code: String
   var description: String
-  var rate: [Double]
-  var image: UIImage
+  var rate: String
+  var image: String
   
-  init(code: String, description: String, image: UIImage, rate: [Double]){
+  init(code: String, description: String, image: String, rate: String){
+    
     self.code = code
     self.description = description
     self.image = image

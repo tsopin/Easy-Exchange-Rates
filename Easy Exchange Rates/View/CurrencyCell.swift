@@ -15,11 +15,13 @@ class CurrencyCell: UITableViewCell {
   @IBOutlet weak var currencyName: UILabel!
   @IBOutlet weak var currencyDescription: UILabel!
   
-  func configeureCell(currencyName: String, currencyDescription: String, currencyImage: UIImage) {
+  @IBOutlet weak var rateLabel: UILabel!
+  func configeureCell(currencyName: String, currencyDescription: String, currencyRate: String, currencyImage: String) {
 
-    self.currencyImage.image = currencyImage
+    self.currencyImage.image = UIImage(named:currencyImage) 
     self.currencyName.text = currencyName
     self.currencyDescription.text = currencyDescription
+    self.rateLabel.text = currencyRate
     
   }
 

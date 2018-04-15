@@ -9,22 +9,22 @@
 /* Begin PBXBuildFile section */
 		744B5CE8207FA741009E5F56 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 744B5CE7207FA741009E5F56 /* Assets.xcassets */; };
 		744B5CEA207FB9BD009E5F56 /* CurrencyCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 744B5CE9207FB9BD009E5F56 /* CurrencyCell.swift */; };
-		744B5CEC207FC8A1009E5F56 /* Currencies.swift in Sources */ = {isa = PBXBuildFile; fileRef = 744B5CEB207FC8A1009E5F56 /* Currencies.swift */; };
-		744B5CEE207FC9F5009E5F56 /* Data.swift in Sources */ = {isa = PBXBuildFile; fileRef = 744B5CED207FC9F5009E5F56 /* Data.swift */; };
+		744B5CEE207FC9F5009E5F56 /* CurrencyData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 744B5CED207FC9F5009E5F56 /* CurrencyData.swift */; };
 		744B5CF220803590009E5F56 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 744B5CF120803590009E5F56 /* Extensions.swift */; };
 		744B5CF6208101EB009E5F56 /* CurrencyVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 744B5CF5208101EA009E5F56 /* CurrencyVC.swift */; };
 		7482D63D207F965800B21612 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7482D63C207F965800B21612 /* AppDelegate.swift */; };
 		7482D63F207F965800B21612 /* CryptoVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7482D63E207F965800B21612 /* CryptoVC.swift */; };
 		7482D642207F965800B21612 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7482D640207F965800B21612 /* Main.storyboard */; };
 		7482D647207F965900B21612 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7482D645207F965900B21612 /* LaunchScreen.storyboard */; };
+		74BF4ACF2082B0DD00AB351D /* Currencies.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74BF4ACE2082B0DD00AB351D /* Currencies.swift */; };
+		74BF4AD32082C01B00AB351D /* Service.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74BF4AD22082C01B00AB351D /* Service.swift */; };
 		99D2A582E6CF2FAECC7AA108 /* Pods_Easy_Exchange_Rates.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C8CD3719265A64F55FE95151 /* Pods_Easy_Exchange_Rates.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		744B5CE7207FA741009E5F56 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		744B5CE9207FB9BD009E5F56 /* CurrencyCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyCell.swift; sourceTree = "<group>"; };
-		744B5CEB207FC8A1009E5F56 /* Currencies.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Currencies.swift; sourceTree = "<group>"; };
-		744B5CED207FC9F5009E5F56 /* Data.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Data.swift; sourceTree = "<group>"; };
+		744B5CED207FC9F5009E5F56 /* CurrencyData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyData.swift; sourceTree = "<group>"; };
 		744B5CF120803590009E5F56 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		744B5CF5208101EA009E5F56 /* CurrencyVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CurrencyVC.swift; sourceTree = "<group>"; };
 		7482D639207F965800B21612 /* Easy Exchange Rates.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Easy Exchange Rates.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -33,6 +33,8 @@
 		7482D641207F965800B21612 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		7482D646207F965900B21612 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		7482D648207F965900B21612 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		74BF4ACE2082B0DD00AB351D /* Currencies.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Currencies.swift; sourceTree = "<group>"; };
+		74BF4AD22082C01B00AB351D /* Service.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Service.swift; sourceTree = "<group>"; };
 		773B33927BAD3EF5552CF0F2 /* Pods-Easy Exchange Rates.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Easy Exchange Rates.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Easy Exchange Rates/Pods-Easy Exchange Rates.debug.xcconfig"; sourceTree = "<group>"; };
 		A087EB40A501D07EDCB9EA33 /* Pods-Easy Exchange Rates.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Easy Exchange Rates.release.xcconfig"; path = "Pods/Target Support Files/Pods-Easy Exchange Rates/Pods-Easy Exchange Rates.release.xcconfig"; sourceTree = "<group>"; };
 		C8CD3719265A64F55FE95151 /* Pods_Easy_Exchange_Rates.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Easy_Exchange_Rates.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -112,8 +114,9 @@
 		7482D651207F967400B21612 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				744B5CEB207FC8A1009E5F56 /* Currencies.swift */,
-				744B5CED207FC9F5009E5F56 /* Data.swift */,
+				74BF4ACE2082B0DD00AB351D /* Currencies.swift */,
+				744B5CED207FC9F5009E5F56 /* CurrencyData.swift */,
+				74BF4AD22082C01B00AB351D /* Service.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -256,11 +259,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				744B5CEA207FB9BD009E5F56 /* CurrencyCell.swift in Sources */,
+				74BF4AD32082C01B00AB351D /* Service.swift in Sources */,
 				744B5CF220803590009E5F56 /* Extensions.swift in Sources */,
-				744B5CEE207FC9F5009E5F56 /* Data.swift in Sources */,
+				744B5CEE207FC9F5009E5F56 /* CurrencyData.swift in Sources */,
 				744B5CF6208101EB009E5F56 /* CurrencyVC.swift in Sources */,
 				7482D63F207F965800B21612 /* CryptoVC.swift in Sources */,
-				744B5CEC207FC8A1009E5F56 /* Currencies.swift in Sources */,
+				74BF4ACF2082B0DD00AB351D /* Currencies.swift in Sources */,
 				7482D63D207F965800B21612 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
