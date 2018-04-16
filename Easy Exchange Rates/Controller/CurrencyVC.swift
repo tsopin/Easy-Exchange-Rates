@@ -15,9 +15,10 @@ class CurrencyVC: UIViewController {
   //  MARK: Variables
   var blurEffect: UIVisualEffect!
   var baseCurrencyArray = ["USD", "CAD", "RUB", "EUR", "GBP"]
-  var currencyArray = [Currencies]()
+  var countryArray = [Country]()
+  var rateArray = [Double]()
   
-
+  
   var exchangeRate = String()
   var pickedBaseCurrency = String()
   var selectedBaseCurrency = String()
@@ -33,32 +34,78 @@ class CurrencyVC: UIViewController {
   @IBOutlet weak var chartView: UIView!
   @IBOutlet weak var currencyTableView: UITableView!
   
+  let jsonUrl = URL(string: "https://currencyconverterapi.com/api/v5/countries?apiKey=8ad20f84-95b2-495f-95e4-1c7bb1f46b11")
+  let currencyUrl = URL(string: "https://currencyconverterapi.com/api/v5/convert?q=USD_AFN,USD_AUD,USD_BDT,USD_BRL,USD_KHR&compact=ultra&apiKey=8ad20f84-95b2-495f-95e4-1c7bb1f46b11")
   
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
-
-    let jsonUrl = "https://currencyconverterapi.com/api/v5/convert?q=USD_USD,USD_CAD,USD_RUB,USD_EUR,USD_GBP&compact=ultra&apiKey=8ad20f84-95b2-495f-95e4-1c7bb1f46b11"
-    let urrl = URL(string: jsonUrl)
-    
-    URLSession.shared.dataTask(with: urrl!){(data, response, error) in
-      
-      
-      do {
-        self.currencyArray = try JSONDecoder().decode([Currencies].self, from: data!)
-        for eachCurrency in self.currencyArray {
-          print(eachCurrency.code)
-          
-        }
-      }
-      catch {
-        print("error")
-      }
-      
-      
-    }.resume()
     
   }
+  
+  func getRates() {
+    guard let downloadUrl = currencyUrl else {return}
+    
+    URLSession.shared.dataTask(with: downloadUrl) { (data, urlResponse, error) in
+      
+      guard let dataToDecode = data, error == nil, urlResponse != nil else {
+        return
+      }
+      
+      let decoder = JSONDecoder()
+      
+      do {
 
+        let results = try decoder.decode(CurrencyRate.self, from: dataToDecode)
+        
+        
+        
+        self.rateArray = [results.USD_AFN, results.USD_AUD, results.USD_BDT, results.USD_BRL, results.USD_KHR]
+        print("DATA \(self.rateArray)")
+        DispatchQueue.main.async {
+          self.currencyTableView.reloadData()
+        }
+        
+//        for (_, value) in results {
+//
+//          self.rateArray.append(value)
+////          print("DATA \(self.rateArray)")
+//        }
+//        DispatchQueue.main.async {
+//          self.currencyTableView.reloadData()
+//        }
+//        print("ARRAY \(self.rateArray)")
+      } catch {
+        print("eerrro")
+      }
+      }.resume()
+    
+  }
+  
+  
+  func getCurrencyList(){
+    guard let downloadUrl = jsonUrl else {return}
+    URLSession.shared.dataTask(with: downloadUrl) { (data, urlResponse, error) in
+      guard let data = data, error == nil, urlResponse != nil else {
+        return
+      }
+      let decoder = JSONDecoder()
+      let file = Bundle.main.url(forResource: "currencyList", withExtension: "json")
+      do {
+        let ooo = try Data(contentsOf: file!)
+        let results = try decoder.decode(Results.self, from: ooo)
+        for (_, value) in results.results {
+          self.countryArray.append(value)
+        }
+        DispatchQueue.main.async {
+          self.currencyTableView.reloadData()
+        }
+//        print("ARRAY \(self.countryArray)")
+      } catch {
+//        print("eerrro")
+      }
+      }.resume()
+  }
+  
   override func viewDidLoad() {
     super.viewDidLoad()
     blurEffect = blurView.effect
@@ -68,7 +115,8 @@ class CurrencyVC: UIViewController {
     
     currencyTableView.delegate = self
     currencyTableView.dataSource = self
-
+    getCurrencyList()
+    getRates()
   }
   
   
@@ -106,7 +154,7 @@ class CurrencyVC: UIViewController {
   let API_KEY = "8ad20f84-95b2-495f-95e4-1c7bb1f46b11"
   
   
- 
+  
   
   
   
@@ -120,13 +168,15 @@ class CurrencyVC: UIViewController {
   }
   
   @IBAction func addNewCurrencyToListButton(_ sender: Any) {
+    getCurrencyList()
+    
   }
   
   @IBAction func baseDoneButton(_ sender: Any) {
     
     selectedBaseCurrency = pickedBaseCurrency
     self.navigationItem.leftBarButtonItem?.title = selectedBaseCurrency
-
+    
     animateOut()
   }
   func changetitle() {
@@ -149,16 +199,26 @@ extension CurrencyVC: UITableViewDelegate, UITableViewDataSource {
     
   }
   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    return CurrencyData.instance.getCurrencies().count
+    return countryArray.count
   }
   
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
     let cell = currencyTableView.dequeueReusableCell(withIdentifier: "currencyCell") as! CurrencyCell
+    let country = countryArray[indexPath.row]
+    let rate = rateArray[indexPath.row]
+    
+    let name = country.name
+    let description = country.currencyName
+    
+    
+    
+    cell.configeureCell(currencyName: name, currencyDescription: description, currencyRate: "\(rate.rounded(toPlaces: 3))", currencySymbol: "$")
+    
     return cell
   }
   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     
-    compareToCurrency = [currencyArray[indexPath.row].code]
+    //    compareToCurrency = [currencyArray[indexPath.row].code]
     
   }
   
@@ -186,7 +246,7 @@ extension CurrencyVC: UIPickerViewDelegate, UIPickerViewDataSource  {
   func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
     self.doneBtnOutlet.isEnabled = true
     pickedBaseCurrency = baseCurrencyArray[row]
-
+    
   }
   
 }

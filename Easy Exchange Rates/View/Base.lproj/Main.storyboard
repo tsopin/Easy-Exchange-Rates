@@ -71,27 +71,38 @@
                                                     </constraints>
                                                 </imageView>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="999.999" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Wq3-3E-tkO">
-                                                    <rect key="frame" x="180.33333333333337" y="14.333333333333332" width="193.66666666666663" height="35.666666666666671"/>
+                                                    <rect key="frame" x="246.66666666666666" y="14.333333333333332" width="108.66666666666666" height="35.666666666666671"/>
                                                     <fontDescription key="fontDescription" name="HelveticaNeue-Thin" family="Helvetica Neue" pointSize="30"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="$" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yJd-Fb-jaq">
+                                                    <rect key="frame" x="360.33333333333331" y="17.666666666666671" width="13.666666666666686" height="30"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="30" id="wih-hJ-A3p"/>
+                                                    </constraints>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="22"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
                                             <constraints>
-                                                <constraint firstAttribute="trailing" secondItem="Wq3-3E-tkO" secondAttribute="trailing" constant="20" id="5mp-cs-ZRv"/>
-                                                <constraint firstItem="Wq3-3E-tkO" firstAttribute="leading" secondItem="Ykp-O3-QTT" secondAttribute="trailing" constant="20" id="EPh-zU-XWU"/>
+                                                <constraint firstItem="Wq3-3E-tkO" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="Ykp-O3-QTT" secondAttribute="trailing" constant="20" id="EPh-zU-XWU"/>
                                                 <constraint firstItem="IWv-eU-PMP" firstAttribute="centerY" secondItem="VZF-Kf-q9f" secondAttribute="centerY" id="Gfq-xM-aT7"/>
+                                                <constraint firstItem="yJd-Fb-jaq" firstAttribute="centerY" secondItem="VZF-Kf-q9f" secondAttribute="centerY" id="NcZ-ww-kpG"/>
                                                 <constraint firstItem="Ykp-O3-QTT" firstAttribute="top" secondItem="VZF-Kf-q9f" secondAttribute="top" constant="9" id="RKh-12-ugO"/>
                                                 <constraint firstAttribute="bottom" secondItem="Ykp-O3-QTT" secondAttribute="bottom" constant="9" id="VDJ-U9-Dzv"/>
+                                                <constraint firstAttribute="trailing" secondItem="yJd-Fb-jaq" secondAttribute="trailing" constant="20" id="aKb-c1-EgU"/>
                                                 <constraint firstItem="IWv-eU-PMP" firstAttribute="leading" secondItem="VZF-Kf-q9f" secondAttribute="leading" constant="5" id="iim-8y-3G3"/>
+                                                <constraint firstItem="yJd-Fb-jaq" firstAttribute="leading" secondItem="Wq3-3E-tkO" secondAttribute="trailing" constant="5" id="qSA-cM-Uvh"/>
                                                 <constraint firstItem="Wq3-3E-tkO" firstAttribute="centerY" secondItem="VZF-Kf-q9f" secondAttribute="centerY" id="uD9-PL-Wtp"/>
                                                 <constraint firstItem="Ykp-O3-QTT" firstAttribute="leading" secondItem="IWv-eU-PMP" secondAttribute="trailing" constant="15" id="yuM-GM-1j9"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                         <connections>
                                             <outlet property="currencyDescription" destination="6r8-AS-7Op" id="KGe-lS-XL0"/>
-                                            <outlet property="currencyImage" destination="IWv-eU-PMP" id="uO6-RY-eZh"/>
                                             <outlet property="currencyName" destination="tIg-ZJ-nvO" id="UpI-XS-FMz"/>
+                                            <outlet property="currencySymbol" destination="yJd-Fb-jaq" id="YdS-3H-IU6"/>
                                             <outlet property="rateLabel" destination="Wq3-3E-tkO" id="hS3-hk-KHQ"/>
                                         </connections>
                                     </tableViewCell>

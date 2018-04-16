@@ -18,6 +18,7 @@
 		7482D647207F965900B21612 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7482D645207F965900B21612 /* LaunchScreen.storyboard */; };
 		74BF4ACF2082B0DD00AB351D /* Currencies.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74BF4ACE2082B0DD00AB351D /* Currencies.swift */; };
 		74BF4AD32082C01B00AB351D /* Service.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74BF4AD22082C01B00AB351D /* Service.swift */; };
+		74BF4AD7208430A700AB351D /* currencyList.json in Resources */ = {isa = PBXBuildFile; fileRef = 74BF4AD6208430A500AB351D /* currencyList.json */; };
 		99D2A582E6CF2FAECC7AA108 /* Pods_Easy_Exchange_Rates.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C8CD3719265A64F55FE95151 /* Pods_Easy_Exchange_Rates.framework */; };
 /* End PBXBuildFile section */
 
@@ -35,6 +36,7 @@
 		7482D648207F965900B21612 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		74BF4ACE2082B0DD00AB351D /* Currencies.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Currencies.swift; sourceTree = "<group>"; };
 		74BF4AD22082C01B00AB351D /* Service.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Service.swift; sourceTree = "<group>"; };
+		74BF4AD6208430A500AB351D /* currencyList.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = currencyList.json; sourceTree = "<group>"; };
 		773B33927BAD3EF5552CF0F2 /* Pods-Easy Exchange Rates.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Easy Exchange Rates.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Easy Exchange Rates/Pods-Easy Exchange Rates.debug.xcconfig"; sourceTree = "<group>"; };
 		A087EB40A501D07EDCB9EA33 /* Pods-Easy Exchange Rates.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Easy Exchange Rates.release.xcconfig"; path = "Pods/Target Support Files/Pods-Easy Exchange Rates/Pods-Easy Exchange Rates.release.xcconfig"; sourceTree = "<group>"; };
 		C8CD3719265A64F55FE95151 /* Pods_Easy_Exchange_Rates.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Easy_Exchange_Rates.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -55,6 +57,7 @@
 		744B5CF020803577009E5F56 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				74BF4AD6208430A500AB351D /* currencyList.json */,
 				744B5CF120803590009E5F56 /* Extensions.swift */,
 			);
 			path = "Supporting Files";
@@ -198,6 +201,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				74BF4AD7208430A700AB351D /* currencyList.json in Resources */,
 				7482D647207F965900B21612 /* LaunchScreen.storyboard in Resources */,
 				744B5CE8207FA741009E5F56 /* Assets.xcassets in Resources */,
 				7482D642207F965800B21612 /* Main.storyboard in Resources */,
