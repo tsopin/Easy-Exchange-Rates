@@ -20,6 +20,7 @@
             "currencyId": "BDT",
             "currencyName": "Bangladeshi taka",
             "name": "Bangladesh",
+            "currencySymbol": "؋",
             "alpha3": "BGD",
             "id": "BD"
         },

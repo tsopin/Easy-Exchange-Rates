@@ -17,6 +17,7 @@ class CurrencyCell: UITableViewCell {
   
   @IBOutlet weak var currencySymbol: UILabel!
   @IBOutlet weak var rateLabel: UILabel!
+  
   func configeureCell(currencyName: String, currencyDescription: String, currencyRate: String, currencySymbol: String) {
 
 //    self.currencyImage.image = UIImage(named:currencyImage)

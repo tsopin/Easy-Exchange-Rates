@@ -39,6 +39,11 @@ class CurrencyVC: UIViewController {
   
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
+    getRates()
+//    sleep(1)
+    getCurrencyList()
+    
+    
     
   }
   
@@ -54,56 +59,47 @@ class CurrencyVC: UIViewController {
       let decoder = JSONDecoder()
       
       do {
-
+        
         let results = try decoder.decode(CurrencyRate.self, from: dataToDecode)
-        
-        
-        
+ 
         self.rateArray = [results.USD_AFN, results.USD_AUD, results.USD_BDT, results.USD_BRL, results.USD_KHR]
         print("DATA \(self.rateArray)")
         DispatchQueue.main.async {
           self.currencyTableView.reloadData()
         }
         
-//        for (_, value) in results {
-//
-//          self.rateArray.append(value)
-////          print("DATA \(self.rateArray)")
-//        }
-//        DispatchQueue.main.async {
-//          self.currencyTableView.reloadData()
-//        }
-//        print("ARRAY \(self.rateArray)")
       } catch {
         print("eerrro")
       }
       }.resume()
     
   }
-  
+  func flag(country:String) -> String {
+    let base : UInt32 = 127397
+    var s = ""
+    for v in country.unicodeScalars {
+      s.unicodeScalars.append(UnicodeScalar(base + v.value)!)
+    }
+    return String(s)
+  }
   
   func getCurrencyList(){
-    guard let downloadUrl = jsonUrl else {return}
-    URLSession.shared.dataTask(with: downloadUrl) { (data, urlResponse, error) in
-      guard let data = data, error == nil, urlResponse != nil else {
-        return
+    let decoder = JSONDecoder()
+    let file = Bundle.main.url(forResource: "currencyList", withExtension: "json")
+    do {
+      let ooo = try Data(contentsOf: file!)
+      let results = try decoder.decode(Results.self, from: ooo)
+      for (_, value) in results.results {
+        self.countryArray.append(value)
       }
-      let decoder = JSONDecoder()
-      let file = Bundle.main.url(forResource: "currencyList", withExtension: "json")
-      do {
-        let ooo = try Data(contentsOf: file!)
-        let results = try decoder.decode(Results.self, from: ooo)
-        for (_, value) in results.results {
-          self.countryArray.append(value)
-        }
-        DispatchQueue.main.async {
-          self.currencyTableView.reloadData()
-        }
-//        print("ARRAY \(self.countryArray)")
-      } catch {
-//        print("eerrro")
+      DispatchQueue.main.async {
+        self.currencyTableView.reloadData()
       }
-      }.resume()
+      //        print("ARRAY \(self.countryArray)")
+    } catch {
+              print("eerrro")
+    }
+    
   }
   
   override func viewDidLoad() {
@@ -115,13 +111,10 @@ class CurrencyVC: UIViewController {
     
     currencyTableView.delegate = self
     currencyTableView.dataSource = self
-    getCurrencyList()
-    getRates()
+    
   }
   
-  
-  
-  
+
   func animateIn()  {
     self.view.addSubview(baseVIew)
     baseVIew.center = self.view.center
@@ -152,11 +145,7 @@ class CurrencyVC: UIViewController {
   }
   
   let API_KEY = "8ad20f84-95b2-495f-95e4-1c7bb1f46b11"
-  
-  
-  
-  
-  
+
   
   //  MARK: Actions
   @IBAction func dismissBaseView(_ sender: Any) {
@@ -168,7 +157,7 @@ class CurrencyVC: UIViewController {
   }
   
   @IBAction func addNewCurrencyToListButton(_ sender: Any) {
-    getCurrencyList()
+    getRates()
     
   }
   
@@ -205,14 +194,25 @@ extension CurrencyVC: UITableViewDelegate, UITableViewDataSource {
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
     let cell = currencyTableView.dequeueReusableCell(withIdentifier: "currencyCell") as! CurrencyCell
     let country = countryArray[indexPath.row]
-    let rate = rateArray[indexPath.row]
+    var rate = String()
     
-    let name = country.name
+    if rateArray.count > 0 {
+       rate = "\((rateArray[indexPath.row]).rounded(toPlaces: 3))"
+      
+    } else {
+      rate = "No data"
+    }
+    
+    
+    let name = country.currencyId
     let description = country.currencyName
+//    let symbol = country.currencySymbol
     
     
+    let getFlag = flag(country: country.id)
     
-    cell.configeureCell(currencyName: name, currencyDescription: description, currencyRate: "\(rate.rounded(toPlaces: 3))", currencySymbol: "$")
+    
+    cell.configeureCell(currencyName: name, currencyDescription: description, currencyRate: "\(rate)", currencySymbol: getFlag)
     
     return cell
   }
