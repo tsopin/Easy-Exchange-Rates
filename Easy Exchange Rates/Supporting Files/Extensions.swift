@@ -8,6 +8,17 @@
 
 import UIKit
 
+extension UIViewController {
+  func presentStoryboard() {
+    
+    let storyboard = UIStoryboard(name: "Main", bundle: nil)
+    let vc = storyboard.instantiateViewController(withIdentifier: "MainVC") as UIViewController
+    self.present(vc, animated: true, completion: nil)
+    print("GoGoGo")
+  }
+}
+
+
 extension UIView {
   
   func pushTransition(_ duration:CFTimeInterval) {

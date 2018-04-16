@@ -10,15 +10,20 @@ import UIKit
 import Alamofire
 import SwiftyJSON
 
-class CurrencyVC: UIViewController {
+class CurrencyVC: UIViewController, AddNewCurrencyDelegate {
+  
+  func userAddNewCurrency(currency: [Country]) {
+    countryArray = currency
+    
+    print("RECIEVED \(currency.count) OBJECTS")
+  }
+  
   
   //  MARK: Variables
   var blurEffect: UIVisualEffect!
   var baseCurrencyArray = ["USD", "CAD", "RUB", "EUR", "GBP"]
   var countryArray = [Country]()
   var rateArray = [Double]()
-  
-  
   var exchangeRate = String()
   var pickedBaseCurrency = String()
   var selectedBaseCurrency = String()
@@ -33,6 +38,8 @@ class CurrencyVC: UIViewController {
   @IBOutlet weak var blurView: UIVisualEffectView!
   @IBOutlet weak var chartView: UIView!
   @IBOutlet weak var currencyTableView: UITableView!
+  @IBOutlet var selectCurrencyView: UIView!
+
   
   let jsonUrl = URL(string: "https://currencyconverterapi.com/api/v5/countries?apiKey=8ad20f84-95b2-495f-95e4-1c7bb1f46b11")
   let currencyUrl = URL(string: "https://currencyconverterapi.com/api/v5/convert?q=USD_AFN,USD_AUD,USD_BDT,USD_BRL,USD_KHR&compact=ultra&apiKey=8ad20f84-95b2-495f-95e4-1c7bb1f46b11")
@@ -74,14 +81,7 @@ class CurrencyVC: UIViewController {
       }.resume()
     
   }
-  func flag(country:String) -> String {
-    let base : UInt32 = 127397
-    var s = ""
-    for v in country.unicodeScalars {
-      s.unicodeScalars.append(UnicodeScalar(base + v.value)!)
-    }
-    return String(s)
-  }
+
   
   func getCurrencyList(){
     let decoder = JSONDecoder()
@@ -90,9 +90,11 @@ class CurrencyVC: UIViewController {
       let ooo = try Data(contentsOf: file!)
       let results = try decoder.decode(Results.self, from: ooo)
       for (_, value) in results.results {
-        self.countryArray.append(value)
+//        self.countryArray.append(value)
       }
+      
       DispatchQueue.main.async {
+        
         self.currencyTableView.reloadData()
       }
       //        print("ARRAY \(self.countryArray)")
@@ -108,40 +110,42 @@ class CurrencyVC: UIViewController {
     blurView.effect = nil
     basePicker.dataSource = self
     basePicker.delegate = self
-    
+
     currencyTableView.delegate = self
     currencyTableView.dataSource = self
     
   }
   
-
-  func animateIn()  {
+ 
+  
+// Animate Base Currency View
+  
+  func animateInBase()  {
     self.view.addSubview(baseVIew)
     baseVIew.center = self.view.center
     baseVIew.transform = CGAffineTransform.init(scaleX: 1.3, y: 1.3)
     baseVIew.alpha = 0
-    
+
     UIView.animate(withDuration: 0.2) {
       self.blurView.effect = self.blurEffect
       self.baseVIew.alpha = 0.8
       self.doneBtnOutlet.isEnabled = false
       self.baseVIew.layer.cornerRadius = 20
-      
+
       self.baseVIew.transform = CGAffineTransform.identity
     }
-    
   }
-  
-  func animateOut() {
+
+  func animateOutBase() {
     UIView.animate(withDuration: 0.2, animations: {
       self.baseVIew.transform = CGAffineTransform.init(scaleX: 1.3, y: 1.3)
       self.baseVIew.alpha = 0
       self.blurView.effect = nil
     }) { (success: Bool) in
       self.baseVIew.removeFromSuperview()
-      
+
     }
-    
+
   }
   
   let API_KEY = "8ad20f84-95b2-495f-95e4-1c7bb1f46b11"
@@ -149,30 +153,52 @@ class CurrencyVC: UIViewController {
   
   //  MARK: Actions
   @IBAction func dismissBaseView(_ sender: Any) {
-    animateOut()
+    animateOutBase()
   }
   
   @IBAction func chooseBaseButton(_ sender: Any) {
-    animateIn()
+    animateInBase()
   }
   
-  @IBAction func addNewCurrencyToListButton(_ sender: Any) {
-    getRates()
-    
-  }
   
   @IBAction func baseDoneButton(_ sender: Any) {
     
     selectedBaseCurrency = pickedBaseCurrency
     self.navigationItem.leftBarButtonItem?.title = selectedBaseCurrency
     
-    animateOut()
+    animateOutBase()
   }
+  @IBAction func selectCancelButton(_ sender: Any) {
+//    animateOutList()
+  }
+  @IBOutlet weak var selectDoneButton: UIButton!
   func changetitle() {
     let item = self.navigationItem.leftBarButtonItem!
     let button = item.customView as! UIButton
     button.setTitle("Change", for: .normal)
   }
+  
+  @IBAction func addCurrencyButton(_ sender: Any) {
+//    animateInList()
+  }
+  
+  
+  override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+    
+    if segue.identifier == "addCurency" {
+      
+      let destinationVC = segue.destination as! AddCurrencyVC
+      
+      destinationVC.delegate = self 
+      
+    }
+    
+  }
+  
+  
+  
+  
+  
   
   
 }
@@ -196,20 +222,20 @@ extension CurrencyVC: UITableViewDelegate, UITableViewDataSource {
     let country = countryArray[indexPath.row]
     var rate = String()
     
-    if rateArray.count > 0 {
-       rate = "\((rateArray[indexPath.row]).rounded(toPlaces: 3))"
-      
-    } else {
+//    if rateArray.count > 0 {
+//       rate = "\((rateArray[indexPath.row]).rounded(toPlaces: 3))"
+//
+//    } else {
       rate = "No data"
-    }
-    
+//    }
+//
     
     let name = country.currencyId
     let description = country.currencyName
 //    let symbol = country.currencySymbol
     
     
-    let getFlag = flag(country: country.id)
+    let getFlag = Service.instance.flag(country: country.id)
     
     
     cell.configeureCell(currencyName: name, currencyDescription: description, currencyRate: "\(rate)", currencySymbol: getFlag)
