@@ -13,9 +13,12 @@ import SwiftyJSON
 class CurrencyVC: UIViewController, AddNewCurrencyDelegate {
   
   func userAddNewCurrency(currency: [Country]) {
-    countryArray = currency
+    for i in currency {
+      countryArray.append(i)
+    }
     
     print("RECIEVED \(currency.count) OBJECTS")
+    currencyTableView.reloadData()
   }
   
   
@@ -40,69 +43,91 @@ class CurrencyVC: UIViewController, AddNewCurrencyDelegate {
   @IBOutlet weak var currencyTableView: UITableView!
   @IBOutlet var selectCurrencyView: UIView!
 
-  
-  let jsonUrl = URL(string: "https://currencyconverterapi.com/api/v5/countries?apiKey=8ad20f84-95b2-495f-95e4-1c7bb1f46b11")
-  let currencyUrl = URL(string: "https://currencyconverterapi.com/api/v5/convert?q=USD_AFN,USD_AUD,USD_BDT,USD_BRL,USD_KHR&compact=ultra&apiKey=8ad20f84-95b2-495f-95e4-1c7bb1f46b11")
-  
+
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
     getRates()
-//    sleep(1)
-    getCurrencyList()
-    
-    
-    
   }
   
+//    func getRates(){
+//      let decoder = JSONDecoder()
+//      let file = Bundle.main.url(forResource: "rates", withExtension: "json")
+//      do {
+//        let ooo = try Data(contentsOf: file!)
+//        let results = try? JSONSerialization.jsonObject(with: ooo, options: .allowFragments) as? [Dictionary<String,Any>]
+////        for (_, value) in results.results {
+////  //        self.countryArray.append(value)
+////        }
+//
+////        DispatchQueue.main.async {
+////
+////          self.currencyTableView.reloadData()
+////        }
+//                print("ARRAY \(results)")
+//      } catch {
+//                print("eerrro")
+//      }
+//
+//    }
+  
   func getRates() {
+
+    let currencyUrl = URL(string: "https://currencyconverterapi.com/api/v5/convert?q=USD_AFN,USD_AUD,USD_BDT,USD_BRL,USD_KHR&compact=ultra&apiKey=8ad20f84-95b2-495f-95e4-1c7bb1f46b11")
+
     guard let downloadUrl = currencyUrl else {return}
-    
+
     URLSession.shared.dataTask(with: downloadUrl) { (data, urlResponse, error) in
-      
+
       guard let dataToDecode = data, error == nil, urlResponse != nil else {
         return
       }
-      
+
       let decoder = JSONDecoder()
-      
+
       do {
         
-        let results = try decoder.decode(CurrencyRate.self, from: dataToDecode)
- 
-        self.rateArray = [results.USD_AFN, results.USD_AUD, results.USD_BDT, results.USD_BRL, results.USD_KHR]
-        print("DATA \(self.rateArray)")
-        DispatchQueue.main.async {
-          self.currencyTableView.reloadData()
+        let results = try? JSONSerialization.jsonObject(with: dataToDecode, options: []) as! [String:Double]
+        
+        for i in results! {
+          self.rateArray.append(i.value)
         }
         
+//        let results = try decoder.decode(CurrencyRate.self, from: dataToDecode)
+//
+//        self.rateArray = [results.USD_AFN, results.USD_AUD, results.USD_BDT, results.USD_BRL, results.USD_KHR]
+        print("DATA \(self.rateArray)")
+//        DispatchQueue.main.async {
+//          self.currencyTableView.reloadData()
+//        }
+
       } catch {
         print("eerrro")
       }
       }.resume()
-    
+
   }
 
   
-  func getCurrencyList(){
-    let decoder = JSONDecoder()
-    let file = Bundle.main.url(forResource: "currencyList", withExtension: "json")
-    do {
-      let ooo = try Data(contentsOf: file!)
-      let results = try decoder.decode(Results.self, from: ooo)
-      for (_, value) in results.results {
-//        self.countryArray.append(value)
-      }
-      
-      DispatchQueue.main.async {
-        
-        self.currencyTableView.reloadData()
-      }
-      //        print("ARRAY \(self.countryArray)")
-    } catch {
-              print("eerrro")
-    }
-    
-  }
+//  func getCurrencyList(){
+//    let decoder = JSONDecoder()
+//    let file = Bundle.main.url(forResource: "currencyList", withExtension: "json")
+//    do {
+//      let ooo = try Data(contentsOf: file!)
+//      let results = try decoder.decode(Results.self, from: ooo)
+//      for (_, value) in results.results {
+////        self.countryArray.append(value)
+//      }
+//
+//      DispatchQueue.main.async {
+//
+//        self.currencyTableView.reloadData()
+//      }
+//      //        print("ARRAY \(self.countryArray)")
+//    } catch {
+//              print("eerrro")
+//    }
+//
+//  }
   
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -168,9 +193,7 @@ class CurrencyVC: UIViewController, AddNewCurrencyDelegate {
     
     animateOutBase()
   }
-  @IBAction func selectCancelButton(_ sender: Any) {
-//    animateOutList()
-  }
+
   @IBOutlet weak var selectDoneButton: UIButton!
   func changetitle() {
     let item = self.navigationItem.leftBarButtonItem!
@@ -204,6 +227,14 @@ class CurrencyVC: UIViewController, AddNewCurrencyDelegate {
 }
 //MARK: Extension TableView
 extension CurrencyVC: UITableViewDelegate, UITableViewDataSource {
+  
+  
+  func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+    //    method for chats deleting
+    
+    countryArray.remove(at: indexPath.row)
+    currencyTableView.deleteRows(at: [indexPath], with: .automatic)
+  }
   
   func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
     return "Compare to"

@@ -38,30 +38,38 @@ struct Country: Codable {
 }
 
 
-
-
-
-
+struct Rate {
+  let base: String
+  let several: String
+  let rate: Double
+}
 
 struct CurrencyRate: Codable {
-
-  let USD_AFN : Double
-  let USD_AUD : Double
-  let USD_BDT : Double
-  let USD_BRL : Double
-  let USD_KHR : Double
-
-  init(USD_AFN: Double, USD_BDT: Double, USD_AUD: Double, USD_BRL: Double, USD_KHR: Double) {
-
-    self.USD_AFN = USD_AFN
-    self.USD_AUD = USD_AUD
-    self.USD_BDT = USD_BDT
-    self.USD_BRL = USD_BRL
-    self.USD_KHR = USD_KHR
-
-  }
-
+  
+ 
+  
 }
+
+
+//struct CurrencyRate: Codable {
+//
+//  let USD_AFN : Double
+//  let USD_AUD : Double
+//  let USD_BDT : Double
+//  let USD_BRL : Double
+//  let USD_KHR : Double
+//
+//  init(USD_AFN: Double, USD_BDT: Double, USD_AUD: Double, USD_BRL: Double, USD_KHR: Double) {
+//
+//    self.USD_AFN = USD_AFN
+//    self.USD_AUD = USD_AUD
+//    self.USD_BDT = USD_BDT
+//    self.USD_BRL = USD_BRL
+//    self.USD_KHR = USD_KHR
+//
+//  }
+
+//}
 
 //let chosenCurrency = "AUD"
 //
