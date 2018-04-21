@@ -85,26 +85,27 @@ extension AddCurrencyVC: UITableViewDelegate, UITableViewDataSource {
     let cell = selectTableView.dequeueReusableCell(withIdentifier: "selectCurrencyCell") as! SelectCurrencyCell
     let country = countryArray[indexPath.row]
 
-    var goSymbol = String()
+    var symbol = String()
     
     let countryName = country.name
     let currencyCode = country.currencyId
     let description = country.currencyName
     
     if country.currencySymbol != nil {
-      goSymbol = country.currencySymbol!
+      symbol = country.currencySymbol!
     } else {
-      goSymbol = ""
+      symbol = ""
     }
     
     
     let getFlag = Service.instance.flag(country: country.id)
     
     
-    cell.configeureCell(flag: getFlag, countryName: countryName, currencyName: description, symbol: goSymbol, currencyCode: currencyCode)
+    cell.configeureCell(flag: getFlag, countryName: countryName, currencyName: description, symbol: symbol, currencyCode: currencyCode)
     
     return cell
   }
+  
   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     
     let country = countryArray[indexPath.row]
@@ -112,9 +113,8 @@ extension AddCurrencyVC: UITableViewDelegate, UITableViewDataSource {
     choosenCountryArray.append(country)
     
     delegate?.userAddNewCurrency(currency: choosenCountryArray)
-//    presentStoryboard()
-    dismiss(animated: true, completion: nil)
     
+    dismiss(animated: true, completion: nil)
     
   }
   

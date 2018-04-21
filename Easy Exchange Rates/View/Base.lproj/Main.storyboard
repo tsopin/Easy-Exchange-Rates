@@ -7,6 +7,7 @@
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+        <capability name="Navigation items with more than one left or right bar item" minToolsVersion="7.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -79,12 +80,19 @@
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="BZ$" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4Ze-ZF-jAj">
+                                                    <rect key="frame" x="222" y="19" width="43.333333333333314" height="28.333333333333329"/>
+                                                    <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="24"/>
+                                                    <color key="textColor" red="0.75406885150000003" green="0.75408679249999999" blue="0.75407713649999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
                                             </subviews>
                                             <constraints>
                                                 <constraint firstItem="yJd-Fb-jaq" firstAttribute="leading" secondItem="VZF-Kf-q9f" secondAttribute="leading" id="JhP-vf-q0X"/>
+                                                <constraint firstItem="Wq3-3E-tkO" firstAttribute="leading" secondItem="4Ze-ZF-jAj" secondAttribute="trailing" constant="5" id="MEs-gk-WZL"/>
                                                 <constraint firstItem="Ykp-O3-QTT" firstAttribute="top" secondItem="VZF-Kf-q9f" secondAttribute="top" constant="9" id="RKh-12-ugO"/>
                                                 <constraint firstAttribute="bottom" secondItem="Ykp-O3-QTT" secondAttribute="bottom" constant="9" id="VDJ-U9-Dzv"/>
-                                                <constraint firstItem="Wq3-3E-tkO" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="Ykp-O3-QTT" secondAttribute="trailing" constant="10" id="f81-WH-8v0"/>
+                                                <constraint firstItem="4Ze-ZF-jAj" firstAttribute="centerY" secondItem="VZF-Kf-q9f" secondAttribute="centerY" id="d12-MR-GrM"/>
                                                 <constraint firstItem="yJd-Fb-jaq" firstAttribute="centerY" secondItem="VZF-Kf-q9f" secondAttribute="centerY" id="koT-r8-Val"/>
                                                 <constraint firstItem="Ykp-O3-QTT" firstAttribute="leading" secondItem="yJd-Fb-jaq" secondAttribute="trailing" constant="10" id="rlO-xy-pjj"/>
                                                 <constraint firstItem="Wq3-3E-tkO" firstAttribute="centerY" secondItem="VZF-Kf-q9f" secondAttribute="centerY" id="uD9-PL-Wtp"/>
@@ -96,6 +104,7 @@
                                             <outlet property="currencyName" destination="tIg-ZJ-nvO" id="UpI-XS-FMz"/>
                                             <outlet property="currencySymbol" destination="yJd-Fb-jaq" id="YdS-3H-IU6"/>
                                             <outlet property="rateLabel" destination="Wq3-3E-tkO" id="hS3-hk-KHQ"/>
+                                            <outlet property="symbol" destination="4Ze-ZF-jAj" id="PtI-6r-ZJf"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
@@ -135,13 +144,20 @@
                                 <action selector="chooseBaseButton:" destination="zPm-vf-NfY" id="FPF-2O-XQ5"/>
                             </connections>
                         </barButtonItem>
-                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="1UH-LQ-4jP">
-                            <connections>
-                                <segue destination="hHK-LC-rh5" kind="popoverPresentation" identifier="addCurency" popoverAnchorBarButtonItem="1UH-LQ-4jP" id="CR2-Dv-atz">
-                                    <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
-                                </segue>
-                            </connections>
-                        </barButtonItem>
+                        <rightBarButtonItems>
+                            <barButtonItem systemItem="add" id="1UH-LQ-4jP">
+                                <connections>
+                                    <segue destination="hHK-LC-rh5" kind="popoverPresentation" identifier="addCurency" popoverAnchorBarButtonItem="1UH-LQ-4jP" id="CR2-Dv-atz">
+                                        <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
+                                    </segue>
+                                </connections>
+                            </barButtonItem>
+                            <barButtonItem systemItem="refresh" id="2w2-kw-lxc">
+                                <connections>
+                                    <action selector="refreshRates:" destination="zPm-vf-NfY" id="b3h-4D-uM2"/>
+                                </connections>
+                            </barButtonItem>
+                        </rightBarButtonItems>
                     </navigationItem>
                     <connections>
                         <outlet property="basePicker" destination="c7O-2S-RFA" id="cOk-r7-5Pp"/>
@@ -488,7 +504,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="BLg-rR-o2q">
-                                                    <rect key="frame" x="57.999999999999993" y="9.3333333333333321" width="102.33333333333331" height="46.666666666666671"/>
+                                                    <rect key="frame" x="58" y="9.3333333333333357" width="102.33333333333331" height="46.666666666666671"/>
                                                     <subviews>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="CAD" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MaJ-kI-C7z">
                                                             <rect key="frame" x="0.0" y="0.0" width="102.33333333333333" height="23.333333333333332"/>

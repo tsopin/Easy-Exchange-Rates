@@ -10,21 +10,19 @@ import UIKit
 
 class CurrencyCell: UITableViewCell {
 
-
-//  @IBOutlet weak var currencyImage: UIImageView!
   @IBOutlet weak var currencyName: UILabel!
   @IBOutlet weak var currencyDescription: UILabel!
-  
+  @IBOutlet weak var symbol: UILabel!
   @IBOutlet weak var currencySymbol: UILabel!
   @IBOutlet weak var rateLabel: UILabel!
   
-  func configeureCell(currencyName: String, currencyDescription: String, currencyRate: String, currencySymbol: String) {
+  func configeureCell(currencyName: String, currencyDescription: String, currencyRate: String, flag: String, symbol: String) {
 
-//    self.currencyImage.image = UIImage(named:currencyImage)
+    self.symbol.text = symbol
     self.currencyName.text = currencyName
     self.currencyDescription.text = currencyDescription
     self.rateLabel.text = currencyRate
-    self.currencySymbol.text = currencySymbol
+    self.currencySymbol.text = flag
+    
   }
-
 }

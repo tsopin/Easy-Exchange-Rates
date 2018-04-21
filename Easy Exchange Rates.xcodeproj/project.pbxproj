@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		744B5CE8207FA741009E5F56 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 744B5CE7207FA741009E5F56 /* Assets.xcassets */; };
 		744B5CEA207FB9BD009E5F56 /* CurrencyCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 744B5CE9207FB9BD009E5F56 /* CurrencyCell.swift */; };
-		744B5CEE207FC9F5009E5F56 /* CurrencyData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 744B5CED207FC9F5009E5F56 /* CurrencyData.swift */; };
 		744B5CF220803590009E5F56 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 744B5CF120803590009E5F56 /* Extensions.swift */; };
 		744B5CF6208101EB009E5F56 /* CurrencyVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 744B5CF5208101EA009E5F56 /* CurrencyVC.swift */; };
 		7482D63D207F965800B21612 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7482D63C207F965800B21612 /* AppDelegate.swift */; };
@@ -28,7 +27,6 @@
 /* Begin PBXFileReference section */
 		744B5CE7207FA741009E5F56 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		744B5CE9207FB9BD009E5F56 /* CurrencyCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyCell.swift; sourceTree = "<group>"; };
-		744B5CED207FC9F5009E5F56 /* CurrencyData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyData.swift; sourceTree = "<group>"; };
 		744B5CF120803590009E5F56 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		744B5CF5208101EA009E5F56 /* CurrencyVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CurrencyVC.swift; sourceTree = "<group>"; };
 		7482D639207F965800B21612 /* Easy Exchange Rates.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Easy Exchange Rates.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -126,7 +124,6 @@
 			isa = PBXGroup;
 			children = (
 				74BF4ACE2082B0DD00AB351D /* Currencies.swift */,
-				744B5CED207FC9F5009E5F56 /* CurrencyData.swift */,
 				74BF4AD22082C01B00AB351D /* Service.swift */,
 			);
 			path = Model;
@@ -283,7 +280,6 @@
 				744B5CEA207FB9BD009E5F56 /* CurrencyCell.swift in Sources */,
 				74BF4AD32082C01B00AB351D /* Service.swift in Sources */,
 				744B5CF220803590009E5F56 /* Extensions.swift in Sources */,
-				744B5CEE207FC9F5009E5F56 /* CurrencyData.swift in Sources */,
 				744B5CF6208101EB009E5F56 /* CurrencyVC.swift in Sources */,
 				74BF4ADC2084F83A00AB351D /* AddCurrencyVC.swift in Sources */,
 				74BF4AD920845B3100AB351D /* SelectCurrencyCell.swift in Sources */,

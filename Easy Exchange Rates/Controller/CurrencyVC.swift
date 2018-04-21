@@ -7,31 +7,28 @@
 //
 
 import UIKit
-import Alamofire
-import SwiftyJSON
 
 class CurrencyVC: UIViewController, AddNewCurrencyDelegate {
   
   func userAddNewCurrency(currency: [Country]) {
     for i in currency {
       countryArray.append(i)
+      compareToCurrency.append(i.currencyId)
     }
-    
-    print("RECIEVED \(currency.count) OBJECTS")
     currencyTableView.reloadData()
   }
   
   
   //  MARK: Variables
+  let API_KEY = "8ad20f84-95b2-495f-95e4-1c7bb1f46b11"
   var blurEffect: UIVisualEffect!
   var baseCurrencyArray = ["USD", "CAD", "RUB", "EUR", "GBP"]
   var countryArray = [Country]()
   var rateArray = [Double]()
   var exchangeRate = String()
   var pickedBaseCurrency = String()
-  var selectedBaseCurrency = String()
+  var selectedBaseCurrency = "USD"
   var compareToCurrency = [String]()
-  
   var numbers = [Double]()
   
   //  MARK: Outlets
@@ -42,92 +39,6 @@ class CurrencyVC: UIViewController, AddNewCurrencyDelegate {
   @IBOutlet weak var chartView: UIView!
   @IBOutlet weak var currencyTableView: UITableView!
   @IBOutlet var selectCurrencyView: UIView!
-
-
-  override func viewWillAppear(_ animated: Bool) {
-    super.viewWillAppear(animated)
-    getRates()
-  }
-  
-//    func getRates(){
-//      let decoder = JSONDecoder()
-//      let file = Bundle.main.url(forResource: "rates", withExtension: "json")
-//      do {
-//        let ooo = try Data(contentsOf: file!)
-//        let results = try? JSONSerialization.jsonObject(with: ooo, options: .allowFragments) as? [Dictionary<String,Any>]
-////        for (_, value) in results.results {
-////  //        self.countryArray.append(value)
-////        }
-//
-////        DispatchQueue.main.async {
-////
-////          self.currencyTableView.reloadData()
-////        }
-//                print("ARRAY \(results)")
-//      } catch {
-//                print("eerrro")
-//      }
-//
-//    }
-  
-  func getRates() {
-
-    let currencyUrl = URL(string: "https://currencyconverterapi.com/api/v5/convert?q=USD_AFN,USD_AUD,USD_BDT,USD_BRL,USD_KHR&compact=ultra&apiKey=8ad20f84-95b2-495f-95e4-1c7bb1f46b11")
-
-    guard let downloadUrl = currencyUrl else {return}
-
-    URLSession.shared.dataTask(with: downloadUrl) { (data, urlResponse, error) in
-
-      guard let dataToDecode = data, error == nil, urlResponse != nil else {
-        return
-      }
-
-      let decoder = JSONDecoder()
-
-      do {
-        
-        let results = try? JSONSerialization.jsonObject(with: dataToDecode, options: []) as! [String:Double]
-        
-        for i in results! {
-          self.rateArray.append(i.value)
-        }
-        
-//        let results = try decoder.decode(CurrencyRate.self, from: dataToDecode)
-//
-//        self.rateArray = [results.USD_AFN, results.USD_AUD, results.USD_BDT, results.USD_BRL, results.USD_KHR]
-        print("DATA \(self.rateArray)")
-//        DispatchQueue.main.async {
-//          self.currencyTableView.reloadData()
-//        }
-
-      } catch {
-        print("eerrro")
-      }
-      }.resume()
-
-  }
-
-  
-//  func getCurrencyList(){
-//    let decoder = JSONDecoder()
-//    let file = Bundle.main.url(forResource: "currencyList", withExtension: "json")
-//    do {
-//      let ooo = try Data(contentsOf: file!)
-//      let results = try decoder.decode(Results.self, from: ooo)
-//      for (_, value) in results.results {
-////        self.countryArray.append(value)
-//      }
-//
-//      DispatchQueue.main.async {
-//
-//        self.currencyTableView.reloadData()
-//      }
-//      //        print("ARRAY \(self.countryArray)")
-//    } catch {
-//              print("eerrro")
-//    }
-//
-//  }
   
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -135,46 +46,71 @@ class CurrencyVC: UIViewController, AddNewCurrencyDelegate {
     blurView.effect = nil
     basePicker.dataSource = self
     basePicker.delegate = self
-
     currencyTableView.delegate = self
     currencyTableView.dataSource = self
+  }
+  
+  override func viewWillAppear(_ animated: Bool) {
+    super.viewWillAppear(animated)
     
   }
   
- 
   
-// Animate Base Currency View
-  
-  func animateInBase()  {
-    self.view.addSubview(baseVIew)
-    baseVIew.center = self.view.center
-    baseVIew.transform = CGAffineTransform.init(scaleX: 1.3, y: 1.3)
-    baseVIew.alpha = 0
-
-    UIView.animate(withDuration: 0.2) {
-      self.blurView.effect = self.blurEffect
-      self.baseVIew.alpha = 0.8
-      self.doneBtnOutlet.isEnabled = false
-      self.baseVIew.layer.cornerRadius = 20
-
-      self.baseVIew.transform = CGAffineTransform.identity
-    }
+  func getRatesClosure(from: String, to: String, handler: @escaping (Double) -> Void) -> Void {
+    
+    var rate = Double()
+    
+    print("WE COMPARE \(from) to \(to)")
+    
+    let rateUrl = URL(string: "https://currencyconverterapi.com/api/v5/convert?q=\(from)_\(to)&compact=ultra&apiKey=\(API_KEY)")
+    
+    URLSession.shared.dataTask(with: rateUrl!) { (data, urlResponse, error) in
+      
+      DispatchQueue.main.async {
+        
+        guard let dataToDecode = data, error == nil, urlResponse != nil else {return}
+        
+        do {
+          
+          let results = try? JSONSerialization.jsonObject(with: dataToDecode, options: []) as! [String:Double]
+          
+          print("WE'VE GOT RESPONSE \(results!)")
+          
+          for i in results! {
+            rate = i.value
+          }
+          
+          handler(rate)
+          
+          print("WE'VE GOT VALUE \(rate)")
+          
+        } catch {
+          
+          print("eerrro")
+        }
+      }
+      }.resume()
+    
   }
-
-  func animateOutBase() {
-    UIView.animate(withDuration: 0.2, animations: {
-      self.baseVIew.transform = CGAffineTransform.init(scaleX: 1.3, y: 1.3)
-      self.baseVIew.alpha = 0
-      self.blurView.effect = nil
-    }) { (success: Bool) in
-      self.baseVIew.removeFromSuperview()
-
-    }
-
+  
+  
+  
+  
+  
+  @IBAction func refreshRates(_ sender: Any) {
+    
+    currencyTableView.reloadData()
+    
   }
   
-  let API_KEY = "8ad20f84-95b2-495f-95e4-1c7bb1f46b11"
-
+  
+  
+  
+  
+  
+  
+  
+  
   
   //  MARK: Actions
   @IBAction func dismissBaseView(_ sender: Any) {
@@ -190,19 +126,16 @@ class CurrencyVC: UIViewController, AddNewCurrencyDelegate {
     
     selectedBaseCurrency = pickedBaseCurrency
     self.navigationItem.leftBarButtonItem?.title = selectedBaseCurrency
-    
+    currencyTableView.reloadData()
     animateOutBase()
   }
-
+  
   @IBOutlet weak var selectDoneButton: UIButton!
-  func changetitle() {
-    let item = self.navigationItem.leftBarButtonItem!
-    let button = item.customView as! UIButton
-    button.setTitle("Change", for: .normal)
-  }
+  
+  
   
   @IBAction func addCurrencyButton(_ sender: Any) {
-//    animateInList()
+    //    animateInList()
   }
   
   
@@ -215,23 +148,17 @@ class CurrencyVC: UIViewController, AddNewCurrencyDelegate {
       destinationVC.delegate = self 
       
     }
-    
   }
   
-  
-  
-  
-  
-  
-  
 }
+
+
 //MARK: Extension TableView
 extension CurrencyVC: UITableViewDelegate, UITableViewDataSource {
   
   
   func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
-    //    method for chats deleting
-    
+    compareToCurrency.remove(at: indexPath.row)
     countryArray.remove(at: indexPath.row)
     currencyTableView.deleteRows(at: [indexPath], with: .automatic)
   }
@@ -249,40 +176,39 @@ extension CurrencyVC: UITableViewDelegate, UITableViewDataSource {
   }
   
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-    let cell = currencyTableView.dequeueReusableCell(withIdentifier: "currencyCell") as! CurrencyCell
+    
     let country = countryArray[indexPath.row]
-    var rate = String()
+    let cell = currencyTableView.dequeueReusableCell(withIdentifier: "currencyCell") as! CurrencyCell
     
-//    if rateArray.count > 0 {
-//       rate = "\((rateArray[indexPath.row]).rounded(toPlaces: 3))"
-//
-//    } else {
-      rate = "No data"
-//    }
-//
-    
-    let name = country.currencyId
-    let description = country.currencyName
-//    let symbol = country.currencySymbol
-    
-    
-    let getFlag = Service.instance.flag(country: country.id)
-    
-    
-    cell.configeureCell(currencyName: name, currencyDescription: description, currencyRate: "\(rate)", currencySymbol: getFlag)
-    
+    getRatesClosure(from: selectedBaseCurrency, to: country.currencyId) { (returnedRate) in
+      
+      var symbol = String()
+      var rate = Double()
+      let name = country.currencyId
+      let description = country.currencyName
+      let getFlag = Service.instance.flag(country: country.id)
+      
+      if country.currencySymbol != nil {
+        symbol = country.currencySymbol!
+      } else {
+        symbol = ""
+      }
+      
+      rate = returnedRate.rounded(toPlaces: 2)
+      
+      cell.configeureCell(currencyName: name, currencyDescription: description, currencyRate: "\(rate)", flag: getFlag, symbol: symbol)
+      
+    }
     return cell
   }
+  
+  
   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     
     //    compareToCurrency = [currencyArray[indexPath.row].code]
     
   }
-  
 }
-
-
-
 
 
 //MARK: PickerView
@@ -305,10 +231,40 @@ extension CurrencyVC: UIPickerViewDelegate, UIPickerViewDataSource  {
     pickedBaseCurrency = baseCurrencyArray[row]
     
   }
-  
 }
 
 
+// Animate Base Currency View
+extension CurrencyVC {
+  
+  
+  func animateInBase()  {
+    self.view.addSubview(baseVIew)
+    baseVIew.center = self.view.center
+    baseVIew.transform = CGAffineTransform.init(scaleX: 1.3, y: 1.3)
+    baseVIew.alpha = 0
+    
+    UIView.animate(withDuration: 0.2) {
+      self.blurView.effect = self.blurEffect
+      self.baseVIew.alpha = 0.8
+      self.doneBtnOutlet.isEnabled = false
+      self.baseVIew.layer.cornerRadius = 20
+      
+      self.baseVIew.transform = CGAffineTransform.identity
+    }
+  }
+  
+  func animateOutBase() {
+    UIView.animate(withDuration: 0.2, animations: {
+      self.baseVIew.transform = CGAffineTransform.init(scaleX: 1.3, y: 1.3)
+      self.baseVIew.alpha = 0
+      self.blurView.effect = nil
+    }) { (success: Bool) in
+      self.baseVIew.removeFromSuperview()
+      
+    }
+  }
+}
 
 
 
