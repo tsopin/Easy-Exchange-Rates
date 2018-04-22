@@ -11,16 +11,17 @@ import Charts
 
 class CurrencyVC: UIViewController, AddNewCurrencyDelegate {
   
+ 
+  
   func userAddNewCurrency(currency: Country) {
     
-      countryArray.append(currency)
-      compareToCurrency.append(currency.currencyId)
-
+    countryArray.append(currency)
+//    compareToCurrency.append(currency.currencyId)
     print("GOT \(countryArray) OBJECTS")
-    currencyTableView.reloadData()
+    saveUserCurrencies()
+    
   }
-  
-  
+
   //  MARK: Variables
   let API_KEY = "8ad20f84-95b2-495f-95e4-1c7bb1f46b11"
   var blurEffect: UIVisualEffect!
@@ -30,8 +31,9 @@ class CurrencyVC: UIViewController, AddNewCurrencyDelegate {
   var exchangeRate = String()
   var pickedBaseCurrency = String()
   var selectedBaseCurrency = "USD"
-  var compareToCurrency = [String]()
+  let dataFilePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("ChosenCurrencies.plist")
   var numbers = [Double]()
+
   
   //  MARK: Outlets
   @IBOutlet weak var doneBtnOutlet: UIButton!
@@ -51,6 +53,10 @@ class CurrencyVC: UIViewController, AddNewCurrencyDelegate {
     currencyTableView.delegate = self
     currencyTableView.dataSource = self
     definesPresentationContext = false
+    
+    loadUserCurrencies()
+
+    
   }
   
   override func viewWillAppear(_ animated: Bool) {
@@ -130,7 +136,6 @@ class CurrencyVC: UIViewController, AddNewCurrencyDelegate {
       
       destinationVC.delegate = self
       
-      
     }
   }
   
@@ -142,9 +147,10 @@ extension CurrencyVC: UITableViewDelegate, UITableViewDataSource {
   
   
   func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
-    compareToCurrency.remove(at: indexPath.row)
+//    compareToCurrency.remove(at: indexPath.row)
     countryArray.remove(at: indexPath.row)
     currencyTableView.deleteRows(at: [indexPath], with: .automatic)
+    saveUserCurrencies()
   }
   
   func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
@@ -155,9 +161,11 @@ extension CurrencyVC: UITableViewDelegate, UITableViewDataSource {
     return 1
     
   }
+  
   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
     return countryArray.count
   }
+  
   
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
     
@@ -249,6 +257,32 @@ extension CurrencyVC {
       
     }
   }
+  
+  func saveUserCurrencies() {
+    
+    let encoder = PropertyListEncoder()
+    do {
+      let data = try encoder.encode(countryArray)
+      try data.write(to: dataFilePath!)
+      
+    } catch {
+      print("error \(error)")
+    }
+    currencyTableView.reloadData()
+  }
+  
+  func loadUserCurrencies() {
+    
+    if let data = try? Data(contentsOf: dataFilePath!) {
+      let decoder = PropertyListDecoder()
+      do {
+        countryArray = try decoder.decode([Country].self, from: data)
+      } catch {
+        print("Error \(error)")
+      }
+    }
+  }
+  
   
   func getRates(from: String, to: String, handler: @escaping (Double) -> Void) -> Void {
     
