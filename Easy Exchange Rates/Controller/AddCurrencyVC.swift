@@ -9,35 +9,51 @@
 import UIKit
 
 protocol AddNewCurrencyDelegate {
-  func userAddNewCurrency(currency: [Country])
+  func userAddNewCurrency(currency: Country)
 }
 
-class AddCurrencyVC: UIViewController {
-
+class AddCurrencyVC: UIViewController, UISearchResultsUpdating {
+  
+  
   @IBOutlet weak var selectTableView: UITableView!
   
   var countryArray = [Country]()
+  var filtredCountryArray = [Country]()
   var choosenCountryArray = [Country]()
   var delegate: AddNewCurrencyDelegate?
-  
-  
+  let searchController = UISearchController(searchResultsController: nil)
   
   override func viewDidLoad() {
-        super.viewDidLoad()
-    choosenCountryArray.removeAll()
+    super.viewDidLoad()
+    
     selectTableView.delegate = self
     selectTableView.dataSource = self
+    
+    searchController.searchResultsUpdater = self
+    searchController.obscuresBackgroundDuringPresentation = false
+    searchController.searchBar.placeholder = "Find by name and select"
+    
+    navigationItem.searchController = searchController
+    navigationItem.searchController?.hidesNavigationBarDuringPresentation = false
+    navigationItem.hidesSearchBarWhenScrolling = false
+    definesPresentationContext = false
+    
     getCountryList()
-
-    }
+  }
   
+  override func viewWillAppear(_ animated: Bool) {
+    super.viewWillAppear(animated)
+    if searchController.canBecomeFirstResponder {
+      searchController.becomeFirstResponder()
+    }
+  }
   
   func getCountryList(){
     let decoder = JSONDecoder()
     let file = Bundle.main.url(forResource: "currencyList", withExtension: "json")
     do {
-      let ooo = try Data(contentsOf: file!)
-      let results = try decoder.decode(Results.self, from: ooo)
+      let list = try Data(contentsOf: file!)
+      let results = try decoder.decode(Results.self, from: list)
       for (_, value) in results.results {
         self.countryArray.append(value)
       }
@@ -45,25 +61,51 @@ class AddCurrencyVC: UIViewController {
       DispatchQueue.main.async {
         self.selectTableView.reloadData()
       }
-//              print("ARRAY \(self.countryArray)")
     } catch {
       print("eerrro")
     }
     
   }
   
-
+  
   @IBAction func doneButton(_ sender: Any) {
     
-//
+    //
     
     print(choosenCountryArray.count)
     
     
   }
   
-  @IBOutlet weak var cancelButton: UIBarButtonItem!
   
+  @IBAction func cancelButton(_ sender: Any) {
+    dismiss(animated: true, completion: nil)
+  }
+  
+  
+  
+  // MARK: -- Search --
+  
+  
+  func updateSearchResults(for searchController: UISearchController) {
+    filterContentForSearchText(searchController.searchBar.text!)
+  }
+  
+  // search in email or username
+  func filterContentForSearchText(_ searchText: String, scope: String = "All") {
+    filtredCountryArray = countryArray.filter({ (country: Country) -> Bool in
+      return country.name.lowercased().contains(searchText.lowercased()) || country.currencyId.lowercased().contains(searchText.lowercased()) || country.currencyName.lowercased().contains(searchText.lowercased())
+    })
+    selectTableView.reloadData()
+  }
+  
+  // check if currently performing search to update table view accordingly
+  func isFiltering() -> Bool {
+    return searchController.isActive && !(searchController.searchBar.text?.isEmpty)!
+  }
+  
+  deinit {
+  }
 }
 
 
@@ -71,20 +113,24 @@ class AddCurrencyVC: UIViewController {
 
 extension AddCurrencyVC: UITableViewDelegate, UITableViewDataSource {
   
-
-  
   func numberOfSections(in tableView: UITableView) -> Int {
     return 1
     
   }
   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    return countryArray.count
+    if isFiltering() {
+      return filtredCountryArray.count
+    } else {
+      return countryArray.count
+    }
+    
   }
   
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
     let cell = selectTableView.dequeueReusableCell(withIdentifier: "selectCurrencyCell") as! SelectCurrencyCell
-    let country = countryArray[indexPath.row]
-
+    //    let country = countryArray[indexPath.row]
+    let country = isFiltering() ? filtredCountryArray[indexPath.row] : countryArray[indexPath.row]
+    
     var symbol = String()
     
     let countryName = country.name
@@ -108,15 +154,23 @@ extension AddCurrencyVC: UITableViewDelegate, UITableViewDataSource {
   
   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     
-    let country = countryArray[indexPath.row]
+    let country: Country
     
-    choosenCountryArray.append(country)
+    if isFiltering() {
+      
+      country = filtredCountryArray[indexPath.row]
+      delegate?.userAddNewCurrency(currency: country)
+      
+    } else {
+      
+      country = countryArray[indexPath.row]
+      delegate?.userAddNewCurrency(currency: country)
+      
+    }
     
-    delegate?.userAddNewCurrency(currency: choosenCountryArray)
-    
-    dismiss(animated: true, completion: nil)
+    navigationController?.popToRootViewController(animated: true)
+    navigationController?.dismiss(animated: true, completion: nil)
     
   }
-  
 }
 

@@ -7,14 +7,16 @@
 //
 
 import UIKit
+import Charts
 
 class CurrencyVC: UIViewController, AddNewCurrencyDelegate {
   
-  func userAddNewCurrency(currency: [Country]) {
-    for i in currency {
-      countryArray.append(i)
-      compareToCurrency.append(i.currencyId)
-    }
+  func userAddNewCurrency(currency: Country) {
+    
+      countryArray.append(currency)
+      compareToCurrency.append(currency.currencyId)
+
+    print("GOT \(countryArray) OBJECTS")
     currencyTableView.reloadData()
   }
   
@@ -36,7 +38,7 @@ class CurrencyVC: UIViewController, AddNewCurrencyDelegate {
   @IBOutlet weak var baseVIew: UIView!
   @IBOutlet weak var basePicker: UIPickerView!
   @IBOutlet weak var blurView: UIVisualEffectView!
-  @IBOutlet weak var chartView: UIView!
+  @IBOutlet weak var chartView: LineChartView!
   @IBOutlet weak var currencyTableView: UITableView!
   @IBOutlet var selectCurrencyView: UIView!
   
@@ -48,69 +50,53 @@ class CurrencyVC: UIViewController, AddNewCurrencyDelegate {
     basePicker.delegate = self
     currencyTableView.delegate = self
     currencyTableView.dataSource = self
+    definesPresentationContext = false
   }
   
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
     
   }
-  
-  
-  func getRatesClosure(from: String, to: String, handler: @escaping (Double) -> Void) -> Void {
-    
-    var rate = Double()
-    
-    print("WE COMPARE \(from) to \(to)")
-    
-    let rateUrl = URL(string: "https://currencyconverterapi.com/api/v5/convert?q=\(from)_\(to)&compact=ultra&apiKey=\(API_KEY)")
-    
-    URLSession.shared.dataTask(with: rateUrl!) { (data, urlResponse, error) in
-      
-      DispatchQueue.main.async {
-        
-        guard let dataToDecode = data, error == nil, urlResponse != nil else {return}
-        
-        do {
-          
-          let results = try? JSONSerialization.jsonObject(with: dataToDecode, options: []) as! [String:Double]
-          
-          print("WE'VE GOT RESPONSE \(results!)")
-          
-          for i in results! {
-            rate = i.value
-          }
-          
-          handler(rate)
-          
-          print("WE'VE GOT VALUE \(rate)")
-          
-        } catch {
-          
-          print("eerrro")
-        }
-      }
-      }.resume()
-    
-  }
-  
-  
-  
-  
-  
+
   @IBAction func refreshRates(_ sender: Any) {
     
     currencyTableView.reloadData()
     
   }
   
+  func updateGraph(){
+    var lineChartEntry  = [ChartDataEntry]() //this is the Array that will eventually be displayed on the graph.
+    
+    //here is the for loop
+    for i in 0..<numbers.count {
+      
+      let value = ChartDataEntry(x: Double(i), y: numbers[i]) // here we set the X and Y status in a data chart entry
+      
+      lineChartEntry.append(value) // here we add it to the data set
+    }
+    
+    let line1 = LineChartDataSet(values: lineChartEntry, label: "Number") //Here we convert lineChartEntry to a LineChartDataSet
+    line1.mode = .cubicBezier
+    line1.cubicIntensity = 0.2
+    line1.lineWidth = 5.0
+    
+    line1.colors = [NSUIColor.blue] //Sets the colour to blue
+    chartView.animate(xAxisDuration: 1.0 , yAxisDuration: 1.0, easingOption: .easeInBounce)
+    chartView.xAxis.drawGridLinesEnabled = false
+    chartView.xAxis.drawAxisLineEnabled = false
+    let data = LineChartData() //This is the object that will be added to the chart
+    
+    data.addDataSet(line1) //Adds the line to the dataSet
+    
+    
+    chartView.data = data //finally - it adds the chart data to the chart and causes an update
+    chartView.backgroundColor = UIColor.gray
+    chartView.doubleTapToZoomEnabled = false
+    //    chartView.isUserInteractionEnabled = false
+    chartView.resetZoom()
+  }
   
-  
-  
-  
-  
-  
-  
-  
+
   
   //  MARK: Actions
   @IBAction func dismissBaseView(_ sender: Any) {
@@ -130,10 +116,7 @@ class CurrencyVC: UIViewController, AddNewCurrencyDelegate {
     animateOutBase()
   }
   
-  @IBOutlet weak var selectDoneButton: UIButton!
-  
-  
-  
+
   @IBAction func addCurrencyButton(_ sender: Any) {
     //    animateInList()
   }
@@ -145,7 +128,8 @@ class CurrencyVC: UIViewController, AddNewCurrencyDelegate {
       
       let destinationVC = segue.destination as! AddCurrencyVC
       
-      destinationVC.delegate = self 
+      destinationVC.delegate = self
+      
       
     }
   }
@@ -180,7 +164,7 @@ extension CurrencyVC: UITableViewDelegate, UITableViewDataSource {
     let country = countryArray[indexPath.row]
     let cell = currencyTableView.dequeueReusableCell(withIdentifier: "currencyCell") as! CurrencyCell
     
-    getRatesClosure(from: selectedBaseCurrency, to: country.currencyId) { (returnedRate) in
+    getRates(from: selectedBaseCurrency, to: country.currencyId) { (returnedRate) in
       
       var symbol = String()
       var rate = Double()
@@ -234,7 +218,6 @@ extension CurrencyVC: UIPickerViewDelegate, UIPickerViewDataSource  {
 }
 
 
-// Animate Base Currency View
 extension CurrencyVC {
   
   
@@ -243,6 +226,8 @@ extension CurrencyVC {
     baseVIew.center = self.view.center
     baseVIew.transform = CGAffineTransform.init(scaleX: 1.3, y: 1.3)
     baseVIew.alpha = 0
+    basePicker.selectRow(2, inComponent: 0, animated: false)
+    
     
     UIView.animate(withDuration: 0.2) {
       self.blurView.effect = self.blurEffect
@@ -264,6 +249,55 @@ extension CurrencyVC {
       
     }
   }
+  
+  func getRates(from: String, to: String, handler: @escaping (Double) -> Void) -> Void {
+    
+    var rate = Double()
+
+    let rateUrl = URL(string: "https://currencyconverterapi.com/api/v5/convert?q=\(from)_\(to)&compact=ultra&apiKey=\(API_KEY)")
+
+    URLSession.shared.dataTask(with: rateUrl!) { (data, urlResponse, error) in
+
+      DispatchQueue.main.async {
+
+        guard let dataToDecode = data, error == nil, urlResponse != nil else {return}
+
+        let results = try? JSONSerialization.jsonObject(with: dataToDecode, options: []) as! [String:Double]
+
+        for i in results! {
+          rate = i.value
+        }
+
+        handler(rate)
+      }
+      }.resume()
+  }
+  
+  func getRatesForMonth(from: String, to: String, handler: @escaping (Double) -> Void) -> Void {
+    
+    var rate = Double()
+    let dateRangeRates = URL(string: "https://currencyconverterapi.com/api/v5/convert?q=\(from)_\(to)&compact=ultra&date=[yyyy-mm-dd]&endDate=[yyyy-mm-dd]&apiKey=\(API_KEY)")
+    let rateUrl = URL(string: "https://currencyconverterapi.com/api/v5/convert?q=\(from)_\(to)&compact=ultra&apiKey=\(API_KEY)")
+    
+    URLSession.shared.dataTask(with: rateUrl!) { (data, urlResponse, error) in
+      
+      DispatchQueue.main.async {
+        
+        guard let dataToDecode = data, error == nil, urlResponse != nil else {return}
+        
+        let results = try? JSONSerialization.jsonObject(with: dataToDecode, options: []) as! [String:Double]
+        
+        for i in results! {
+          rate = i.value
+        }
+        
+        handler(rate)
+      }
+      }.resume()
+  }
+  
+  
+  
 }
 
 

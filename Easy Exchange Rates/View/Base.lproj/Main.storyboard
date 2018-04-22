@@ -147,9 +147,7 @@
                         <rightBarButtonItems>
                             <barButtonItem systemItem="add" id="1UH-LQ-4jP">
                                 <connections>
-                                    <segue destination="hHK-LC-rh5" kind="popoverPresentation" identifier="addCurency" popoverAnchorBarButtonItem="1UH-LQ-4jP" id="CR2-Dv-atz">
-                                        <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
-                                    </segue>
+                                    <segue destination="hHK-LC-rh5" kind="show" identifier="addCurency" id="CR2-Dv-atz"/>
                                 </connections>
                             </barButtonItem>
                             <barButtonItem systemItem="refresh" id="2w2-kw-lxc">
@@ -171,7 +169,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="6Vf-D2-Vb0" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <view contentMode="scaleToFill" id="2X7-zb-Lnz">
-                    <rect key="frame" x="0.0" y="0.0" width="232" height="160"/>
+                    <rect key="frame" x="0.0" y="0.0" width="232" height="350"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <subviews>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Choose Base Currency" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="SA2-0g-hpO">
@@ -184,7 +182,7 @@
                             <nil key="highlightedColor"/>
                         </label>
                         <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="60" translatesAutoresizingMaskIntoConstraints="NO" id="OpH-Sn-WNv">
-                            <rect key="frame" x="16" y="125" width="200" height="30"/>
+                            <rect key="frame" x="16" y="315" width="200" height="30"/>
                             <subviews>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gfb-XE-nOF">
                                     <rect key="frame" x="0.0" y="0.0" width="70" height="30"/>
@@ -213,13 +211,13 @@
                             </subviews>
                         </stackView>
                         <pickerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="c7O-2S-RFA">
-                            <rect key="frame" x="36" y="37" width="160" height="80"/>
+                            <rect key="frame" x="36" y="42" width="160" height="260"/>
                             <constraints>
-                                <constraint firstAttribute="height" constant="80" id="Cyd-zJ-i7J"/>
+                                <constraint firstAttribute="height" constant="260" id="Cyd-zJ-i7J"/>
                             </constraints>
                         </pickerView>
                     </subviews>
-                    <color key="backgroundColor" red="0.83741801979999997" green="0.83743780850000005" blue="0.83742713930000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    <color key="backgroundColor" red="0.92143100499999997" green="0.92145264149999995" blue="0.92144101860000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     <constraints>
                         <constraint firstItem="Owj-Sh-oD7" firstAttribute="bottom" secondItem="OpH-Sn-WNv" secondAttribute="bottom" constant="5" id="2qt-da-pUJ"/>
                         <constraint firstItem="c7O-2S-RFA" firstAttribute="centerX" secondItem="2X7-zb-Lnz" secondAttribute="centerX" id="AI7-la-c1j"/>
@@ -244,27 +242,32 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Axa-TJ-cUk" userLabel="SelectCurrencyView">
-                                <rect key="frame" x="0.0" y="20" width="414" height="716"/>
+                                <rect key="frame" x="0.0" y="64" width="414" height="623"/>
                                 <subviews>
                                     <navigationBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="sKv-ug-cin">
-                                        <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
-                                        <color key="backgroundColor" red="0.92143100499999997" green="0.92145264149999995" blue="0.92144101860000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <rect key="frame" x="0.0" y="5" width="414" height="50"/>
+                                        <color key="backgroundColor" red="0.99999600649999998" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <constraints>
-                                            <constraint firstAttribute="height" constant="44" id="KB9-A6-TeL"/>
+                                            <constraint firstAttribute="height" constant="50" id="KB9-A6-TeL"/>
                                         </constraints>
+                                        <color key="barTintColor" red="0.99999600649999998" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <items>
-                                            <navigationItem title="Add Currencies to the List" id="G35-Xb-18X">
-                                                <barButtonItem key="leftBarButtonItem" title="Cancel" id="RBr-8b-nUk"/>
+                                            <navigationItem title="Add Currencies to the List" largeTitleDisplayMode="always" id="G35-Xb-18X">
+                                                <barButtonItem key="leftBarButtonItem" title="Cancel" id="RBr-8b-nUk">
+                                                    <connections>
+                                                        <action selector="cancelButton:" destination="hHK-LC-rh5" id="rCE-qg-2Tw"/>
+                                                    </connections>
+                                                </barButtonItem>
                                                 <barButtonItem key="rightBarButtonItem" systemItem="done" id="5pC-oa-uZ5">
                                                     <connections>
-                                                        <action selector="doneButton:" destination="hHK-LC-rh5" id="KBp-SW-GfN"/>
+                                                        <action selector="doneButton:" destination="hHK-LC-rh5" id="zB2-Lw-2go"/>
                                                     </connections>
                                                 </barButtonItem>
                                             </navigationItem>
                                         </items>
                                     </navigationBar>
                                     <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="55" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="4hi-N5-QHW">
-                                        <rect key="frame" x="0.0" y="49" width="414" height="667"/>
+                                        <rect key="frame" x="0.0" y="55" width="414" height="568"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <prototypes>
                                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="selectCurrencyCell" id="MMn-Ms-JdF" customClass="SelectCurrencyCell" customModule="Easy_Exchange_Rates" customModuleProvider="target">
@@ -275,7 +278,7 @@
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <subviews>
                                                         <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="T8l-Hj-4pj">
-                                                            <rect key="frame" x="60" y="4.6666666666666679" width="100" height="45.333333333333329"/>
+                                                            <rect key="frame" x="60" y="5" width="100" height="45"/>
                                                             <subviews>
                                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Canada" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9bg-8d-byu">
                                                                     <rect key="frame" x="0.0" y="0.0" width="100" height="22.666666666666668"/>
@@ -284,7 +287,7 @@
                                                                     <nil key="highlightedColor"/>
                                                                 </label>
                                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Canadian Dollar" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="khF-oS-3bY">
-                                                                    <rect key="frame" x="0.0" y="22.666666666666664" width="100" height="22.666666666666664"/>
+                                                                    <rect key="frame" x="0.0" y="22.666666666666671" width="100" height="22.333333333333329"/>
                                                                     <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="13"/>
                                                                     <nil key="textColor"/>
                                                                     <nil key="highlightedColor"/>
@@ -296,7 +299,7 @@
                                                             </constraints>
                                                         </stackView>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="$" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NKv-Ze-lXL">
-                                                            <rect key="frame" x="321.66666666666669" y="12.333333333333336" width="13.666666666666686" height="30"/>
+                                                            <rect key="frame" x="321.66666666666669" y="12" width="13.666666666666686" height="30"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="height" constant="30" id="FY6-5w-Xqx"/>
                                                             </constraints>
@@ -305,7 +308,7 @@
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="@" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="21" translatesAutoresizingMaskIntoConstraints="NO" id="sRb-Fh-MT9">
-                                                            <rect key="frame" x="10" y="7.3333333333333321" width="40" height="40"/>
+                                                            <rect key="frame" x="10" y="7" width="40" height="40"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="width" constant="40" id="Tv2-eU-nwX"/>
                                                                 <constraint firstAttribute="height" constant="40" id="dsd-5w-95H"/>
@@ -315,7 +318,7 @@
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="CAD" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jPJ-OA-gHY">
-                                                            <rect key="frame" x="350.33333333333331" y="13.333333333333336" width="48.666666666666686" height="28"/>
+                                                            <rect key="frame" x="350.33333333333331" y="13" width="48.666666666666686" height="28"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="height" constant="28" id="wWh-Ct-7gV"/>
                                                             </constraints>
@@ -349,13 +352,13 @@
                                 </subviews>
                                 <constraints>
                                     <constraint firstItem="sKv-ug-cin" firstAttribute="trailing" secondItem="O13-Io-fN3" secondAttribute="trailing" id="01l-L2-Xfq"/>
-                                    <constraint firstItem="4hi-N5-QHW" firstAttribute="top" secondItem="sKv-ug-cin" secondAttribute="bottom" constant="5" id="5KG-lo-cku"/>
                                     <constraint firstItem="4hi-N5-QHW" firstAttribute="leading" secondItem="O13-Io-fN3" secondAttribute="leading" id="5eE-Pc-CGb"/>
                                     <constraint firstItem="4hi-N5-QHW" firstAttribute="trailing" secondItem="O13-Io-fN3" secondAttribute="trailing" id="7cw-BF-Abv"/>
                                     <constraint firstItem="O13-Io-fN3" firstAttribute="trailing" secondItem="4hi-N5-QHW" secondAttribute="trailing" id="AJF-Bt-MnM"/>
                                     <constraint firstItem="sKv-ug-cin" firstAttribute="leading" secondItem="O13-Io-fN3" secondAttribute="leading" id="FzD-WE-dtJ"/>
                                     <constraint firstItem="O13-Io-fN3" firstAttribute="bottom" secondItem="4hi-N5-QHW" secondAttribute="bottom" id="Fzt-Cj-FEL"/>
-                                    <constraint firstItem="sKv-ug-cin" firstAttribute="top" secondItem="O13-Io-fN3" secondAttribute="top" id="Gso-lj-oqm"/>
+                                    <constraint firstItem="sKv-ug-cin" firstAttribute="top" secondItem="O13-Io-fN3" secondAttribute="top" constant="5" id="Gso-lj-oqm"/>
+                                    <constraint firstItem="4hi-N5-QHW" firstAttribute="top" secondItem="sKv-ug-cin" secondAttribute="bottom" id="Rdf-Pv-pRe"/>
                                     <constraint firstItem="4hi-N5-QHW" firstAttribute="leading" secondItem="O13-Io-fN3" secondAttribute="leading" id="YUy-4i-ulS"/>
                                 </constraints>
                                 <viewLayoutGuide key="safeArea" id="O13-Io-fN3"/>
@@ -370,8 +373,8 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="cs6-kI-sng"/>
                     </view>
+                    <navigationItem key="navigationItem" id="S96-Z6-25k"/>
                     <connections>
-                        <outlet property="cancelButton" destination="RBr-8b-nUk" id="L0X-v7-ywM"/>
                         <outlet property="selectTableView" destination="4hi-N5-QHW" id="QsH-fB-9Cp"/>
                     </connections>
                 </viewController>
