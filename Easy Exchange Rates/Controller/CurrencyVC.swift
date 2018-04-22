@@ -56,7 +56,9 @@ class CurrencyVC: UIViewController, AddNewCurrencyDelegate {
     
     loadUserCurrencies()
 
-    
+    getRatesForMonth(from: "USD", to: "CAD") { (ooo) in
+      self.updateGraph()
+    }
   }
   
   override func viewWillAppear(_ animated: Bool) {
@@ -81,10 +83,10 @@ class CurrencyVC: UIViewController, AddNewCurrencyDelegate {
       lineChartEntry.append(value) // here we add it to the data set
     }
     
-    let line1 = LineChartDataSet(values: lineChartEntry, label: "Number") //Here we convert lineChartEntry to a LineChartDataSet
+    let line1 = LineChartDataSet(values: lineChartEntry, label: "Rate") //Here we convert lineChartEntry to a LineChartDataSet
     line1.mode = .cubicBezier
     line1.cubicIntensity = 0.2
-    line1.lineWidth = 5.0
+    line1.lineWidth = 2.0
     
     line1.colors = [NSUIColor.blue] //Sets the colour to blue
     chartView.animate(xAxisDuration: 1.0 , yAxisDuration: 1.0, easingOption: .easeInBounce)
@@ -96,7 +98,7 @@ class CurrencyVC: UIViewController, AddNewCurrencyDelegate {
     
     
     chartView.data = data //finally - it adds the chart data to the chart and causes an update
-    chartView.backgroundColor = UIColor.gray
+    chartView.backgroundColor = UIColor.white
     chartView.doubleTapToZoomEnabled = false
     //    chartView.isUserInteractionEnabled = false
     chartView.resetZoom()
@@ -197,7 +199,9 @@ extension CurrencyVC: UITableViewDelegate, UITableViewDataSource {
   
   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     
-    //    compareToCurrency = [currencyArray[indexPath.row].code]
+    getRatesForMonth(from: selectedBaseCurrency, to: countryArray[indexPath.row].currencyId) { (ppp) in
+      self.updateGraph()
+    }
     
   }
 }
@@ -307,25 +311,36 @@ extension CurrencyVC {
       }.resume()
   }
   
-  func getRatesForMonth(from: String, to: String, handler: @escaping (Double) -> Void) -> Void {
+  func getRatesForMonth(from: String, to: String, handler: @escaping ([Double]) -> Void) -> Void {
     
     var rate = Double()
-    let dateRangeRates = URL(string: "https://currencyconverterapi.com/api/v5/convert?q=\(from)_\(to)&compact=ultra&date=[yyyy-mm-dd]&endDate=[yyyy-mm-dd]&apiKey=\(API_KEY)")
-    let rateUrl = URL(string: "https://currencyconverterapi.com/api/v5/convert?q=\(from)_\(to)&compact=ultra&apiKey=\(API_KEY)")
+    let dateRangeRates = URL(string: "https://currencyconverterapi.com/api/v5/convert?q=\(from)_\(to)&compact=ultra&date=2018-04-01&endDate=2018-04-08&apiKey=\(API_KEY)")
+//    let rateUrl = URL(string: "https://currencyconverterapi.com/api/v5/convert?q=\(from)_\(to)&compact=ultra&apiKey=\(API_KEY)")
     
-    URLSession.shared.dataTask(with: rateUrl!) { (data, urlResponse, error) in
+    URLSession.shared.dataTask(with: dateRangeRates!) { (data, urlResponse, error) in
       
       DispatchQueue.main.async {
         
         guard let dataToDecode = data, error == nil, urlResponse != nil else {return}
         
-        let results = try? JSONSerialization.jsonObject(with: dataToDecode, options: []) as! [String:Double]
+        let results = try? JSONSerialization.jsonObject(with: dataToDecode, options: []) as! [String : [String:Double]]
         
-        for i in results! {
-          rate = i.value
+        var res = [String:Double]()
+        
+        for i in (results?.values)! {
+          res = i
         }
         
-        handler(rate)
+        self.numbers = Array(res.values)
+        
+        
+        print("RANGE \(res)")
+       
+//        for i in results! {
+//          rate = i.value
+//        }
+        
+        handler(self.numbers)
       }
       }.resume()
   }

@@ -7,7 +7,6 @@
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
-        <capability name="Navigation items with more than one left or right bar item" minToolsVersion="7.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -144,18 +143,11 @@
                                 <action selector="chooseBaseButton:" destination="zPm-vf-NfY" id="FPF-2O-XQ5"/>
                             </connections>
                         </barButtonItem>
-                        <rightBarButtonItems>
-                            <barButtonItem systemItem="add" id="1UH-LQ-4jP">
-                                <connections>
-                                    <segue destination="hHK-LC-rh5" kind="show" identifier="addCurency" id="CR2-Dv-atz"/>
-                                </connections>
-                            </barButtonItem>
-                            <barButtonItem systemItem="refresh" id="2w2-kw-lxc">
-                                <connections>
-                                    <action selector="refreshRates:" destination="zPm-vf-NfY" id="b3h-4D-uM2"/>
-                                </connections>
-                            </barButtonItem>
-                        </rightBarButtonItems>
+                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="1UH-LQ-4jP">
+                            <connections>
+                                <segue destination="hHK-LC-rh5" kind="show" identifier="addCurency" id="CR2-Dv-atz"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
                     <connections>
                         <outlet property="basePicker" destination="c7O-2S-RFA" id="cOk-r7-5Pp"/>
@@ -244,30 +236,8 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Axa-TJ-cUk" userLabel="SelectCurrencyView">
                                 <rect key="frame" x="0.0" y="64" width="414" height="623"/>
                                 <subviews>
-                                    <navigationBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="sKv-ug-cin">
-                                        <rect key="frame" x="0.0" y="5" width="414" height="50"/>
-                                        <color key="backgroundColor" red="0.99999600649999998" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="50" id="KB9-A6-TeL"/>
-                                        </constraints>
-                                        <color key="barTintColor" red="0.99999600649999998" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                        <items>
-                                            <navigationItem title="Add Currencies to the List" largeTitleDisplayMode="always" id="G35-Xb-18X">
-                                                <barButtonItem key="leftBarButtonItem" title="Cancel" id="RBr-8b-nUk">
-                                                    <connections>
-                                                        <action selector="cancelButton:" destination="hHK-LC-rh5" id="rCE-qg-2Tw"/>
-                                                    </connections>
-                                                </barButtonItem>
-                                                <barButtonItem key="rightBarButtonItem" systemItem="done" id="5pC-oa-uZ5">
-                                                    <connections>
-                                                        <action selector="doneButton:" destination="hHK-LC-rh5" id="zB2-Lw-2go"/>
-                                                    </connections>
-                                                </barButtonItem>
-                                            </navigationItem>
-                                        </items>
-                                    </navigationBar>
                                     <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="55" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="4hi-N5-QHW">
-                                        <rect key="frame" x="0.0" y="55" width="414" height="568"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="414" height="623"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <prototypes>
                                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="selectCurrencyCell" id="MMn-Ms-JdF" customClass="SelectCurrencyCell" customModule="Easy_Exchange_Rates" customModuleProvider="target">
@@ -351,14 +321,11 @@
                                     </tableView>
                                 </subviews>
                                 <constraints>
-                                    <constraint firstItem="sKv-ug-cin" firstAttribute="trailing" secondItem="O13-Io-fN3" secondAttribute="trailing" id="01l-L2-Xfq"/>
                                     <constraint firstItem="4hi-N5-QHW" firstAttribute="leading" secondItem="O13-Io-fN3" secondAttribute="leading" id="5eE-Pc-CGb"/>
                                     <constraint firstItem="4hi-N5-QHW" firstAttribute="trailing" secondItem="O13-Io-fN3" secondAttribute="trailing" id="7cw-BF-Abv"/>
                                     <constraint firstItem="O13-Io-fN3" firstAttribute="trailing" secondItem="4hi-N5-QHW" secondAttribute="trailing" id="AJF-Bt-MnM"/>
-                                    <constraint firstItem="sKv-ug-cin" firstAttribute="leading" secondItem="O13-Io-fN3" secondAttribute="leading" id="FzD-WE-dtJ"/>
+                                    <constraint firstItem="4hi-N5-QHW" firstAttribute="top" secondItem="O13-Io-fN3" secondAttribute="top" id="CgB-eU-56R"/>
                                     <constraint firstItem="O13-Io-fN3" firstAttribute="bottom" secondItem="4hi-N5-QHW" secondAttribute="bottom" id="Fzt-Cj-FEL"/>
-                                    <constraint firstItem="sKv-ug-cin" firstAttribute="top" secondItem="O13-Io-fN3" secondAttribute="top" constant="5" id="Gso-lj-oqm"/>
-                                    <constraint firstItem="4hi-N5-QHW" firstAttribute="top" secondItem="sKv-ug-cin" secondAttribute="bottom" id="Rdf-Pv-pRe"/>
                                     <constraint firstItem="4hi-N5-QHW" firstAttribute="leading" secondItem="O13-Io-fN3" secondAttribute="leading" id="YUy-4i-ulS"/>
                                 </constraints>
                                 <viewLayoutGuide key="safeArea" id="O13-Io-fN3"/>
