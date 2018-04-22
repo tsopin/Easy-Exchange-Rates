@@ -11,29 +11,32 @@ import Charts
 
 class CurrencyVC: UIViewController, AddNewCurrencyDelegate {
   
- 
+  
   
   func userAddNewCurrency(currency: Country) {
-    
     countryArray.append(currency)
-//    compareToCurrency.append(currency.currencyId)
-    print("GOT \(countryArray) OBJECTS")
     saveUserCurrencies()
-    
   }
-
+  
   //  MARK: Variables
   let API_KEY = "8ad20f84-95b2-495f-95e4-1c7bb1f46b11"
   var blurEffect: UIVisualEffect!
   var baseCurrencyArray = ["USD", "CAD", "RUB", "EUR", "GBP"]
   var countryArray = [Country]()
-  var rateArray = [Double]()
-  var exchangeRate = String()
-  var pickedBaseCurrency = String()
+  
+  @IBOutlet weak var segmentedControlOutlet: UISegmentedControl!
+  var pickedBaseCurrency = "USD"
   var selectedBaseCurrency = "USD"
+  var selectedToCompareCurrency = "EUR"
   let dataFilePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("ChosenCurrencies.plist")
   var numbers = [Double]()
-
+  var selectedPickerRow = Int()
+  let defaults = UserDefaults()
+  var startDate = String()
+  var endDate = String()
+  var selectedSegment = 2
+  var last = "Week"
+  
   
   //  MARK: Outlets
   @IBOutlet weak var doneBtnOutlet: UIButton!
@@ -53,58 +56,141 @@ class CurrencyVC: UIViewController, AddNewCurrencyDelegate {
     currencyTableView.delegate = self
     currencyTableView.dataSource = self
     definesPresentationContext = false
-    
-    loadUserCurrencies()
 
-    getRatesForMonth(from: "USD", to: "CAD") { (ooo) in
-      self.updateGraph()
-    }
+    loadUserCurrencies()
+    loadDataFromUserDefaults()
+    
   }
   
+  func loadDataFromUserDefaults(){
+    
+    let dateFormatter = DateFormatter()
+    let date = Date()
+    dateFormatter.dateFormat = "yyyy-MM-dd"
+    
+    countryArray.append(Country.init(currencyId: "EUR", currencyName: "European euro", currencySymbol: "€", id: "DE", name: "Germany"))
+    self.navigationItem.leftBarButtonItem?.title = selectedBaseCurrency
+    
+    
+    let previousWeek = Calendar.current.date(byAdding: .weekOfMonth, value: -1, to: Date())
+    endDate = dateFormatter.string(from: date)
+    startDate = dateFormatter.string(from: previousWeek!)
+    
+    if let savedBaseCurrency = defaults.string(forKey: "selectedBaseCurrency") {
+      selectedBaseCurrency = savedBaseCurrency
+    }
+    if let savedToCompareCurrency = defaults.string(forKey: "selectedToCompareCurrency") {
+      selectedToCompareCurrency = savedToCompareCurrency
+    }
+    if let savedStartDate = defaults.string(forKey: "startDate") {
+      startDate = savedStartDate
+    }
+    if let savedEndDate = defaults.string(forKey: "endDate") {
+      endDate = savedEndDate
+    }
+    if let savedSegment = defaults.string(forKey: "selectedSegment") {
+      selectedSegment = Int(savedSegment)!
+    }
+    if let savedLast = defaults.string(forKey: "last") {
+      last = savedLast
+    }
+    segmentedControlOutlet.selectedSegmentIndex = selectedSegment
+    
+    getRatesForMonth(from: selectedBaseCurrency, to: selectedToCompareCurrency, startDate: startDate, endDate: endDate) { (ooo) in
+      self.updateGraph()
+    }
+    self.navigationItem.leftBarButtonItem?.title = selectedBaseCurrency
+  }
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
-    
-  }
-
-  @IBAction func refreshRates(_ sender: Any) {
-    
-    currencyTableView.reloadData()
     
   }
   
   func updateGraph(){
     var lineChartEntry  = [ChartDataEntry]() //this is the Array that will eventually be displayed on the graph.
     
+    var filtredNumbers = [Double]()
+    
+    switch selectedSegment {
+    case 0:
+      
+      for (index, value) in numbers.enumerated() {
+        
+        if index % 30 == 0 {
+          
+          filtredNumbers.append(value)
+          
+        }
+        
+      }
+    //      print("YEAR NUMBERS \(numbers)")
+    case 1:
+      
+      for (index, value) in numbers.enumerated() {
+        
+        if index % 3 == 0 {
+          
+          filtredNumbers.append(value)
+          
+        }
+      }
+      
+    case 2:
+      filtredNumbers = numbers
+      
+    default:
+      break
+    }
+    
+    
+    
     //here is the for loop
-    for i in 0..<numbers.count {
+    for i in 0..<filtredNumbers.count {
       
-      let value = ChartDataEntry(x: Double(i), y: numbers[i]) // here we set the X and Y status in a data chart entry
-      
+      let value = ChartDataEntry(x: Double(i).rounded(toPlaces: 1), y: numbers[i]) // here we set the X and Y status in a data chart entry
       lineChartEntry.append(value) // here we add it to the data set
     }
     
-    let line1 = LineChartDataSet(values: lineChartEntry, label: "Rate") //Here we convert lineChartEntry to a LineChartDataSet
-    line1.mode = .cubicBezier
-    line1.cubicIntensity = 0.2
-    line1.lineWidth = 2.0
+    let rateLine = LineChartDataSet(values: lineChartEntry, label: "Rate \(selectedBaseCurrency)/\(selectedToCompareCurrency) for last \(last)") //Here we convert lineChartEntry to a LineChartDataSet
+    rateLine.mode = .cubicBezier
+    rateLine.cubicIntensity = 0.1
+    rateLine.lineWidth = 1.5
+    rateLine.drawCircleHoleEnabled = false
+    rateLine.drawCirclesEnabled = true
+    rateLine.circleRadius = 3
+    rateLine.circleColors = [NSUIColor.blue]
+    rateLine.drawFilledEnabled = true
+    rateLine.valueFont = UIFont(name: "HelveticaNeue-Medium", size: 12)!
+    rateLine.valueTextColor = UIColor.darkGray
+   
+  
     
-    line1.colors = [NSUIColor.blue] //Sets the colour to blue
-    chartView.animate(xAxisDuration: 1.0 , yAxisDuration: 1.0, easingOption: .easeInBounce)
+    
+    
+    
+    rateLine.colors = [NSUIColor.blue] //Sets the colour to blue
+        chartView.animate(xAxisDuration: 1.0 , yAxisDuration: 1.0, easingOption: .easeInBounce)
     chartView.xAxis.drawGridLinesEnabled = false
     chartView.xAxis.drawAxisLineEnabled = false
+    chartView.leftAxis.drawGridLinesEnabled = false
+    chartView.rightAxis.drawGridLinesEnabled = false
+//    chartView.setVisibleYRange(minYRange: 1 , maxYRange: filtredNumbers.max()!, axis: YAxis.AxisDependency.left)
+//    chartView.
     let data = LineChartData() //This is the object that will be added to the chart
     
-    data.addDataSet(line1) //Adds the line to the dataSet
+    data.addDataSet(rateLine) //Adds the line to the dataSet
     
     
     chartView.data = data //finally - it adds the chart data to the chart and causes an update
     chartView.backgroundColor = UIColor.white
     chartView.doubleTapToZoomEnabled = false
-    //    chartView.isUserInteractionEnabled = false
+    chartView.isUserInteractionEnabled = false
+//    chartView.leftAxis.drawLabelsEnabled = false
+    chartView.rightAxis.drawLabelsEnabled = false
     chartView.resetZoom()
   }
   
-
+  
   
   //  MARK: Actions
   @IBAction func dismissBaseView(_ sender: Any) {
@@ -120,13 +206,67 @@ class CurrencyVC: UIViewController, AddNewCurrencyDelegate {
     
     selectedBaseCurrency = pickedBaseCurrency
     self.navigationItem.leftBarButtonItem?.title = selectedBaseCurrency
+    defaults.set(selectedBaseCurrency, forKey: "selectedBaseCurrency")
+    getRatesForMonth(from: selectedBaseCurrency, to: selectedToCompareCurrency, startDate: startDate, endDate: endDate) { (ppp) in
+      self.updateGraph()
+    }
     currencyTableView.reloadData()
     animateOutBase()
   }
   
-
-  @IBAction func addCurrencyButton(_ sender: Any) {
-    //    animateInList()
+  func saveData(){
+    defaults.set(startDate, forKey: "startDate")
+    defaults.set(endDate, forKey: "endDate")
+    defaults.set(selectedSegment, forKey: "selectedSegment")
+    defaults.set(last, forKey: "last")
+  }
+  
+  @IBAction func segmentedControl(_ sender: Any) {
+    
+    let dateFormatter = DateFormatter()
+    let date = Date()
+    dateFormatter.dateFormat = "yyyy-MM-dd"
+    
+    switch segmentedControlOutlet.selectedSegmentIndex {
+      
+    case 0: let previousYear = Calendar.current.date(byAdding: .year, value: -1, to: Date())
+    last = "Year"
+    selectedSegment = 0
+    endDate = dateFormatter.string(from: date)
+    startDate = dateFormatter.string(from: previousYear!)
+    getRatesForMonth(from: selectedBaseCurrency, to: selectedToCompareCurrency, startDate: startDate, endDate: endDate) { (ooo) in
+      self.updateGraph()
+    }
+    saveData()
+    print("YEAR \(endDate)")
+      
+    case 1: let previousMonth = Calendar.current.date(byAdding: .month, value: -1, to: Date())
+    last = "Month"
+    selectedSegment = 1
+    endDate = dateFormatter.string(from: date)
+    startDate = dateFormatter.string(from: previousMonth!)
+    getRatesForMonth(from: selectedBaseCurrency, to: selectedToCompareCurrency, startDate: startDate, endDate: endDate) { (ooo) in
+      self.updateGraph()
+    }
+    saveData()
+    print("MONTH \(endDate)")
+      
+      
+    case 2: let previousWeek = Calendar.current.date(byAdding: .weekOfMonth, value: -1, to: Date())
+    last = "Week"
+    selectedSegment = 2
+    endDate = dateFormatter.string(from: date)
+    startDate = dateFormatter.string(from: previousWeek!)
+    getRatesForMonth(from: selectedBaseCurrency, to: selectedToCompareCurrency, startDate: startDate, endDate: endDate) { (ooo) in
+      self.updateGraph()
+    }
+    saveData()
+    print("WEEK \(endDate)")
+      
+    default:
+      break
+    }
+    
   }
   
   
@@ -140,7 +280,6 @@ class CurrencyVC: UIViewController, AddNewCurrencyDelegate {
       
     }
   }
-  
 }
 
 
@@ -149,7 +288,6 @@ extension CurrencyVC: UITableViewDelegate, UITableViewDataSource {
   
   
   func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
-//    compareToCurrency.remove(at: indexPath.row)
     countryArray.remove(at: indexPath.row)
     currencyTableView.deleteRows(at: [indexPath], with: .automatic)
     saveUserCurrencies()
@@ -199,7 +337,10 @@ extension CurrencyVC: UITableViewDelegate, UITableViewDataSource {
   
   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     
-    getRatesForMonth(from: selectedBaseCurrency, to: countryArray[indexPath.row].currencyId) { (ppp) in
+    selectedToCompareCurrency = countryArray[indexPath.row].currencyId
+    defaults.set(selectedToCompareCurrency, forKey: "selectedToCompareCurrency")
+    
+    getRatesForMonth(from: selectedBaseCurrency, to: selectedToCompareCurrency, startDate: startDate, endDate: endDate) { (ppp) in
       self.updateGraph()
     }
     
@@ -225,6 +366,8 @@ extension CurrencyVC: UIPickerViewDelegate, UIPickerViewDataSource  {
   func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
     self.doneBtnOutlet.isEnabled = true
     pickedBaseCurrency = baseCurrencyArray[row]
+    selectedPickerRow = row
+    defaults.set(selectedPickerRow, forKey: "selectedPickerRow")
     
   }
 }
@@ -238,7 +381,11 @@ extension CurrencyVC {
     baseVIew.center = self.view.center
     baseVIew.transform = CGAffineTransform.init(scaleX: 1.3, y: 1.3)
     baseVIew.alpha = 0
-    basePicker.selectRow(2, inComponent: 0, animated: false)
+    
+    let selectRow = defaults.integer(forKey: "selectedPickerRow")
+    basePicker.selectRow(selectRow, inComponent: 0, animated: false)
+    
+    
     
     
     UIView.animate(withDuration: 0.2) {
@@ -287,36 +434,36 @@ extension CurrencyVC {
     }
   }
   
-  
+  // Get rates for pair of currencies
   func getRates(from: String, to: String, handler: @escaping (Double) -> Void) -> Void {
     
     var rate = Double()
-
+    
     let rateUrl = URL(string: "https://currencyconverterapi.com/api/v5/convert?q=\(from)_\(to)&compact=ultra&apiKey=\(API_KEY)")
-
+    
     URLSession.shared.dataTask(with: rateUrl!) { (data, urlResponse, error) in
-
+      
       DispatchQueue.main.async {
-
+        
         guard let dataToDecode = data, error == nil, urlResponse != nil else {return}
-
+        
         let results = try? JSONSerialization.jsonObject(with: dataToDecode, options: []) as! [String:Double]
-
+        
         for i in results! {
           rate = i.value
         }
-
+        
         handler(rate)
       }
       }.resume()
   }
   
-  func getRatesForMonth(from: String, to: String, handler: @escaping ([Double]) -> Void) -> Void {
+  // Get range of rates for date range
+  func getRatesForMonth(from: String, to: String, startDate: String, endDate: String,  handler: @escaping ([Double]) -> Void) -> Void {
     
-    var rate = Double()
-    let dateRangeRates = URL(string: "https://currencyconverterapi.com/api/v5/convert?q=\(from)_\(to)&compact=ultra&date=2018-04-01&endDate=2018-04-08&apiKey=\(API_KEY)")
-//    let rateUrl = URL(string: "https://currencyconverterapi.com/api/v5/convert?q=\(from)_\(to)&compact=ultra&apiKey=\(API_KEY)")
+    let dateRangeRates = URL(string: "https://currencyconverterapi.com/api/v5/convert?q=\(from)_\(to)&compact=ultra&date=\(startDate)&endDate=\(endDate)&apiKey=\(API_KEY)")
     
+    print("RANGE URL \(dateRangeRates!)")
     URLSession.shared.dataTask(with: dateRangeRates!) { (data, urlResponse, error) in
       
       DispatchQueue.main.async {
@@ -332,21 +479,10 @@ extension CurrencyVC {
         }
         
         self.numbers = Array(res.values)
-        
-        
-        print("RANGE \(res)")
-       
-//        for i in results! {
-//          rate = i.value
-//        }
-        
         handler(self.numbers)
       }
       }.resume()
   }
-  
-  
-  
 }
 
 

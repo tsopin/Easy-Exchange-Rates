@@ -36,7 +36,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="65" sectionHeaderHeight="28" sectionFooterHeight="28" springLoaded="YES" translatesAutoresizingMaskIntoConstraints="NO" id="sFS-H0-Owl" userLabel="CurrencyTableView">
-                                <rect key="frame" x="10" y="324" width="394" height="363"/>
+                                <rect key="frame" x="10" y="342" width="394" height="345"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="currencyCell" rowHeight="65" id="nto-rl-PiF" userLabel="CurrencyCell" customClass="CurrencyCell" customModule="Easy_Exchange_Rates" customModuleProvider="target">
@@ -124,10 +124,27 @@
                                 </view>
                                 <blurEffect style="extraLight"/>
                             </visualEffectView>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="2" translatesAutoresizingMaskIntoConstraints="NO" id="akv-ey-JiO">
+                                <rect key="frame" x="82.666666666666686" y="314" width="250" height="21"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="20" id="5fq-yx-Alj"/>
+                                    <constraint firstAttribute="width" constant="250" id="q0P-b5-FIl"/>
+                                </constraints>
+                                <segments>
+                                    <segment title="Year"/>
+                                    <segment title="Month"/>
+                                    <segment title="Week"/>
+                                </segments>
+                                <connections>
+                                    <action selector="segmentedControl:" destination="zPm-vf-NfY" eventType="valueChanged" id="BT1-KA-faQ"/>
+                                </connections>
+                            </segmentedControl>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
-                            <constraint firstItem="sFS-H0-Owl" firstAttribute="top" secondItem="5u3-df-UsG" secondAttribute="bottom" constant="10" id="HQZ-Sb-2hl"/>
+                            <constraint firstItem="akv-ey-JiO" firstAttribute="centerX" secondItem="pJI-h0-gc7" secondAttribute="centerX" id="7U8-lD-MgE"/>
+                            <constraint firstItem="sFS-H0-Owl" firstAttribute="top" secondItem="akv-ey-JiO" secondAttribute="bottom" constant="8" id="7oh-IX-vaY"/>
+                            <constraint firstItem="akv-ey-JiO" firstAttribute="top" secondItem="5u3-df-UsG" secondAttribute="bottom" id="J2I-Lj-7Xq"/>
                             <constraint firstItem="sFS-H0-Owl" firstAttribute="bottom" secondItem="1EO-Zb-1lr" secondAttribute="bottom" id="NDv-2c-ymA"/>
                             <constraint firstItem="1EO-Zb-1lr" firstAttribute="trailing" secondItem="sFS-H0-Owl" secondAttribute="trailing" constant="10" id="UCx-ia-hgp"/>
                             <constraint firstItem="5u3-df-UsG" firstAttribute="leading" secondItem="1EO-Zb-1lr" secondAttribute="leading" constant="8" id="YZA-ET-pyI"/>
@@ -156,6 +173,7 @@
                         <outlet property="chartView" destination="5u3-df-UsG" id="JAv-a9-q22"/>
                         <outlet property="currencyTableView" destination="sFS-H0-Owl" id="Emp-l5-fSR"/>
                         <outlet property="doneBtnOutlet" destination="zqD-dm-FP9" id="IZ2-pl-hTd"/>
+                        <outlet property="segmentedControlOutlet" destination="akv-ey-JiO" id="8KH-ey-Mjc"/>
                         <outlet property="selectCurrencyView" destination="Axa-TJ-cUk" id="JgO-QV-6qW"/>
                     </connections>
                 </viewController>
