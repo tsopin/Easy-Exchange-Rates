@@ -8,6 +8,7 @@
 
 import UIKit
 import Charts
+import SVProgressHUD
 
 class CurrencyVC: UIViewController, AddNewCurrencyDelegate {
   
@@ -21,7 +22,9 @@ class CurrencyVC: UIViewController, AddNewCurrencyDelegate {
   //  MARK: Variables
   let API_KEY = "8ad20f84-95b2-495f-95e4-1c7bb1f46b11"
   var blurEffect: UIVisualEffect!
-  var baseCurrencyArray = ["USD", "CAD", "RUB", "EUR", "GBP"]
+  
+  
+  var baseCurrencyArray = ["USD", "EUR", "JPY", "GBP", "AUD", "CAD", "CHF", "CNY", "SEK", "NZD", "MXN", "SGD", "HKD", "NOK", "KRW", "TRY", "RUB", "INR","BRL","ZAR"]
   var countryArray = [Country]()
   
   @IBOutlet weak var segmentedControlOutlet: UISegmentedControl!
@@ -30,6 +33,7 @@ class CurrencyVC: UIViewController, AddNewCurrencyDelegate {
   var selectedToCompareCurrency = "EUR"
   let dataFilePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("ChosenCurrencies.plist")
   var numbers = [Double]()
+  var selectedCurrencyRow = Int()
   var selectedPickerRow = Int()
   let defaults = UserDefaults()
   var startDate = String()
@@ -56,7 +60,10 @@ class CurrencyVC: UIViewController, AddNewCurrencyDelegate {
     currencyTableView.delegate = self
     currencyTableView.dataSource = self
     definesPresentationContext = false
+    segmentedControlOutlet.tintColor = UIColor(rgb: 0x1B9AAA)
 
+    currencyTableView.separatorColor = UIColor(rgb: 0x1B9AAA)
+    
     loadUserCurrencies()
     loadDataFromUserDefaults()
     
@@ -68,9 +75,10 @@ class CurrencyVC: UIViewController, AddNewCurrencyDelegate {
     let date = Date()
     dateFormatter.dateFormat = "yyyy-MM-dd"
     
+    if countryArray.count == 0 {
     countryArray.append(Country.init(currencyId: "EUR", currencyName: "European euro", currencySymbol: "€", id: "DE", name: "Germany"))
+    }
     self.navigationItem.leftBarButtonItem?.title = selectedBaseCurrency
-    
     
     let previousWeek = Calendar.current.date(byAdding: .weekOfMonth, value: -1, to: Date())
     endDate = dateFormatter.string(from: date)
@@ -94,7 +102,12 @@ class CurrencyVC: UIViewController, AddNewCurrencyDelegate {
     if let savedLast = defaults.string(forKey: "last") {
       last = savedLast
     }
+    if let savedSelectedCurrency = defaults.string(forKey: "selectedCurrencyRow") {
+      selectedCurrencyRow = Int(savedSelectedCurrency)!
+    }
     segmentedControlOutlet.selectedSegmentIndex = selectedSegment
+    
+    currencyTableView.selectRow(at: IndexPath.init(row: selectedCurrencyRow, section: 1), animated: false, scrollPosition: .none)
     
     getRatesForMonth(from: selectedBaseCurrency, to: selectedToCompareCurrency, startDate: startDate, endDate: endDate) { (ooo) in
       self.updateGraph()
@@ -107,31 +120,23 @@ class CurrencyVC: UIViewController, AddNewCurrencyDelegate {
   }
   
   func updateGraph(){
+    
     var lineChartEntry  = [ChartDataEntry]() //this is the Array that will eventually be displayed on the graph.
     
     var filtredNumbers = [Double]()
     
     switch selectedSegment {
     case 0:
-      
       for (index, value) in numbers.enumerated() {
-        
         if index % 30 == 0 {
-          
           filtredNumbers.append(value)
-          
         }
-        
       }
-    //      print("YEAR NUMBERS \(numbers)")
+
     case 1:
-      
       for (index, value) in numbers.enumerated() {
-        
         if index % 3 == 0 {
-          
           filtredNumbers.append(value)
-          
         }
       }
       
@@ -142,52 +147,68 @@ class CurrencyVC: UIViewController, AddNewCurrencyDelegate {
       break
     }
     
-    
-    
+
     //here is the for loop
     for i in 0..<filtredNumbers.count {
       
-      let value = ChartDataEntry(x: Double(i).rounded(toPlaces: 1), y: numbers[i]) // here we set the X and Y status in a data chart entry
+      let value = ChartDataEntry(x: Double(i), y: filtredNumbers[i]) // here we set the X and Y status in a data chart entry
       lineChartEntry.append(value) // here we add it to the data set
     }
     
     let rateLine = LineChartDataSet(values: lineChartEntry, label: "Rate \(selectedBaseCurrency)/\(selectedToCompareCurrency) for last \(last)") //Here we convert lineChartEntry to a LineChartDataSet
+
+    rateLine.valueFormatter = DigitValueFormatter()
     rateLine.mode = .cubicBezier
-    rateLine.cubicIntensity = 0.1
-    rateLine.lineWidth = 1.5
-    rateLine.drawCircleHoleEnabled = false
+    rateLine.cubicIntensity = 0.2
+    rateLine.lineWidth = 2
+    rateLine.circleHoleColor = UIColor.white
+    rateLine.drawCircleHoleEnabled = true
     rateLine.drawCirclesEnabled = true
     rateLine.circleRadius = 3
-    rateLine.circleColors = [NSUIColor.blue]
+    rateLine.circleHoleRadius = 2
+    rateLine.circleColors = [UIColor(rgb: 0x1B9AAA)]
     rateLine.drawFilledEnabled = true
-    rateLine.valueFont = UIFont(name: "HelveticaNeue-Medium", size: 12)!
-    rateLine.valueTextColor = UIColor.darkGray
-   
-  
+    rateLine.fillColor = UIColor(rgb: 0x1BEDD7)
+    rateLine.drawValuesEnabled = true
+    rateLine.valueFont = UIFont(name: "HelveticaNeue-Light", size: 10)!
+    
+    rateLine.valueTextColor = UIColor(rgb: 0x929292)
+    rateLine.colors = [UIColor(rgb: 0x1B9AAA)] //Set Line Color
     
     
+    chartView.legend.font = UIFont(name: "HelveticaNeue-Light", size: 15)!
+    chartView.legend.textColor = UIColor(rgb: 0x929292)
     
-    
-    rateLine.colors = [NSUIColor.blue] //Sets the colour to blue
-        chartView.animate(xAxisDuration: 1.0 , yAxisDuration: 1.0, easingOption: .easeInBounce)
+    chartView.chartDescription?.text = ""
     chartView.xAxis.drawGridLinesEnabled = false
     chartView.xAxis.drawAxisLineEnabled = false
-    chartView.leftAxis.drawGridLinesEnabled = false
+    chartView.xAxis.drawLabelsEnabled = false
+    chartView.leftAxis.drawGridLinesEnabled = true
     chartView.rightAxis.drawGridLinesEnabled = false
-//    chartView.setVisibleYRange(minYRange: 1 , maxYRange: filtredNumbers.max()!, axis: YAxis.AxisDependency.left)
-//    chartView.
+    chartView.leftAxis.gridColor = UIColor(rgb: 0xEBEBEB)
+    chartView.leftAxis.axisLineWidth = 0
+    chartView.rightAxis.axisLineWidth = 0
+    chartView.leftAxis.gridLineWidth = 0.5
+    chartView.leftAxis.axisMaximum = (filtredNumbers.max()! * 1.05)
+    chartView.leftAxis.axisMinimum = (filtredNumbers.min()! / 1.05)
+//    chartView.legend.xOffset = 75
+    
+    
     let data = LineChartData() //This is the object that will be added to the chart
+    
     
     data.addDataSet(rateLine) //Adds the line to the dataSet
     
     
     chartView.data = data //finally - it adds the chart data to the chart and causes an update
-    chartView.backgroundColor = UIColor.white
+//    chartView.backgroundColor = UIColor(rgb: 0xF8FFE5)
     chartView.doubleTapToZoomEnabled = false
-    chartView.isUserInteractionEnabled = false
-//    chartView.leftAxis.drawLabelsEnabled = false
+    chartView.isUserInteractionEnabled = true
     chartView.rightAxis.drawLabelsEnabled = false
-    chartView.resetZoom()
+    chartView.leftAxis.drawLabelsEnabled = false
+    chartView.leftAxis.labelFont = UIFont(name: "HelveticaNeue-Light", size: 16)!
+    chartView.leftAxis.labelTextColor = UIColor(rgb: 0x929292)
+    chartView.zoomOut()
   }
   
   
@@ -339,11 +360,12 @@ extension CurrencyVC: UITableViewDelegate, UITableViewDataSource {
     
     selectedToCompareCurrency = countryArray[indexPath.row].currencyId
     defaults.set(selectedToCompareCurrency, forKey: "selectedToCompareCurrency")
+    selectedCurrencyRow = indexPath.row
+    defaults.set(selectedCurrencyRow, forKey: "selectedCurrencyRow")
     
     getRatesForMonth(from: selectedBaseCurrency, to: selectedToCompareCurrency, startDate: startDate, endDate: endDate) { (ppp) in
       self.updateGraph()
     }
-    
   }
 }
 
@@ -368,13 +390,11 @@ extension CurrencyVC: UIPickerViewDelegate, UIPickerViewDataSource  {
     pickedBaseCurrency = baseCurrencyArray[row]
     selectedPickerRow = row
     defaults.set(selectedPickerRow, forKey: "selectedPickerRow")
-    
   }
 }
 
 
 extension CurrencyVC {
-  
   
   func animateInBase()  {
     self.view.addSubview(baseVIew)
@@ -385,15 +405,11 @@ extension CurrencyVC {
     let selectRow = defaults.integer(forKey: "selectedPickerRow")
     basePicker.selectRow(selectRow, inComponent: 0, animated: false)
     
-    
-    
-    
     UIView.animate(withDuration: 0.2) {
       self.blurView.effect = self.blurEffect
       self.baseVIew.alpha = 0.8
       self.doneBtnOutlet.isEnabled = false
       self.baseVIew.layer.cornerRadius = 20
-      
       self.baseVIew.transform = CGAffineTransform.identity
     }
   }
@@ -405,7 +421,6 @@ extension CurrencyVC {
       self.blurView.effect = nil
     }) { (success: Bool) in
       self.baseVIew.removeFromSuperview()
-      
     }
   }
   

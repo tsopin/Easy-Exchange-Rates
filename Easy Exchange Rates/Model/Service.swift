@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Charts
 
 class Service {
   
@@ -21,14 +22,14 @@ class Service {
     return String(s)
   }
   
+}
+class DigitValueFormatter : NSObject, IValueFormatter {
   
-  
-  
-  
-  
-  
-  
-  
-  
-  
+  func stringForValue(_ value: Double,
+                      entry: ChartDataEntry,
+                      dataSetIndex: Int,
+                      viewPortHandler: ViewPortHandler?) -> String {
+    let valueWithoutDecimalPart = String(format: "%.2f", value)
+    return "\(valueWithoutDecimalPart)"
+  }
 }
