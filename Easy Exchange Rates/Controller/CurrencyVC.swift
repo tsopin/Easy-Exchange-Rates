@@ -12,37 +12,10 @@ import SVProgressHUD
 
 class CurrencyVC: UIViewController, AddNewCurrencyDelegate {
   
-  
-  
-  func userAddNewCurrency(currency: Country) {
-    countryArray.append(currency)
-    saveUserCurrencies()
-  }
-  
-  //  MARK: Variables
-  let API_KEY = "8ad20f84-95b2-495f-95e4-1c7bb1f46b11"
-  var blurEffect: UIVisualEffect!
-  
-  
-  var baseCurrencyArray = ["USD", "EUR", "JPY", "GBP", "AUD", "CAD", "CHF", "CNY", "SEK", "NZD", "MXN", "SGD", "HKD", "NOK", "KRW", "TRY", "RUB", "INR","BRL","ZAR"]
-  var countryArray = [Country]()
-  
-  @IBOutlet weak var segmentedControlOutlet: UISegmentedControl!
-  var pickedBaseCurrency = "USD"
-  var selectedBaseCurrency = "USD"
-  var selectedToCompareCurrency = "EUR"
-  let dataFilePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("ChosenCurrencies.plist")
-  var numbers = [Double]()
-  var selectedCurrencyRow = Int()
-  var selectedPickerRow = Int()
-  let defaults = UserDefaults()
-  var startDate = String()
-  var endDate = String()
-  var selectedSegment = 2
-  var last = "Week"
-  
+  static let instance = CurrencyVC()
   
   //  MARK: Outlets
+  @IBOutlet weak var segmentedControlOutlet: UISegmentedControl!
   @IBOutlet weak var doneBtnOutlet: UIButton!
   @IBOutlet weak var baseVIew: UIView!
   @IBOutlet weak var basePicker: UIPickerView!
@@ -51,7 +24,28 @@ class CurrencyVC: UIViewController, AddNewCurrencyDelegate {
   @IBOutlet weak var currencyTableView: UITableView!
   @IBOutlet var selectCurrencyView: UIView!
   
+  //  MARK: Variables
+  var blurEffect: UIVisualEffect!
+  
+  var countryArray = [Country]()
+  let defaults = UserDefaults()
+  var numbers = [Double]()
+  var selectedCurrencyRow = Int()
+  var selectedPickerRow = Int()
+  var startDate = String()
+  var endDate = String()
+  
+  let API_KEY = "8ad20f84-95b2-495f-95e4-1c7bb1f46b11"
+  var baseCurrencyArray = ["USD", "EUR", "BTC", "GBP", "AUD", "CAD", "JPY", "CHF", "CNY", "SEK", "NZD", "MXN", "SGD", "HKD", "NOK", "KRW", "TRY", "RUB", "INR","BRL","ZAR"]
+  var pickedBaseCurrency = "USD"
+  var selectedBaseCurrency = "USD"
+  var selectedToCompareCurrency = "CAD"
+  let dataFilePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("ChosenCurrencies.plist")
+  var selectedSegment = 2
+  var last = "Week"
+  
   override func viewDidLoad() {
+    
     super.viewDidLoad()
     blurEffect = blurView.effect
     blurView.effect = nil
@@ -61,14 +55,19 @@ class CurrencyVC: UIViewController, AddNewCurrencyDelegate {
     currencyTableView.dataSource = self
     definesPresentationContext = false
     segmentedControlOutlet.tintColor = UIColor(rgb: 0x1B9AAA)
-
     currencyTableView.separatorColor = UIColor(rgb: 0x1B9AAA)
     
     loadUserCurrencies()
     loadDataFromUserDefaults()
-    
   }
   
+  //Get added currencies
+  func userAddNewCurrency(currency: Country) {
+    countryArray.append(currency)
+    saveUserCurrencies()
+  }
+  
+  // Load saved data
   func loadDataFromUserDefaults(){
     
     let dateFormatter = DateFormatter()
@@ -76,7 +75,8 @@ class CurrencyVC: UIViewController, AddNewCurrencyDelegate {
     dateFormatter.dateFormat = "yyyy-MM-dd"
     
     if countryArray.count == 0 {
-    countryArray.append(Country.init(currencyId: "EUR", currencyName: "European euro", currencySymbol: "€", id: "DE", name: "Germany"))
+      countryArray.append(Country.init(currencyId: "CAD", currencyName: "Canadian dollar", currencySymbol: "$", id: "CA", name: "Canada"))
+      saveUserCurrencies()
     }
     self.navigationItem.leftBarButtonItem?.title = selectedBaseCurrency
     
@@ -107,22 +107,23 @@ class CurrencyVC: UIViewController, AddNewCurrencyDelegate {
     }
     segmentedControlOutlet.selectedSegmentIndex = selectedSegment
     
-    currencyTableView.selectRow(at: IndexPath.init(row: selectedCurrencyRow, section: 1), animated: false, scrollPosition: .none)
+    currencyTableView.selectRow(at: IndexPath.init(row: selectedCurrencyRow, section: 0), animated: false, scrollPosition: .none)
     
     getRatesForMonth(from: selectedBaseCurrency, to: selectedToCompareCurrency, startDate: startDate, endDate: endDate) { (ooo) in
       self.updateGraph()
     }
     self.navigationItem.leftBarButtonItem?.title = selectedBaseCurrency
   }
+  
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
-    
   }
   
+  
+  //MARK: Charts
   func updateGraph(){
     
     var lineChartEntry  = [ChartDataEntry]() //this is the Array that will eventually be displayed on the graph.
-    
     var filtredNumbers = [Double]()
     
     switch selectedSegment {
@@ -132,7 +133,7 @@ class CurrencyVC: UIViewController, AddNewCurrencyDelegate {
           filtredNumbers.append(value)
         }
       }
-
+      
     case 1:
       for (index, value) in numbers.enumerated() {
         if index % 3 == 0 {
@@ -147,7 +148,6 @@ class CurrencyVC: UIViewController, AddNewCurrencyDelegate {
       break
     }
     
-
     //here is the for loop
     for i in 0..<filtredNumbers.count {
       
@@ -155,8 +155,8 @@ class CurrencyVC: UIViewController, AddNewCurrencyDelegate {
       lineChartEntry.append(value) // here we add it to the data set
     }
     
-    let rateLine = LineChartDataSet(values: lineChartEntry, label: "Rate \(selectedBaseCurrency)/\(selectedToCompareCurrency) for last \(last)") //Here we convert lineChartEntry to a LineChartDataSet
-
+    let rateLine = LineChartDataSet(values: lineChartEntry, label: "Rate \(selectedBaseCurrency)/\(selectedToCompareCurrency) for Last \(last)") //Here we convert lineChartEntry to a LineChartDataSet
+    
     rateLine.valueFormatter = DigitValueFormatter()
     rateLine.mode = .cubicBezier
     rateLine.cubicIntensity = 0.2
@@ -170,15 +170,14 @@ class CurrencyVC: UIViewController, AddNewCurrencyDelegate {
     rateLine.drawFilledEnabled = true
     rateLine.fillColor = UIColor(rgb: 0x1BEDD7)
     rateLine.drawValuesEnabled = true
-    rateLine.valueFont = UIFont(name: "HelveticaNeue-Light", size: 10)!
-    
+    rateLine.valueFont = UIFont(name: "HelveticaNeue-Light", size: 11)!
     rateLine.valueTextColor = UIColor(rgb: 0x929292)
     rateLine.colors = [UIColor(rgb: 0x1B9AAA)] //Set Line Color
     
-    
-    chartView.legend.font = UIFont(name: "HelveticaNeue-Light", size: 15)!
+    chartView.legend.font = UIFont(name: "HelveticaNeue-Light", size: 16)!
     chartView.legend.textColor = UIColor(rgb: 0x929292)
-    
+    chartView.legend.form = .circle
+    chartView.minOffset = 15
     chartView.chartDescription?.text = ""
     chartView.xAxis.drawGridLinesEnabled = false
     chartView.xAxis.drawAxisLineEnabled = false
@@ -189,19 +188,13 @@ class CurrencyVC: UIViewController, AddNewCurrencyDelegate {
     chartView.leftAxis.axisLineWidth = 0
     chartView.rightAxis.axisLineWidth = 0
     chartView.leftAxis.gridLineWidth = 0.5
-    chartView.leftAxis.axisMaximum = (filtredNumbers.max()! * 1.05)
-    chartView.leftAxis.axisMinimum = (filtredNumbers.min()! / 1.05)
-//    chartView.legend.xOffset = 75
-    
+    chartView.leftAxis.axisMaximum = (filtredNumbers.max()! * 1.05)//Max Range for Y
+    chartView.leftAxis.axisMinimum = (filtredNumbers.min()! / 1.05)//Min Range for Y
     
     let data = LineChartData() //This is the object that will be added to the chart
-    
-    
     data.addDataSet(rateLine) //Adds the line to the dataSet
     
-    
     chartView.data = data //finally - it adds the chart data to the chart and causes an update
-//    chartView.backgroundColor = UIColor(rgb: 0xF8FFE5)
     chartView.doubleTapToZoomEnabled = false
     chartView.isUserInteractionEnabled = true
     chartView.rightAxis.drawLabelsEnabled = false
@@ -211,8 +204,6 @@ class CurrencyVC: UIViewController, AddNewCurrencyDelegate {
     chartView.zoomOut()
   }
   
-  
-  
   //  MARK: Actions
   @IBAction func dismissBaseView(_ sender: Any) {
     animateOutBase()
@@ -221,7 +212,6 @@ class CurrencyVC: UIViewController, AddNewCurrencyDelegate {
   @IBAction func chooseBaseButton(_ sender: Any) {
     animateInBase()
   }
-  
   
   @IBAction func baseDoneButton(_ sender: Any) {
     
@@ -272,7 +262,6 @@ class CurrencyVC: UIViewController, AddNewCurrencyDelegate {
     saveData()
     print("MONTH \(endDate)")
       
-      
     case 2: let previousWeek = Calendar.current.date(byAdding: .weekOfMonth, value: -1, to: Date())
     last = "Week"
     selectedSegment = 2
@@ -287,18 +276,13 @@ class CurrencyVC: UIViewController, AddNewCurrencyDelegate {
     default:
       break
     }
-    
   }
-  
   
   override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
     
     if segue.identifier == "addCurency" {
-      
       let destinationVC = segue.destination as! AddCurrencyVC
-      
       destinationVC.delegate = self
-      
     }
   }
 }
@@ -306,7 +290,6 @@ class CurrencyVC: UIViewController, AddNewCurrencyDelegate {
 
 //MARK: Extension TableView
 extension CurrencyVC: UITableViewDelegate, UITableViewDataSource {
-  
   
   func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
     countryArray.remove(at: indexPath.row)
@@ -348,13 +331,10 @@ extension CurrencyVC: UITableViewDelegate, UITableViewDataSource {
       }
       
       rate = returnedRate.rounded(toPlaces: 2)
-      
       cell.configeureCell(currencyName: name, currencyDescription: description, currencyRate: "\(rate)", flag: getFlag, symbol: symbol)
-      
     }
     return cell
   }
-  
   
   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     
@@ -467,7 +447,6 @@ extension CurrencyVC {
         for i in results! {
           rate = i.value
         }
-        
         handler(rate)
       }
       }.resume()
@@ -475,6 +454,7 @@ extension CurrencyVC {
   
   // Get range of rates for date range
   func getRatesForMonth(from: String, to: String, startDate: String, endDate: String,  handler: @escaping ([Double]) -> Void) -> Void {
+    SVProgressHUD.show(withStatus: "Loading Chart Data")
     
     let dateRangeRates = URL(string: "https://currencyconverterapi.com/api/v5/convert?q=\(from)_\(to)&compact=ultra&date=\(startDate)&endDate=\(endDate)&apiKey=\(API_KEY)")
     
@@ -492,9 +472,9 @@ extension CurrencyVC {
         for i in (results?.values)! {
           res = i
         }
-        
         self.numbers = Array(res.values)
         handler(self.numbers)
+        SVProgressHUD.dismiss()
       }
       }.resume()
   }
