@@ -45,6 +45,11 @@ class AddCurrencyVC: UIViewController, UISearchResultsUpdating {
     countryArray = countryArray.filter { !addedCountries.contains($0) } //Filter array of Countries by already added countries
   }
   
+  override func viewWillDisappear(_ animated: Bool) {
+    super.viewWillDisappear(animated)
+    searchController.isActive = false
+  }
+  
   func loadUserCurrencies() {
     
     if let data = try? Data(contentsOf: dataFilePath!) {

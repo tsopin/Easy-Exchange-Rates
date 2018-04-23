@@ -44,11 +44,14 @@ class CurrencyVC: UIViewController, AddNewCurrencyDelegate {
   var selectedSegment = 2
   var last = "Week"
   
+  
+  
   override func viewDidLoad() {
     
     super.viewDidLoad()
     blurEffect = blurView.effect
     blurView.effect = nil
+    blurView.isHidden = true
     basePicker.dataSource = self
     basePicker.delegate = self
     currencyTableView.delegate = self
@@ -117,6 +120,8 @@ class CurrencyVC: UIViewController, AddNewCurrencyDelegate {
   
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
+    
+    self.navigationController?.popToRootViewController(animated: true)
   }
   
   
@@ -155,7 +160,7 @@ class CurrencyVC: UIViewController, AddNewCurrencyDelegate {
       lineChartEntry.append(value) // here we add it to the data set
     }
     
-    let rateLine = LineChartDataSet(values: lineChartEntry, label: "Rate \(selectedBaseCurrency)/\(selectedToCompareCurrency) for Last \(last)") //Here we convert lineChartEntry to a LineChartDataSet
+    let rateLine = LineChartDataSet(values: lineChartEntry, label: "Exchange Rate \(selectedBaseCurrency)/\(selectedToCompareCurrency) for Last \(last)") //Here we convert lineChartEntry to a LineChartDataSet
     
     rateLine.valueFormatter = DigitValueFormatter()
     rateLine.mode = .cubicBezier
@@ -310,7 +315,6 @@ extension CurrencyVC: UITableViewDelegate, UITableViewDataSource {
     return countryArray.count
   }
   
-  
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
     
     let country = countryArray[indexPath.row]
@@ -381,6 +385,7 @@ extension CurrencyVC {
     baseVIew.center = self.view.center
     baseVIew.transform = CGAffineTransform.init(scaleX: 1.3, y: 1.3)
     baseVIew.alpha = 0
+    blurView.isHidden = false
     
     let selectRow = defaults.integer(forKey: "selectedPickerRow")
     basePicker.selectRow(selectRow, inComponent: 0, animated: false)
@@ -399,6 +404,7 @@ extension CurrencyVC {
       self.baseVIew.transform = CGAffineTransform.init(scaleX: 1.3, y: 1.3)
       self.baseVIew.alpha = 0
       self.blurView.effect = nil
+      self.blurView.isHidden = true
     }) { (success: Bool) in
       self.baseVIew.removeFromSuperview()
     }
