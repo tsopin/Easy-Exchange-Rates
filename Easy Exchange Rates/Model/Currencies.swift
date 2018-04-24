@@ -36,14 +36,8 @@ struct Country: Codable {
   }
 }
 
-struct DateRange {
-  
-  
-}
-
 extension Country: Equatable {
   
-  // make User class equatable to be able to find them in arrays, etc.
   static func == (lhs: Country, rhs: Country) -> Bool {
     return lhs.name == rhs.name &&
       lhs.currencyId == rhs.currencyId

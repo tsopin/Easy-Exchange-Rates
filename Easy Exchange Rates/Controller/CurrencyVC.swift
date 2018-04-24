@@ -44,8 +44,6 @@ class CurrencyVC: UIViewController, AddNewCurrencyDelegate {
   var selectedSegment = 2
   var last = "Week"
   
-  
-  
   override func viewDidLoad() {
     
     super.viewDidLoad()
@@ -377,7 +375,6 @@ extension CurrencyVC: UIPickerViewDelegate, UIPickerViewDataSource  {
   }
 }
 
-
 extension CurrencyVC {
   
   func animateInBase()  {
@@ -385,6 +382,8 @@ extension CurrencyVC {
     baseVIew.center = self.view.center
     baseVIew.transform = CGAffineTransform.init(scaleX: 1.3, y: 1.3)
     baseVIew.alpha = 0
+    baseVIew.layer.borderWidth = 1
+    baseVIew.layer.borderColor = UIColor(rgb: 0xD6D6D6).cgColor
     blurView.isHidden = false
     
     let selectRow = defaults.integer(forKey: "selectedPickerRow")
@@ -392,7 +391,7 @@ extension CurrencyVC {
     
     UIView.animate(withDuration: 0.2) {
       self.blurView.effect = self.blurEffect
-      self.baseVIew.alpha = 0.8
+      self.baseVIew.alpha = 1
       self.doneBtnOutlet.isEnabled = false
       self.baseVIew.layer.cornerRadius = 20
       self.baseVIew.transform = CGAffineTransform.identity
@@ -455,7 +454,7 @@ extension CurrencyVC {
         }
         handler(rate)
       }
-      }.resume()
+    }.resume()
   }
   
   // Get range of rates for date range
@@ -482,7 +481,7 @@ extension CurrencyVC {
         handler(self.numbers)
         SVProgressHUD.dismiss()
       }
-      }.resume()
+    }.resume()
   }
 }
 
