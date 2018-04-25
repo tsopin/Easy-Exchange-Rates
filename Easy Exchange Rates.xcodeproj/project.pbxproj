@@ -20,6 +20,7 @@
 		74BF4AD920845B3100AB351D /* SelectCurrencyCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74BF4AD820845B3100AB351D /* SelectCurrencyCell.swift */; };
 		74BF4ADC2084F83A00AB351D /* AddCurrencyVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74BF4ADB2084F83A00AB351D /* AddCurrencyVC.swift */; };
 		74E60B87208E4EE80024B939 /* ExchangeVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74E60B86208E4EE80024B939 /* ExchangeVC.swift */; };
+		74E60B8C208FC46D0024B939 /* TabBarVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74E60B8B208FC46D0024B939 /* TabBarVC.swift */; };
 		99D2A582E6CF2FAECC7AA108 /* Pods_Easy_Exchange_Rates.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C8CD3719265A64F55FE95151 /* Pods_Easy_Exchange_Rates.framework */; };
 /* End PBXBuildFile section */
 
@@ -39,6 +40,7 @@
 		74BF4AD820845B3100AB351D /* SelectCurrencyCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectCurrencyCell.swift; sourceTree = "<group>"; };
 		74BF4ADB2084F83A00AB351D /* AddCurrencyVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddCurrencyVC.swift; sourceTree = "<group>"; };
 		74E60B86208E4EE80024B939 /* ExchangeVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExchangeVC.swift; sourceTree = "<group>"; };
+		74E60B8B208FC46D0024B939 /* TabBarVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarVC.swift; sourceTree = "<group>"; };
 		773B33927BAD3EF5552CF0F2 /* Pods-Easy Exchange Rates.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Easy Exchange Rates.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Easy Exchange Rates/Pods-Easy Exchange Rates.debug.xcconfig"; sourceTree = "<group>"; };
 		A087EB40A501D07EDCB9EA33 /* Pods-Easy Exchange Rates.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Easy Exchange Rates.release.xcconfig"; path = "Pods/Target Support Files/Pods-Easy Exchange Rates/Pods-Easy Exchange Rates.release.xcconfig"; sourceTree = "<group>"; };
 		C8CD3719265A64F55FE95151 /* Pods_Easy_Exchange_Rates.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Easy_Exchange_Rates.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -100,8 +102,9 @@
 			children = (
 				744B5CF5208101EA009E5F56 /* CurrencyVC.swift */,
 				74BF4ADB2084F83A00AB351D /* AddCurrencyVC.swift */,
-				7482D63C207F965800B21612 /* AppDelegate.swift */,
 				74E60B86208E4EE80024B939 /* ExchangeVC.swift */,
+				7482D63C207F965800B21612 /* AppDelegate.swift */,
+				74E60B8B208FC46D0024B939 /* TabBarVC.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -271,6 +274,7 @@
 			files = (
 				744B5CEA207FB9BD009E5F56 /* CurrencyCell.swift in Sources */,
 				74BF4AD32082C01B00AB351D /* Service.swift in Sources */,
+				74E60B8C208FC46D0024B939 /* TabBarVC.swift in Sources */,
 				744B5CF220803590009E5F56 /* Extensions.swift in Sources */,
 				744B5CF6208101EB009E5F56 /* CurrencyVC.swift in Sources */,
 				74BF4ADC2084F83A00AB351D /* AddCurrencyVC.swift in Sources */,
@@ -425,10 +429,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 6QEFHSRMQX;
 				INFOPLIST_FILE = "Easy Exchange Rates/Info.plist";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "in.timsop.Easy-Exchange-Rates";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
@@ -444,10 +445,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 6QEFHSRMQX;
 				INFOPLIST_FILE = "Easy Exchange Rates/Info.plist";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "in.timsop.Easy-Exchange-Rates";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;

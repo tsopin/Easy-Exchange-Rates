@@ -40,13 +40,13 @@ class CurrencyVC: UIViewController, AddNewCurrencyDelegate {
   var pickedBaseCurrency = "USD"
   var selectedBaseCurrency = "USD"
   var selectedToCompareCurrency = "CAD"
-  let dataFilePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("ChosenCurrencies.plist")
+  let currenciesFilePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("ChosenCurrencies.plist")
   var selectedSegment = 2
   var last = "Week"
   
   override func viewDidLoad() {
-    
     super.viewDidLoad()
+    
     blurEffect = blurView.effect
     blurView.effect = nil
     blurView.isHidden = true
@@ -57,6 +57,7 @@ class CurrencyVC: UIViewController, AddNewCurrencyDelegate {
     definesPresentationContext = false
     segmentedControlOutlet.tintColor = UIColor(rgb: 0x1B9AAA)
     currencyTableView.separatorColor = UIColor(rgb: 0x1B9AAA)
+    currencyTableView.isMultipleTouchEnabled = false
     
     loadUserCurrencies()
     loadDataFromUserDefaults()
@@ -64,10 +65,19 @@ class CurrencyVC: UIViewController, AddNewCurrencyDelegate {
   
   //Get added currencies
   func userAddNewCurrency(currency: Country) {
+    
     countryArray.append(currency)
+
+    let lastCountry = countryArray.count - 1
+    selectedToCompareCurrency = countryArray[lastCountry].currencyId
+    currencyTableView.selectRow(at: IndexPath.init(row: countryArray.count, section: 0), animated: false, scrollPosition: .none)
+    getRatesForMonth(from: selectedBaseCurrency, to: countryArray[lastCountry].currencyId, startDate: startDate, endDate: endDate) { (ooo) in
+      self.updateGraph()
+    }
     saveUserCurrencies()
+    
   }
-  
+ 
   // Load saved data
   func loadDataFromUserDefaults(){
     
@@ -75,10 +85,10 @@ class CurrencyVC: UIViewController, AddNewCurrencyDelegate {
     let date = Date()
     dateFormatter.dateFormat = "yyyy-MM-dd"
     
-    if countryArray.count == 0 {
-      countryArray.append(Country.init(currencyId: "CAD", currencyName: "Canadian dollar", currencySymbol: "$", id: "CA", name: "Canada"))
-      saveUserCurrencies()
-    }
+//    if countryArray.count == 0 {
+//      countryArray.append(Country.init(currencyId: "CAD", currencyName: "Canadian dollar", currencySymbol: "$", id: "CA", name: "Canada"))
+//      saveUserCurrencies()
+//    }
     self.navigationItem.leftBarButtonItem?.title = selectedBaseCurrency
     
     let previousWeek = Calendar.current.date(byAdding: .weekOfMonth, value: -1, to: Date())
@@ -106,6 +116,7 @@ class CurrencyVC: UIViewController, AddNewCurrencyDelegate {
     if let savedSelectedCurrency = defaults.string(forKey: "selectedCurrencyRow") {
       selectedCurrencyRow = Int(savedSelectedCurrency)!
     }
+    
     segmentedControlOutlet.selectedSegmentIndex = selectedSegment
     
     currencyTableView.selectRow(at: IndexPath.init(row: selectedCurrencyRow, section: 0), animated: false, scrollPosition: .none)
@@ -118,8 +129,15 @@ class CurrencyVC: UIViewController, AddNewCurrencyDelegate {
   
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
-    
+    if countryArray.count > 0{
+      segmentedControlOutlet.isEnabled = true
+
+      
+    } else if countryArray.count == 1 {
+      selectedToCompareCurrency = countryArray[0].currencyId
+    }
     self.navigationController?.popToRootViewController(animated: true)
+    
   }
   
   
@@ -177,6 +195,8 @@ class CurrencyVC: UIViewController, AddNewCurrencyDelegate {
     rateLine.valueTextColor = UIColor(rgb: 0x929292)
     rateLine.colors = [UIColor(rgb: 0x1B9AAA)] //Set Line Color
     
+    chartView.noDataFont = UIFont(name: "HelveticaNeue-Light", size: 11)!
+    chartView.noDataText = "No Currencies Added"
     chartView.legend.font = UIFont(name: "HelveticaNeue-Light", size: 16)!
     chartView.legend.textColor = UIColor(rgb: 0x929292)
     chartView.legend.form = .circle
@@ -191,8 +211,11 @@ class CurrencyVC: UIViewController, AddNewCurrencyDelegate {
     chartView.leftAxis.axisLineWidth = 0
     chartView.rightAxis.axisLineWidth = 0
     chartView.leftAxis.gridLineWidth = 0.5
-    chartView.leftAxis.axisMaximum = (filtredNumbers.max()! * 1.05)//Max Range for Y
-    chartView.leftAxis.axisMinimum = (filtredNumbers.min()! / 1.05)//Min Range for Y
+    if filtredNumbers.count > 0 {
+      chartView.leftAxis.axisMaximum = (filtredNumbers.max()! * 1.05) //Max Range for Y
+      chartView.leftAxis.axisMinimum = (filtredNumbers.min()! / 1.05) //Min Range for Y
+    }
+  
     
     let data = LineChartData() //This is the object that will be added to the chart
     data.addDataSet(rateLine) //Adds the line to the dataSet
@@ -297,6 +320,48 @@ extension CurrencyVC: UITableViewDelegate, UITableViewDataSource {
   func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
     countryArray.remove(at: indexPath.row)
     currencyTableView.deleteRows(at: [indexPath], with: .automatic)
+    
+    if countryArray.count >= 1 {
+      
+      if indexPath.row >= 1 && indexPath.row != countryArray.count {
+        
+        let closestRow = indexPath.row
+        selectedToCompareCurrency = countryArray[closestRow].currencyId
+//        self.currencyTableView.selectRow(at: IndexPath.init(row: closestRow, section: 0), animated: false, scrollPosition: .none)
+
+        
+        print(" DELETED NO LAST")
+        
+      } else if indexPath.row == 0 {
+        
+        let closestRow = indexPath.row
+        selectedToCompareCurrency = countryArray[closestRow].currencyId
+//        self.currencyTableView.selectRow(at: IndexPath.init(row: closestRow, section: 0), animated: false, scrollPosition: .none)
+  
+        print(" DELETED First Row")
+        
+      } else if indexPath.row == countryArray.count {
+        let closestRow = selectedCurrencyRow
+        selectedToCompareCurrency = countryArray[closestRow].currencyId
+//        self.currencyTableView.selectRow(at: IndexPath.init(row: closestRow, section: 0), animated: false, scrollPosition: .none)
+         print("DELETED LAST Row")
+      }
+      
+      
+       getRatesForMonth(from: selectedBaseCurrency, to: selectedToCompareCurrency, startDate: startDate, endDate: endDate) { (ppp) in
+      self.updateGraph()
+    }
+      
+      updateGraph()
+      
+    }
+    
+    if countryArray.count < 1{
+      selectedToCompareCurrency = selectedBaseCurrency
+      segmentedControlOutlet.isEnabled = false
+      numbers.removeAll()
+      updateGraph()
+    }
     saveUserCurrencies()
   }
   
@@ -315,10 +380,40 @@ extension CurrencyVC: UITableViewDelegate, UITableViewDataSource {
   
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
     
+    
     let country = countryArray[indexPath.row]
     let cell = currencyTableView.dequeueReusableCell(withIdentifier: "currencyCell") as! CurrencyCell
+   
+    if countryArray.count >= 1  {
+      
+      if indexPath.row >= 1 && indexPath.row != countryArray.count {
+        
+        self.currencyTableView.selectRow(at: IndexPath.init(row: selectedCurrencyRow, section: 0), animated: false, scrollPosition: .none)
+        
+        print(" SELECTED NOT LAST")
+        
+      } else if indexPath.row == 0 {
+        
+        let closestRow = indexPath.row
+        self.currencyTableView.selectRow(at: IndexPath.init(row: closestRow, section: 0), animated: false, scrollPosition: .none)
+        
+        print(" SELECTED First Row")
+        
+      }
+    }
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     getRates(from: selectedBaseCurrency, to: country.currencyId) { (returnedRate) in
+      
       
       var symbol = String()
       var rate = Double()
@@ -334,6 +429,7 @@ extension CurrencyVC: UITableViewDelegate, UITableViewDataSource {
       
       rate = returnedRate.rounded(toPlaces: 2)
       cell.configeureCell(currencyName: name, currencyDescription: description, currencyRate: "\(rate)", flag: getFlag, symbol: symbol)
+      
     }
     return cell
   }
@@ -349,6 +445,8 @@ extension CurrencyVC: UITableViewDelegate, UITableViewDataSource {
       self.updateGraph()
     }
   }
+  
+
 }
 
 
@@ -414,7 +512,7 @@ extension CurrencyVC {
     let encoder = PropertyListEncoder()
     do {
       let data = try encoder.encode(countryArray)
-      try data.write(to: dataFilePath!)
+      try data.write(to: currenciesFilePath!)
       
     } catch {
       print("error \(error)")
@@ -424,7 +522,7 @@ extension CurrencyVC {
   
   func loadUserCurrencies() {
     
-    if let data = try? Data(contentsOf: dataFilePath!) {
+    if let data = try? Data(contentsOf: currenciesFilePath!) {
       let decoder = PropertyListDecoder()
       do {
         countryArray = try decoder.decode([Country].self, from: data)
@@ -459,7 +557,7 @@ extension CurrencyVC {
   
   // Get range of rates for date range
   func getRatesForMonth(from: String, to: String, startDate: String, endDate: String,  handler: @escaping ([Double]) -> Void) -> Void {
-    SVProgressHUD.show(withStatus: "Loading Chart Data")
+//    SVProgressHUD.show(withStatus: "Loading Chart Data")
     
     let dateRangeRates = URL(string: "https://currencyconverterapi.com/api/v5/convert?q=\(from)_\(to)&compact=ultra&date=\(startDate)&endDate=\(endDate)&apiKey=\(API_KEY)")
     
@@ -479,7 +577,7 @@ extension CurrencyVC {
         }
         self.numbers = Array(res.values)
         handler(self.numbers)
-        SVProgressHUD.dismiss()
+//        SVProgressHUD.dismiss()
       }
     }.resume()
   }
