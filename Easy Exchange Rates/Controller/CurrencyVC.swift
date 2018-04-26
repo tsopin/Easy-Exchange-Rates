@@ -25,6 +25,7 @@ class CurrencyVC: UIViewController, AddNewCurrencyDelegate {
   @IBOutlet var selectCurrencyView: UIView!
   @IBOutlet weak var addNewCurrenncy: UIBarButtonItem!
   @IBOutlet weak var baseButtonOutlet: UIBarButtonItem!
+  @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
   
   //  MARK: Variables
   var blurEffect: UIVisualEffect!
@@ -70,6 +71,7 @@ class CurrencyVC: UIViewController, AddNewCurrencyDelegate {
 
     if selectedToCompareCurrency == "" {
       segmentedControlOutlet.isEnabled = false
+      activityIndicator.stopAnimating()
     }
     
     loadUserCurrencies()
@@ -83,9 +85,10 @@ class CurrencyVC: UIViewController, AddNewCurrencyDelegate {
     
     let lastCountry = countryArray.count - 1
         selectedToCompareCurrency = countryArray[lastCountry].currencyId
+        defaults.set(selectedToCompareCurrency, forKey: "selectedToCompareCurrency")
         selectedCurrencyRow = lastCountry
         currencyTableView.selectRow(at: IndexPath.init(row: countryArray.count, section: 0), animated: false, scrollPosition: .none)
-        getRatesForMonth(from: selectedBaseCurrency, to: countryArray[lastCountry].currencyId, startDate: startDate, endDate: endDate) { (ooo) in
+        getRatesForDataRange(from: selectedBaseCurrency, to: countryArray[lastCountry].currencyId, startDate: startDate, endDate: endDate) { (ooo) in
           self.updateGraph()
         }
     saveUserCurrencies()
@@ -133,13 +136,13 @@ class CurrencyVC: UIViewController, AddNewCurrencyDelegate {
     if let savedSelectedCurrency = defaults.string(forKey: "selectedCurrencyRow") {
       selectedCurrencyRow = Int(savedSelectedCurrency)!
     }
-    
+ 
     segmentedControlOutlet.selectedSegmentIndex = selectedSegment
     
     currencyTableView.selectRow(at: IndexPath.init(row: selectedCurrencyRow, section: 0), animated: false, scrollPosition: .none)
     
     if countryArray.count > 0 {
-    getRatesForMonth(from: selectedBaseCurrency, to: selectedToCompareCurrency, startDate: startDate, endDate: endDate) { (ooo) in
+    getRatesForDataRange(from: selectedBaseCurrency, to: selectedToCompareCurrency, startDate: startDate, endDate: endDate) { (ooo) in
       
       self.updateGraph()
     }
@@ -156,6 +159,7 @@ class CurrencyVC: UIViewController, AddNewCurrencyDelegate {
       selectedToCompareCurrency = countryArray[0].currencyId
     }
     self.navigationController?.popToRootViewController(animated: true)
+    
   }
   
   
@@ -251,8 +255,7 @@ class CurrencyVC: UIViewController, AddNewCurrencyDelegate {
   }
   
   //  MARK: Actions
-  @IBAction func exchangeButton(_ sender: Any) {
-  }
+
   @IBAction func dismissBaseView(_ sender: Any) {
     animateOutBase()
   }
@@ -266,7 +269,7 @@ class CurrencyVC: UIViewController, AddNewCurrencyDelegate {
     selectedBaseCurrency = pickedBaseCurrency
     self.navigationItem.leftBarButtonItem?.title = selectedBaseCurrency
     defaults.set(selectedBaseCurrency, forKey: "selectedBaseCurrency")
-    getRatesForMonth(from: selectedBaseCurrency, to: selectedToCompareCurrency, startDate: startDate, endDate: endDate) { (ppp) in
+    getRatesForDataRange(from: selectedBaseCurrency, to: selectedToCompareCurrency, startDate: startDate, endDate: endDate) { (ppp) in
       self.updateGraph()
     }
     currencyTableView.reloadData()
@@ -293,7 +296,7 @@ class CurrencyVC: UIViewController, AddNewCurrencyDelegate {
     selectedSegment = 0
     endDate = dateFormatter.string(from: date)
     startDate = dateFormatter.string(from: previousYear!)
-    getRatesForMonth(from: selectedBaseCurrency, to: selectedToCompareCurrency, startDate: startDate, endDate: endDate) { (ooo) in
+    getRatesForDataRange(from: selectedBaseCurrency, to: selectedToCompareCurrency, startDate: startDate, endDate: endDate) { (ooo) in
       self.updateGraph()
     }
     saveData()
@@ -304,7 +307,7 @@ class CurrencyVC: UIViewController, AddNewCurrencyDelegate {
     selectedSegment = 1
     endDate = dateFormatter.string(from: date)
     startDate = dateFormatter.string(from: previousMonth!)
-    getRatesForMonth(from: selectedBaseCurrency, to: selectedToCompareCurrency, startDate: startDate, endDate: endDate) { (ooo) in
+    getRatesForDataRange(from: selectedBaseCurrency, to: selectedToCompareCurrency, startDate: startDate, endDate: endDate) { (ooo) in
       self.updateGraph()
     }
     saveData()
@@ -315,7 +318,7 @@ class CurrencyVC: UIViewController, AddNewCurrencyDelegate {
     selectedSegment = 2
     endDate = dateFormatter.string(from: date)
     startDate = dateFormatter.string(from: previousWeek!)
-    getRatesForMonth(from: selectedBaseCurrency, to: selectedToCompareCurrency, startDate: startDate, endDate: endDate) { (ooo) in
+    getRatesForDataRange(from: selectedBaseCurrency, to: selectedToCompareCurrency, startDate: startDate, endDate: endDate) { (ooo) in
       self.updateGraph()
     }
     saveData()
@@ -347,9 +350,11 @@ extension CurrencyVC: UITableViewDelegate, UITableViewDataSource {
       
       if indexPath.row == selectedCurrencyRow {
         selectedToCompareCurrency = countryArray[0].currencyId
+        defaults.set(selectedToCompareCurrency, forKey: "selectedToCompareCurrency")
         selectedCurrencyRow = 0
         
-        getRatesForMonth(from: selectedBaseCurrency, to: selectedToCompareCurrency, startDate: startDate, endDate: endDate) { (ppp) in
+        
+        getRatesForDataRange(from: selectedBaseCurrency, to: selectedToCompareCurrency, startDate: startDate, endDate: endDate) { (ppp) in
           self.updateGraph()
         }
         updateGraph()
@@ -358,8 +363,10 @@ extension CurrencyVC: UITableViewDelegate, UITableViewDataSource {
     
     if countryArray.count < 1{
       selectedToCompareCurrency = ""
+      defaults.set(selectedToCompareCurrency, forKey: "selectedToCompareCurrency")
       segmentedControlOutlet.isEnabled = false
       numbers.removeAll()
+//      baseButtonOutlet.isEnabled = false
       updateGraph()
     }
     saveUserCurrencies()
@@ -442,7 +449,7 @@ extension CurrencyVC: UITableViewDelegate, UITableViewDataSource {
     
     print("Selected Row # \(indexPath.row)")
     
-    getRatesForMonth(from: selectedBaseCurrency, to: selectedToCompareCurrency, startDate: startDate, endDate: endDate) { (ppp) in
+    getRatesForDataRange(from: selectedBaseCurrency, to: selectedToCompareCurrency, startDate: startDate, endDate: endDate) { (ppp) in
       self.updateGraph()
     }
   }
@@ -562,8 +569,9 @@ extension CurrencyVC {
   }
   
   // Get range of rates for date range
-  func getRatesForMonth(from: String, to: String, startDate: String, endDate: String,  handler: @escaping ([Double]) -> Void) -> Void {
+  func getRatesForDataRange(from: String, to: String, startDate: String, endDate: String,  handler: @escaping ([Double]) -> Void) -> Void {
     //    SVProgressHUD.show(withStatus: "Loading Chart Data")
+    activityIndicator.startAnimating()
     
     let dateRangeRates = URL(string: "https://currencyconverterapi.com/api/v5/convert?q=\(from)_\(to)&compact=ultra&date=\(startDate)&endDate=\(endDate)&apiKey=\(API_KEY)")
     
@@ -583,7 +591,7 @@ extension CurrencyVC {
         }
         self.numbers = Array(res.values)
         handler(self.numbers)
-        //        SVProgressHUD.dismiss()
+        self.activityIndicator.stopAnimating()
       }
       }.resume()
   }
