@@ -33,3 +33,4 @@ class DigitValueFormatter : NSObject, IValueFormatter {
     return "\(valueWithoutDecimalPart)"
   }
 }
+

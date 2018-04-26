@@ -8,7 +8,7 @@
 
 import UIKit
 import Charts
-import SVProgressHUD
+
 
 class CurrencyVC: UIViewController, AddNewCurrencyDelegate {
   
@@ -23,6 +23,8 @@ class CurrencyVC: UIViewController, AddNewCurrencyDelegate {
   @IBOutlet weak var chartView: LineChartView!
   @IBOutlet weak var currencyTableView: UITableView!
   @IBOutlet var selectCurrencyView: UIView!
+  @IBOutlet weak var addNewCurrenncy: UIBarButtonItem!
+  @IBOutlet weak var baseButtonOutlet: UIBarButtonItem!
   
   //  MARK: Variables
   var blurEffect: UIVisualEffect!
@@ -35,12 +37,13 @@ class CurrencyVC: UIViewController, AddNewCurrencyDelegate {
   var selectedPickerRow = Int()
   var startDate = String()
   var endDate = String()
+  var mainColor = UIColor(rgb: 0x1f61ff)
   
   let API_KEY = ""
   var baseCurrencyArray = ["USD", "EUR", "BTC", "GBP", "AUD", "CAD", "JPY", "CHF", "CNY", "SEK", "NZD", "MXN", "SGD", "HKD", "NOK", "KRW", "TRY", "RUB", "INR","BRL","ZAR"]
   var pickedBaseCurrency = "USD"
   var selectedBaseCurrency = "USD"
-  var selectedToCompareCurrency = "CAD"
+  var selectedToCompareCurrency = ""
   let currenciesFilePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("ChosenCurrencies.plist")
   var selectedSegment = 2
   var last = "Week"
@@ -48,6 +51,7 @@ class CurrencyVC: UIViewController, AddNewCurrencyDelegate {
   override func viewDidLoad() {
     super.viewDidLoad()
     
+    self.currencyTableView.sectionHeaderHeight = 32
     blurEffect = blurView.effect
     blurView.effect = nil
     blurView.isHidden = true
@@ -56,9 +60,17 @@ class CurrencyVC: UIViewController, AddNewCurrencyDelegate {
     currencyTableView.delegate = self
     currencyTableView.dataSource = self
     definesPresentationContext = false
-    segmentedControlOutlet.tintColor = UIColor(rgb: 0x1B9AAA)
-    currencyTableView.separatorColor = UIColor(rgb: 0x1B9AAA)
+    segmentedControlOutlet.tintColor = mainColor
+    currencyTableView.separatorColor = mainColor
     currencyTableView.isMultipleTouchEnabled = false
+    chartView.noDataTextAlignment = .center
+    chartView.noDataFont = UIFont(name: "HelveticaNeue-Light", size: 20)!
+    
+    chartView.noDataText = "No Data to Display"
+
+    if selectedToCompareCurrency == "" {
+      segmentedControlOutlet.isEnabled = false
+    }
     
     loadUserCurrencies()
     loadDataFromUserDefaults()
@@ -87,11 +99,14 @@ class CurrencyVC: UIViewController, AddNewCurrencyDelegate {
     let date = Date()
     dateFormatter.dateFormat = "yyyy-MM-dd"
     
-    //    if countryArray.count == 0 {
-    //      countryArray.append(Country.init(currencyId: "CAD", currencyName: "Canadian dollar", currencySymbol: "$", id: "CA", name: "Canada"))
-    //      saveUserCurrencies()
-    //    }
+//        if countryArray.count == 0 {
+//          countryArray.append(Country.init(currencyId: "CAD", currencyName: "Canadian dollar", currencySymbol: "$", id: "CA", name: "Canada"))
+//          saveUserCurrencies()
+//        }
+    
     self.navigationItem.leftBarButtonItem?.title = selectedBaseCurrency
+    self.navigationItem.leftBarButtonItem?.tintColor = mainColor
+    self.navigationItem.rightBarButtonItem?.tintColor = mainColor
     
     let previousWeek = Calendar.current.date(byAdding: .weekOfMonth, value: -1, to: Date())
     endDate = dateFormatter.string(from: date)
@@ -123,8 +138,11 @@ class CurrencyVC: UIViewController, AddNewCurrencyDelegate {
     
     currencyTableView.selectRow(at: IndexPath.init(row: selectedCurrencyRow, section: 0), animated: false, scrollPosition: .none)
     
+    if countryArray.count > 0 {
     getRatesForMonth(from: selectedBaseCurrency, to: selectedToCompareCurrency, startDate: startDate, endDate: endDate) { (ooo) in
+      
       self.updateGraph()
+    }
     }
     self.navigationItem.leftBarButtonItem?.title = selectedBaseCurrency
   }
@@ -134,17 +152,16 @@ class CurrencyVC: UIViewController, AddNewCurrencyDelegate {
     if countryArray.count > 0{
       segmentedControlOutlet.isEnabled = true
       
-      
     } else if countryArray.count == 1 {
       selectedToCompareCurrency = countryArray[0].currencyId
     }
     self.navigationController?.popToRootViewController(animated: true)
-    
   }
   
   
   //MARK: Charts
   func updateGraph(){
+    chartView.fitScreen()
     
     var lineChartEntry  = [ChartDataEntry]() //this is the Array that will eventually be displayed on the graph.
     var filtredNumbers = [Double]()
@@ -183,7 +200,7 @@ class CurrencyVC: UIViewController, AddNewCurrencyDelegate {
     rateLine.valueFormatter = DigitValueFormatter()
     rateLine.mode = .cubicBezier
     rateLine.cubicIntensity = 0.2
-    rateLine.lineWidth = 2
+    rateLine.lineWidth = 2.5
     rateLine.circleHoleColor = UIColor.white
     rateLine.drawCircleHoleEnabled = true
     rateLine.drawCirclesEnabled = true
@@ -191,17 +208,16 @@ class CurrencyVC: UIViewController, AddNewCurrencyDelegate {
     rateLine.circleHoleRadius = 2
     rateLine.circleColors = [UIColor(rgb: 0x1B9AAA)]
     rateLine.drawFilledEnabled = true
-    rateLine.fillColor = UIColor(rgb: 0x1BEDD7)
+    rateLine.fillColor = mainColor.withAlphaComponent(0.7)
     rateLine.drawValuesEnabled = true
     rateLine.valueFont = UIFont(name: "HelveticaNeue-Light", size: 11)!
     rateLine.valueTextColor = UIColor(rgb: 0x929292)
-    rateLine.colors = [UIColor(rgb: 0x1B9AAA)] //Set Line Color
+    rateLine.colors = [mainColor] //Set Line Color
     
-    chartView.noDataFont = UIFont(name: "HelveticaNeue-Light", size: 11)!
-    chartView.noDataText = "No Currencies Added"
-    chartView.legend.font = UIFont(name: "HelveticaNeue-Light", size: 16)!
+   
+    chartView.legend.font = UIFont(name: "HelveticaNeue-Light", size: 15)!
     chartView.legend.textColor = UIColor(rgb: 0x929292)
-    chartView.legend.form = .circle
+    chartView.legend.form = .line
     chartView.minOffset = 15
     chartView.chartDescription?.text = ""
     chartView.xAxis.drawGridLinesEnabled = false
@@ -229,10 +245,14 @@ class CurrencyVC: UIViewController, AddNewCurrencyDelegate {
     chartView.leftAxis.drawLabelsEnabled = false
     chartView.leftAxis.labelFont = UIFont(name: "HelveticaNeue-Light", size: 16)!
     chartView.leftAxis.labelTextColor = UIColor(rgb: 0x929292)
-    chartView.zoomOut()
+    chartView.highlightPerTapEnabled = false
+    chartView.highlightPerDragEnabled = false
+    
   }
   
   //  MARK: Actions
+  @IBAction func exchangeButton(_ sender: Any) {
+  }
   @IBAction func dismissBaseView(_ sender: Any) {
     animateOutBase()
   }
@@ -323,30 +343,51 @@ extension CurrencyVC: UITableViewDelegate, UITableViewDataSource {
     countryArray.remove(at: indexPath.row)
     currencyTableView.deleteRows(at: [indexPath], with: .automatic)
     
-    
     if countryArray.count >= 1  {
       
-      selectedToCompareCurrency = countryArray[0].currencyId
-      selectedCurrencyRow = 0
-      
-      getRatesForMonth(from: selectedBaseCurrency, to: selectedToCompareCurrency, startDate: startDate, endDate: endDate) { (ppp) in
-        self.updateGraph()
+      if indexPath.row == selectedCurrencyRow {
+        selectedToCompareCurrency = countryArray[0].currencyId
+        selectedCurrencyRow = 0
+        
+        getRatesForMonth(from: selectedBaseCurrency, to: selectedToCompareCurrency, startDate: startDate, endDate: endDate) { (ppp) in
+          self.updateGraph()
+        }
+        updateGraph()
       }
-      updateGraph()
     }
     
     if countryArray.count < 1{
-      selectedToCompareCurrency = selectedBaseCurrency
+      selectedToCompareCurrency = ""
       segmentedControlOutlet.isEnabled = false
       numbers.removeAll()
       updateGraph()
     }
     saveUserCurrencies()
+    saveData()
   }
   
-  func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-    return "Compare to"
+  func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+    currencyTableView.sectionHeaderHeight = 32
+    
+    var separatorText = String()
+    
+    if countryArray.count == 0 {
+      separatorText = "Add Currencies to Compare"
+    } else {
+      separatorText = "Compare to "
+    }
+    
+    let view = UIView(frame: CGRect(x: 0, y: 0, width: tableView.frame.size.width, height: 32))
+    view.backgroundColor = UIColor(rgb: 0xEBEBEB)
+    let label = UILabel(frame: CGRect(x: 0, y: 0, width: tableView.frame.size.width, height: 32))
+    label.textAlignment = .center
+    label.font = UIFont(name: "HelveticaNeue-Light", size: 18)!
+    view.addSubview(label)
+    label.text = separatorText
+    label.textColor = UIColor.black
+    return view
   }
+  
   
   func numberOfSections(in tableView: UITableView) -> Int {
     return 1
@@ -363,20 +404,21 @@ extension CurrencyVC: UITableViewDelegate, UITableViewDataSource {
     let country = countryArray[indexPath.row]
     let cell = currencyTableView.dequeueReusableCell(withIdentifier: "currencyCell") as! CurrencyCell
     
-    if countryArray.count >= 1  {
-      
-      self.currencyTableView.selectRow(at: IndexPath.init(row: selectedCurrencyRow, section: 0), animated: false, scrollPosition: .none)
-      
-    }
-    
+//    if countryArray.count >= indexPath.row && indexPath.row > selectedCurrencyRow  {
+//      self.currencyTableView.selectRow(at: IndexPath.init(row: selectedCurrencyRow, section: 0), animated: true, scrollPosition: .none)
+//    }
+
     getRates(from: selectedBaseCurrency, to: country.currencyId) { (returnedRate) in
-      
       
       var symbol = String()
       var rate = Double()
       let name = country.currencyId
       let description = country.currencyName
-      let getFlag = Service.instance.flag(country: country.id)
+      let  getFlag = Service.instance.flag(country: country.id)
+      
+//      if country.currencyName == "European euro" {
+//        getFlag = "🇪🇺"
+//      }
       
       if country.currencySymbol != nil {
         symbol = country.currencySymbol!
@@ -414,6 +456,8 @@ extension CurrencyVC: UIPickerViewDelegate, UIPickerViewDataSource  {
     return 1
   }
   
+
+  
   func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
     return baseCurrencyArray.count
   }
@@ -440,6 +484,9 @@ extension CurrencyVC {
     baseVIew.layer.borderWidth = 1
     baseVIew.layer.borderColor = UIColor(rgb: 0xD6D6D6).cgColor
     blurView.isHidden = false
+    addNewCurrenncy.isEnabled = false
+    baseButtonOutlet.isEnabled = false
+    
     
     let selectRow = defaults.integer(forKey: "selectedPickerRow")
     basePicker.selectRow(selectRow, inComponent: 0, animated: false)
@@ -459,6 +506,8 @@ extension CurrencyVC {
       self.baseVIew.alpha = 0
       self.blurView.effect = nil
       self.blurView.isHidden = true
+      self.addNewCurrenncy.isEnabled = true
+      self.baseButtonOutlet.isEnabled = true
     }) { (success: Bool) in
       self.baseVIew.removeFromSuperview()
     }

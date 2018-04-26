@@ -19,8 +19,6 @@
 		74BF4AD7208430A700AB351D /* currencyList.json in Resources */ = {isa = PBXBuildFile; fileRef = 74BF4AD6208430A500AB351D /* currencyList.json */; };
 		74BF4AD920845B3100AB351D /* SelectCurrencyCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74BF4AD820845B3100AB351D /* SelectCurrencyCell.swift */; };
 		74BF4ADC2084F83A00AB351D /* AddCurrencyVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74BF4ADB2084F83A00AB351D /* AddCurrencyVC.swift */; };
-		74E60B87208E4EE80024B939 /* ExchangeVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74E60B86208E4EE80024B939 /* ExchangeVC.swift */; };
-		74E60B8C208FC46D0024B939 /* TabBarVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74E60B8B208FC46D0024B939 /* TabBarVC.swift */; };
 		99D2A582E6CF2FAECC7AA108 /* Pods_Easy_Exchange_Rates.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C8CD3719265A64F55FE95151 /* Pods_Easy_Exchange_Rates.framework */; };
 /* End PBXBuildFile section */
 
@@ -29,18 +27,16 @@
 		744B5CE9207FB9BD009E5F56 /* CurrencyCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyCell.swift; sourceTree = "<group>"; };
 		744B5CF120803590009E5F56 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		744B5CF5208101EA009E5F56 /* CurrencyVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CurrencyVC.swift; sourceTree = "<group>"; };
+		7451E6CA2092597E0030A15C /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/Main.storyboard; sourceTree = "<group>"; };
+		7451E6CB2092597E0030A15C /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		7482D639207F965800B21612 /* Easy Exchange Rates.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Easy Exchange Rates.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		7482D63C207F965800B21612 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		7482D641207F965800B21612 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		7482D646207F965900B21612 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		7482D648207F965900B21612 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		74BF4ACE2082B0DD00AB351D /* Currencies.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Currencies.swift; sourceTree = "<group>"; };
 		74BF4AD22082C01B00AB351D /* Service.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Service.swift; sourceTree = "<group>"; };
 		74BF4AD6208430A500AB351D /* currencyList.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = currencyList.json; sourceTree = "<group>"; };
 		74BF4AD820845B3100AB351D /* SelectCurrencyCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectCurrencyCell.swift; sourceTree = "<group>"; };
 		74BF4ADB2084F83A00AB351D /* AddCurrencyVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddCurrencyVC.swift; sourceTree = "<group>"; };
-		74E60B86208E4EE80024B939 /* ExchangeVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExchangeVC.swift; sourceTree = "<group>"; };
-		74E60B8B208FC46D0024B939 /* TabBarVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarVC.swift; sourceTree = "<group>"; };
 		773B33927BAD3EF5552CF0F2 /* Pods-Easy Exchange Rates.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Easy Exchange Rates.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Easy Exchange Rates/Pods-Easy Exchange Rates.debug.xcconfig"; sourceTree = "<group>"; };
 		A087EB40A501D07EDCB9EA33 /* Pods-Easy Exchange Rates.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Easy Exchange Rates.release.xcconfig"; path = "Pods/Target Support Files/Pods-Easy Exchange Rates/Pods-Easy Exchange Rates.release.xcconfig"; sourceTree = "<group>"; };
 		C8CD3719265A64F55FE95151 /* Pods_Easy_Exchange_Rates.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Easy_Exchange_Rates.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -102,9 +98,7 @@
 			children = (
 				744B5CF5208101EA009E5F56 /* CurrencyVC.swift */,
 				74BF4ADB2084F83A00AB351D /* AddCurrencyVC.swift */,
-				74E60B86208E4EE80024B939 /* ExchangeVC.swift */,
 				7482D63C207F965800B21612 /* AppDelegate.swift */,
-				74E60B8B208FC46D0024B939 /* TabBarVC.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -198,7 +192,6 @@
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
-				Base,
 			);
 			mainGroup = 7482D630207F965800B21612;
 			productRefGroup = 7482D63A207F965800B21612 /* Products */;
@@ -274,11 +267,9 @@
 			files = (
 				744B5CEA207FB9BD009E5F56 /* CurrencyCell.swift in Sources */,
 				74BF4AD32082C01B00AB351D /* Service.swift in Sources */,
-				74E60B8C208FC46D0024B939 /* TabBarVC.swift in Sources */,
 				744B5CF220803590009E5F56 /* Extensions.swift in Sources */,
 				744B5CF6208101EB009E5F56 /* CurrencyVC.swift in Sources */,
 				74BF4ADC2084F83A00AB351D /* AddCurrencyVC.swift in Sources */,
-				74E60B87208E4EE80024B939 /* ExchangeVC.swift in Sources */,
 				74BF4AD920845B3100AB351D /* SelectCurrencyCell.swift in Sources */,
 				74BF4ACF2082B0DD00AB351D /* Currencies.swift in Sources */,
 				7482D63D207F965800B21612 /* AppDelegate.swift in Sources */,
@@ -291,7 +282,7 @@
 		7482D640207F965800B21612 /* Main.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
-				7482D641207F965800B21612 /* Base */,
+				7451E6CA2092597E0030A15C /* en */,
 			);
 			name = Main.storyboard;
 			sourceTree = "<group>";
@@ -299,7 +290,7 @@
 		7482D645207F965900B21612 /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
-				7482D646207F965900B21612 /* Base */,
+				7451E6CB2092597E0030A15C /* en */,
 			);
 			name = LaunchScreen.storyboard;
 			sourceTree = "<group>";
@@ -311,6 +302,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -371,6 +363,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -429,7 +422,10 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 6QEFHSRMQX;
 				INFOPLIST_FILE = "Easy Exchange Rates/Info.plist";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = "in.timsop.Easy-Exchange-Rates";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
@@ -445,7 +441,10 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 6QEFHSRMQX;
 				INFOPLIST_FILE = "Easy Exchange Rates/Info.plist";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = "in.timsop.Easy-Exchange-Rates";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
