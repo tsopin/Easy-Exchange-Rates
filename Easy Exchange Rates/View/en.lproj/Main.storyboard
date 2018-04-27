@@ -264,7 +264,7 @@
                                 <rect key="frame" x="0.0" y="64" width="414" height="672"/>
                                 <subviews>
                                     <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="55" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="4hi-N5-QHW">
-                                        <rect key="frame" x="0.0" y="0.0" width="414" height="672"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="414" height="667"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <color key="separatorColor" red="0.83921568627450982" green="0.83921568627450982" blue="0.83921568627450982" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <prototypes>
@@ -355,7 +355,7 @@
                                     <constraint firstItem="4hi-N5-QHW" firstAttribute="trailing" secondItem="O13-Io-fN3" secondAttribute="trailing" id="7cw-BF-Abv"/>
                                     <constraint firstItem="O13-Io-fN3" firstAttribute="trailing" secondItem="4hi-N5-QHW" secondAttribute="trailing" id="AJF-Bt-MnM"/>
                                     <constraint firstItem="4hi-N5-QHW" firstAttribute="top" secondItem="O13-Io-fN3" secondAttribute="top" id="CgB-eU-56R"/>
-                                    <constraint firstItem="O13-Io-fN3" firstAttribute="bottom" secondItem="4hi-N5-QHW" secondAttribute="bottom" id="Fzt-Cj-FEL"/>
+                                    <constraint firstItem="O13-Io-fN3" firstAttribute="bottom" secondItem="4hi-N5-QHW" secondAttribute="bottom" constant="5" id="Fzt-Cj-FEL"/>
                                     <constraint firstItem="4hi-N5-QHW" firstAttribute="leading" secondItem="O13-Io-fN3" secondAttribute="leading" id="YUy-4i-ulS"/>
                                 </constraints>
                                 <viewLayoutGuide key="safeArea" id="O13-Io-fN3"/>
@@ -372,6 +372,7 @@
                     </view>
                     <navigationItem key="navigationItem" id="S96-Z6-25k"/>
                     <connections>
+                        <outlet property="bottomConstraint" destination="Fzt-Cj-FEL" id="FgN-9W-3nx"/>
                         <outlet property="selectTableView" destination="4hi-N5-QHW" id="QsH-fB-9Cp"/>
                     </connections>
                 </viewController>

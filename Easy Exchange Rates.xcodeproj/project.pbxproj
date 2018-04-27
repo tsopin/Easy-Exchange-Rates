@@ -59,6 +59,7 @@
 			children = (
 				74BF4AD6208430A500AB351D /* currencyList.json */,
 				744B5CF120803590009E5F56 /* Extensions.swift */,
+				74BF4AD22082C01B00AB351D /* Service.swift */,
 			);
 			path = "Supporting Files";
 			sourceTree = "<group>";
@@ -118,7 +119,6 @@
 			isa = PBXGroup;
 			children = (
 				74BF4ACE2082B0DD00AB351D /* Currencies.swift */,
-				74BF4AD22082C01B00AB351D /* Service.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -419,7 +419,10 @@
 				DEVELOPMENT_TEAM = 6QEFHSRMQX;
 				INFOPLIST_FILE = "Easy Exchange Rates/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = "in.timsop.Easy-Exchange-Rates";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
@@ -436,7 +439,10 @@
 				DEVELOPMENT_TEAM = 6QEFHSRMQX;
 				INFOPLIST_FILE = "Easy Exchange Rates/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = "in.timsop.Easy-Exchange-Rates";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;

@@ -364,7 +364,7 @@
     "CN": {
       "alpha3": "CHN",
       "currencyId": "CNY",
-      "currencyName": "Chinese renminbi",
+      "currencyName": "Chinese yuan renminbi",
       "currencySymbol": "¥",
       "id": "CN",
       "name": "China"
@@ -785,7 +785,7 @@
     "MT": {
       "alpha3": "MLT",
       "currencyId": "EUR",
-      "currencyName": "European Euro",
+      "currencyName": "European euro",
       "currencySymbol": "€",
       "id": "MT",
       "name": "Malta"
@@ -1111,7 +1111,7 @@
     "ME": {
       "alpha3": "MNE",
       "currencyId": "EUR",
-      "currencyName": "European Euro",
+      "currencyName": "European euro",
       "currencySymbol": "€",
       "id": "ME",
       "name": "Montenegro"
@@ -1409,7 +1409,7 @@
     "MC": {
       "alpha3": "MCO",
       "currencyId": "EUR",
-      "currencyName": "European Euro",
+      "currencyName": "European euro",
       "currencySymbol": "€",
       "id": "MC",
       "name": "Monaco"
@@ -1457,7 +1457,7 @@
       "alpha3": "RUS",
       "currencyId": "RUB",
       "currencyName": "Russian ruble",
-      "currencySymbol": "руб",
+      "currencySymbol": "₽",
       "id": "RU",
       "name": "Russia"
     },

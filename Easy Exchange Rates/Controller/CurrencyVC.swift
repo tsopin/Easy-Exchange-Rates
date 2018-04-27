@@ -38,7 +38,7 @@ class CurrencyVC: UIViewController, AddNewCurrencyDelegate {
   var endDate = String()
   
   let currenciesFilePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("ChosenCurrencies.plist")
-  let API_KEY = ""
+  let API_KEY = "661af06d-15b4-46ae-ab72-0432272cc4f6"
   let greySubtitleColor = UIColor(rgb: 0x929292)
   let mainColor = UIColor(rgb: 0x1f61ff)
   var baseCurrencyArray = ["USD", "EUR", "BTC", "GBP", "AUD", "CAD", "JPY", "CHF", "CNY", "SEK", "NZD", "MXN", "SGD", "HKD", "NOK", "KRW", "TRY", "RUB", "INR","BRL","ZAR"]
@@ -75,6 +75,7 @@ class CurrencyVC: UIViewController, AddNewCurrencyDelegate {
     
     loadUserCurrencies()
     loadDataFromUserDefaults()
+    
   }
   
   //Get added currencies
@@ -158,7 +159,6 @@ class CurrencyVC: UIViewController, AddNewCurrencyDelegate {
     }
     self.navigationController?.popToRootViewController(animated: true)
   }
-  
   
   //MARK: Charts
   func updateChart(){
@@ -415,11 +415,11 @@ extension CurrencyVC: UITableViewDelegate, UITableViewDataSource {
       var rate = Double()
       let name = country.currencyId
       let description = country.currencyName
-      let  getFlag = Service.instance.flag(country: country.id)
+      var  getFlag = Service.instance.flag(country: country.id)
       
-      //      if country.currencyName == "European euro" {
-      //        getFlag = "🇪🇺"
-      //      }
+            if country.currencyName == "European euro" {
+              getFlag = "🇪🇺"
+            }
       
       if country.currencySymbol != nil {
         symbol = country.currencySymbol!

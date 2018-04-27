@@ -15,6 +15,7 @@ protocol AddNewCurrencyDelegate {
 class AddCurrencyVC: UIViewController, UISearchResultsUpdating {
   
   @IBOutlet weak var selectTableView: UITableView!
+  @IBOutlet weak var bottomConstraint: NSLayoutConstraint!
   
   var countryArray = [Country]()
   var addedCountries = [Country]()
@@ -23,10 +24,13 @@ class AddCurrencyVC: UIViewController, UISearchResultsUpdating {
   var delegate: AddNewCurrencyDelegate?
   let searchController = UISearchController(searchResultsController: nil)
   let dataFilePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("ChosenCurrencies.plist")
-
+  
   
   override func viewDidLoad() {
     super.viewDidLoad()
+    
+    NotificationCenter.default.addObserver(self, selector:#selector(AddCurrencyVC.keyboardWillShow(notification:)), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
+    NotificationCenter.default.addObserver(self, selector:#selector(AddCurrencyVC.keyboardWillHide(notification:)), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
     
     selectTableView.delegate = self
     selectTableView.dataSource = self
@@ -37,7 +41,7 @@ class AddCurrencyVC: UIViewController, UISearchResultsUpdating {
     navigationItem.searchController = searchController
     navigationItem.searchController?.hidesNavigationBarDuringPresentation = false
     navigationItem.hidesSearchBarWhenScrolling = false
-    definesPresentationContext = false
+    definesPresentationContext = true
     
     getCountryList()
     loadUserCurrencies()
@@ -85,18 +89,10 @@ class AddCurrencyVC: UIViewController, UISearchResultsUpdating {
     } catch {
       print("eerrro")
     }
+    
+
+    
   }
-  
-  
-  @IBAction func doneButton(_ sender: Any) {
-    print(choosenCountryArray.count)
-  }
-  
-  
-  @IBAction func cancelButton(_ sender: Any) {
-    dismiss(animated: true, completion: nil)
-  }
-  
   
   // MARK: Search
   
@@ -117,6 +113,15 @@ class AddCurrencyVC: UIViewController, UISearchResultsUpdating {
   
   deinit {
   }
+  
+  func alert(message: String) {
+    let alertController = UIAlertController(title: nil, message: message, preferredStyle: .alert)
+    let okAction = UIAlertAction(title: "OK", style: .default, handler: nil)
+    alertController.addAction(okAction)
+    self.present(alertController, animated: true, completion: nil)
+    //    searchController.searchBar.text = ""
+  }
+  
 }
 
 extension AddCurrencyVC: UITableViewDelegate, UITableViewDataSource {
@@ -160,18 +165,43 @@ extension AddCurrencyVC: UITableViewDelegate, UITableViewDataSource {
     
     if isFiltering() {
       
-      country = filtredCountryArray[indexPath.row]
-      delegate?.userAddNewCurrency(currency: country)
+      
+      if  filtredCountryArray[indexPath.row].currencyName == "European euro" && addedCountries.contains(where: { $0.currencyName == "European euro" }) {
+        
+        alert(message: "Euro already exist in your list")
+        
+      } else {
+        country = filtredCountryArray[indexPath.row]
+        delegate?.userAddNewCurrency(currency: country)
+        navigationController?.popToRootViewController(animated: true)
+        navigationController?.dismiss(animated: true, completion: nil)
+      }
       
     } else {
       
-      country = countryArray[indexPath.row]
-      delegate?.userAddNewCurrency(currency: country)
-      
+      if  countryArray[indexPath.row].currencyName == "European euro" && addedCountries.contains(where: { $0.currencyName == "European euro" }) {
+        
+        alert(message: "Euro already exist in your list")
+        
+      } else {
+        country = countryArray[indexPath.row]
+        delegate?.userAddNewCurrency(currency: country)
+        navigationController?.popToRootViewController(animated: true)
+        navigationController?.dismiss(animated: true, completion: nil)
+      }
     }
+  }
+  @objc func keyboardWillShow(notification : NSNotification) {
     
-    navigationController?.popToRootViewController(animated: true)
-    navigationController?.dismiss(animated: true, completion: nil)
+    let keyboardSize = (notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as AnyObject).cgRectValue.size
+    self.bottomConstraint.constant = keyboardSize.height
+    UIView.animate(withDuration: 0.3, delay: 0, options: UIViewAnimationOptions.curveLinear, animations: { () -> Void in
+      
+    })
+  }
+  
+  @objc func keyboardWillHide(notification : NSNotification) {
+    self.bottomConstraint.constant = 0
     
   }
 }
