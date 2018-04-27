@@ -57,9 +57,10 @@
 		744B5CF020803577009E5F56 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				74BF4AD6208430A500AB351D /* currencyList.json */,
+				7482D63C207F965800B21612 /* AppDelegate.swift */,
 				744B5CF120803590009E5F56 /* Extensions.swift */,
 				74BF4AD22082C01B00AB351D /* Service.swift */,
+				74BF4AD6208430A500AB351D /* currencyList.json */,
 			);
 			path = "Supporting Files";
 			sourceTree = "<group>";
@@ -99,7 +100,6 @@
 			children = (
 				744B5CF5208101EA009E5F56 /* CurrencyVC.swift */,
 				74BF4ADB2084F83A00AB351D /* AddCurrencyVC.swift */,
-				7482D63C207F965800B21612 /* AppDelegate.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";

@@ -18,8 +18,8 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="65" sectionHeaderHeight="28" sectionFooterHeight="28" springLoaded="YES" translatesAutoresizingMaskIntoConstraints="NO" id="sFS-H0-Owl" userLabel="CurrencyTableView">
-                                <rect key="frame" x="10" y="396" width="394" height="330"/>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="65" sectionHeaderHeight="28" sectionFooterHeight="28" springLoaded="YES" translatesAutoresizingMaskIntoConstraints="NO" id="sFS-H0-Owl" userLabel="CurrencyTableView">
+                                <rect key="frame" x="10" y="396" width="394" height="335"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="currencyCell" rowHeight="65" id="nto-rl-PiF" userLabel="CurrencyCell" customClass="CurrencyCell" customModule="Easy_Exchange_Rates" customModuleProvider="target">
@@ -154,7 +154,7 @@
                             <constraint firstItem="sFS-H0-Owl" firstAttribute="leading" secondItem="1EO-Zb-1lr" secondAttribute="leading" constant="10" id="eJd-6O-RYC"/>
                             <constraint firstItem="K3a-FJ-O9J" firstAttribute="bottom" secondItem="1EO-Zb-1lr" secondAttribute="bottom" id="lyq-qy-M5X"/>
                             <constraint firstItem="K3a-FJ-O9J" firstAttribute="trailing" secondItem="1EO-Zb-1lr" secondAttribute="trailing" id="tod-Hk-Eus"/>
-                            <constraint firstItem="1EO-Zb-1lr" firstAttribute="bottom" secondItem="sFS-H0-Owl" secondAttribute="bottom" constant="10" id="vOg-gD-bup"/>
+                            <constraint firstItem="1EO-Zb-1lr" firstAttribute="bottom" secondItem="sFS-H0-Owl" secondAttribute="bottom" constant="5" id="vOg-gD-bup"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="1EO-Zb-1lr"/>
                     </view>

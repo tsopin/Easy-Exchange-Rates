@@ -21,8 +21,8 @@ class Service {
     }
     return String(s)
   }
-  
 }
+
 class DigitValueFormatter : NSObject, IValueFormatter {
   
   func stringForValue(_ value: Double,
