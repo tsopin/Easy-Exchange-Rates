@@ -8,7 +8,7 @@
 
 import UIKit
 
-// COUNTRIES MODEL
+// Countries Model
 struct Results: Codable {
   let results: [String: Country]
   
@@ -16,6 +16,7 @@ struct Results: Codable {
     self.results = results
   }
 }
+
 struct Country: Codable {
   
   let currencyId: String
@@ -23,7 +24,6 @@ struct Country: Codable {
   let currencySymbol: String?
   let id: String
   let name: String
-  
   
   init(currencyId :String, currencyName: String, currencySymbol: String, id: String, name: String ) {
     
@@ -37,7 +37,6 @@ struct Country: Codable {
 }
 
 extension Country: Equatable {
-  
   static func == (lhs: Country, rhs: Country) -> Bool {
     return lhs.name == rhs.name &&
       lhs.currencyId == rhs.currencyId

@@ -10,7 +10,6 @@ import UIKit
 
 class SelectCurrencyCell : UITableViewCell {
   
-  
   @IBOutlet weak var flagView: UILabel!
   @IBOutlet weak var countryNameLabel: UILabel!
   @IBOutlet weak var currencyNameLabel: UILabel!
@@ -18,10 +17,12 @@ class SelectCurrencyCell : UITableViewCell {
   @IBOutlet weak var currencyCode: UILabel!
   
   func configeureCell(flag: String, countryName: String, currencyName: String, symbol: String, currencyCode: String) {
+    
     self.flagView.text = flag
     self.countryNameLabel.text = countryName
     self.currencyNameLabel.text = currencyName
     self.currencySymbol.text = symbol
     self.currencyCode.text = currencyCode
+    
   }
 }

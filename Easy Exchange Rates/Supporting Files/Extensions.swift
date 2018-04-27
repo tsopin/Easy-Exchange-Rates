@@ -8,17 +8,7 @@
 
 import UIKit
 
-extension UIViewController {
-  func presentStoryboard() {
-    
-    let storyboard = UIStoryboard(name: "Main", bundle: nil)
-    let vc = storyboard.instantiateViewController(withIdentifier: "MainVC") as UIViewController
-    self.present(vc, animated: true, completion: nil)
-    print("GoGoGo")
-  }
-}
-
-
+// Animation for Base Currency View
 extension UIView {
   
   func pushTransition(_ duration:CFTimeInterval) {
@@ -29,9 +19,11 @@ extension UIView {
     animation.subtype = kCATransitionFromTop
     animation.duration = duration
     layer.add(animation, forKey: kCATransitionPush)
+    
   }
 }
 
+// Sets RGB color
 extension UIColor {
   convenience init(red: Int, green: Int, blue: Int) {
     assert(red >= 0 && red <= 255, "Invalid red component")
@@ -49,8 +41,9 @@ extension UIColor {
     )
   }
 }
+  //Rounds the double to decimal places value
+
 extension Double {
-  /// Rounds the double to decimal places value
   func rounded(toPlaces places:Int) -> Double {
     let divisor = pow(10.0, Double(places))
     return (self * divisor).rounded() / divisor

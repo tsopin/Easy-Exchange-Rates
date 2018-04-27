@@ -25,5 +25,4 @@ class CurrencyCell: UITableViewCell {
     self.currencySymbol.text = flag
     
   }
-  
 }
