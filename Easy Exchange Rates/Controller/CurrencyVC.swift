@@ -38,7 +38,7 @@ class CurrencyVC: UIViewController, AddNewCurrencyDelegate {
   var endDate = String()
   
   let currenciesFilePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("ChosenCurrencies.plist")
-  let API_KEY = "661af06d-15b4-46ae-ab72-0432272cc4f6"
+  let API_KEY = ""
   let greySubtitleColor = UIColor(rgb: 0x929292)
   let mainColor = UIColor(rgb: 0x1f61ff)
   var baseCurrencyArray = ["USD", "EUR", "BTC", "GBP", "AUD", "CAD", "JPY", "CHF", "CNY", "SEK", "NZD", "MXN", "SGD", "HKD", "NOK", "KRW", "TRY", "RUB", "INR","BRL","ZAR"]
