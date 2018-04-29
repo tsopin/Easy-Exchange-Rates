@@ -89,10 +89,7 @@ class AddCurrencyVC: UIViewController, UISearchResultsUpdating {
     } catch {
       print("eerrro")
     }
-    
-
-    
-  }
+}
   
   // MARK: Search
   
@@ -163,12 +160,16 @@ extension AddCurrencyVC: UITableViewDelegate, UITableViewDataSource {
     
     let country: Country
     
+//    Checking if USD or EUR already exist in the list
     if isFiltering() {
-      
       
       if  filtredCountryArray[indexPath.row].currencyName == "European euro" && addedCountries.contains(where: { $0.currencyName == "European euro" }) {
         
         alert(message: "Euro already exist in your list")
+        
+      } else if filtredCountryArray[indexPath.row].currencyId == "USD" && addedCountries.contains(where: { $0.currencyId == "USD"}) {
+        
+        alert(message: "United States dollar already exist in your list")
         
       } else {
         country = filtredCountryArray[indexPath.row]
@@ -179,9 +180,13 @@ extension AddCurrencyVC: UITableViewDelegate, UITableViewDataSource {
       
     } else {
       
-      if  countryArray[indexPath.row].currencyName == "European euro" && addedCountries.contains(where: { $0.currencyName == "European euro" }) {
+      if countryArray[indexPath.row].currencyId == "EUR" && addedCountries.contains(where: { $0.currencyId == "EUR"}) {
         
         alert(message: "Euro already exist in your list")
+        
+      } else if countryArray[indexPath.row].currencyId == "USD" && addedCountries.contains(where: { $0.currencyId == "USD"}) {
+        
+        alert(message: "United States dollar already exist in your list")
         
       } else {
         country = countryArray[indexPath.row]
@@ -191,6 +196,8 @@ extension AddCurrencyVC: UITableViewDelegate, UITableViewDataSource {
       }
     }
   }
+  
+//  Move uitableView above a keyboard
   @objc func keyboardWillShow(notification : NSNotification) {
     
     let keyboardSize = (notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as AnyObject).cgRectValue.size
@@ -202,7 +209,6 @@ extension AddCurrencyVC: UITableViewDelegate, UITableViewDataSource {
   
   @objc func keyboardWillHide(notification : NSNotification) {
     self.bottomConstraint.constant = 0
-    
   }
 }
 

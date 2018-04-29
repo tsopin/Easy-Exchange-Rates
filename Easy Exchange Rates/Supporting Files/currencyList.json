@@ -388,7 +388,7 @@
     "EC": {
       "alpha3": "ECU",
       "currencyId": "USD",
-      "currencyName": "U.S. Dollar",
+      "currencyName": "United States dollar",
       "currencySymbol": "$",
       "id": "EC",
       "name": "Ecuador"
@@ -487,7 +487,7 @@
     "FM": {
       "alpha3": "FSM",
       "currencyId": "USD",
-      "currencyName": "U.S. Dollar",
+      "currencyName": "United States dollar",
       "currencySymbol": "$",
       "id": "FM",
       "name": "Micronesia"
@@ -822,7 +822,7 @@
     "PW": {
       "alpha3": "PLW",
       "currencyId": "USD",
-      "currencyName": "U.S. Dollar",
+      "currencyName": "United States dollar",
       "currencySymbol": "$",
       "id": "PW",
       "name": "Palau"
@@ -1151,7 +1151,7 @@
     "PR": {
       "alpha3": "PRI",
       "currencyId": "USD",
-      "currencyName": "U.S. Dollar",
+      "currencyName": "United States dollar",
       "currencySymbol": "$",
       "id": "PR",
       "name": "Puerto Rico"
@@ -1317,7 +1317,7 @@
     "SV": {
       "alpha3": "SLV",
       "currencyId": "USD",
-      "currencyName": "U.S. Dollar",
+      "currencyName": "United States dollar",
       "currencySymbol": "$",
       "id": "SV",
       "name": "El Salvador"
