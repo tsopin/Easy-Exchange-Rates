@@ -89,7 +89,7 @@ class AddCurrencyVC: UIViewController, UISearchResultsUpdating {
     } catch {
       print("eerrro")
     }
-}
+  }
   
   // MARK: Search
   
@@ -116,7 +116,7 @@ class AddCurrencyVC: UIViewController, UISearchResultsUpdating {
     let okAction = UIAlertAction(title: "OK", style: .default, handler: nil)
     alertController.addAction(okAction)
     self.present(alertController, animated: true, completion: nil)
-    //    searchController.searchBar.text = ""
+    searchController.searchBar.text = ""
   }
   
 }
@@ -160,7 +160,7 @@ extension AddCurrencyVC: UITableViewDelegate, UITableViewDataSource {
     
     let country: Country
     
-//    Checking if USD or EUR already exist in the list
+    //    Checking if USD or EUR already exist in the list
     if isFiltering() {
       
       if  filtredCountryArray[indexPath.row].currencyName == "European euro" && addedCountries.contains(where: { $0.currencyName == "European euro" }) {
@@ -197,7 +197,7 @@ extension AddCurrencyVC: UITableViewDelegate, UITableViewDataSource {
     }
   }
   
-//  Move uitableView above a keyboard
+  //  Move uitableView above a keyboard
   @objc func keyboardWillShow(notification : NSNotification) {
     
     let keyboardSize = (notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as AnyObject).cgRectValue.size

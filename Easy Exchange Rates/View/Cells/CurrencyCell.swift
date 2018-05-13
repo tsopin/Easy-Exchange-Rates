@@ -13,7 +13,7 @@ class CurrencyCell: UITableViewCell {
   @IBOutlet weak var currencyName: UILabel!
   @IBOutlet weak var currencyDescription: UILabel!
   @IBOutlet weak var symbol: UILabel!
-  @IBOutlet weak var currencySymbol: UILabel!
+  @IBOutlet weak var currencyFlag: UILabel!
   @IBOutlet weak var rateLabel: UILabel!
   
   func configeureCell(currencyName: String, currencyDescription: String, currencyRate: String, flag: String, symbol: String) {
@@ -22,7 +22,7 @@ class CurrencyCell: UITableViewCell {
     self.currencyName.text = currencyName
     self.currencyDescription.text = currencyDescription
     self.rateLabel.text = currencyRate
-    self.currencySymbol.text = flag
+    self.currencyFlag.text = flag
     
   }
 }

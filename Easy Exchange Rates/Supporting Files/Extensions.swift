@@ -41,13 +41,46 @@ extension UIColor {
     )
   }
 }
-  //Rounds the double to decimal places value
 
+//Rounds the double to decimal places value
 extension Double {
   func rounded(toPlaces places:Int) -> Double {
     let divisor = pow(10.0, Double(places))
     return (self * divisor).rounded() / divisor
   }
 }
+extension UITextField {
+  func addDoneCancelToolbar(onDone: (target: Any, action: Selector)? = nil, onCancel: (target: Any, action: Selector)? = nil) {
+    let onCancel = onCancel ?? (target: self, action: #selector(cancelButtonTapped))
+    let onDone = onDone ?? (target: self, action: #selector(doneButtonTapped))
+    
+    let toolbar: UIToolbar = UIToolbar()
+    toolbar.barStyle = .default
+    toolbar.items = [
+      UIBarButtonItem(title: "Cancel", style: .plain, target: onCancel.target, action: onCancel.action),
+      UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: self, action: nil),
+      UIBarButtonItem(title: "Done", style: .done, target: onDone.target, action: onDone.action)
+    ]
+    
+    toolbar.sizeToFit()
+    self.inputAccessoryView = toolbar
+  }
+  
+  // Default actions:
+  @objc func doneButtonTapped() {
+    self.resignFirstResponder()
+  }
+  
+  @objc func cancelButtonTapped() {
+    self.resignFirstResponder()
+  }
+}
 
+extension String {
+  var isAllowed: Bool {
+    guard self.count > 0 else { return false }
+    let allowedSymbols: Set<Character> = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "."]
+    return Set(self).isSubset(of: allowedSymbols)
+  }
+}
 
