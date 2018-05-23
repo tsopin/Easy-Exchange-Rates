@@ -19,7 +19,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" style="plain" rowHeight="60" sectionHeaderHeight="28" sectionFooterHeight="28" springLoaded="YES" translatesAutoresizingMaskIntoConstraints="NO" id="sFS-H0-Owl" userLabel="CurrencyTableView">
-                                <rect key="frame" x="10" y="402" width="394" height="329"/>
+                                <rect key="frame" x="10" y="397" width="394" height="334"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="currencyCell" rowHeight="60" id="nto-rl-PiF" userLabel="CurrencyCell" customClass="CurrencyCell" customModule="Easy_Exchange_Rates" customModuleProvider="target">
@@ -101,10 +101,10 @@
                                 </prototypes>
                             </tableView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5u3-df-UsG" customClass="LineChartView" customModule="Charts">
-                                <rect key="frame" x="0.0" y="124" width="414" height="196"/>
+                                <rect key="frame" x="0.0" y="119" width="414" height="196"/>
                                 <subviews>
                                     <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="IJE-do-Jai">
-                                        <rect key="frame" x="188.66666666666666" y="79.666666666666657" width="37" height="37"/>
+                                        <rect key="frame" x="189" y="79.666666666666657" width="37" height="37"/>
                                         <color key="color" red="0.57254901960000004" green="0.57254901960000004" blue="0.57254901960000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     </activityIndicatorView>
                                 </subviews>
@@ -116,7 +116,7 @@
                                 </constraints>
                             </view>
                             <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="2" translatesAutoresizingMaskIntoConstraints="NO" id="akv-ey-JiO">
-                                <rect key="frame" x="82" y="342.66666666666669" width="250" height="31"/>
+                                <rect key="frame" x="82" y="337.66666666666669" width="250" height="31"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="30" id="5fq-yx-Alj"/>
                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="250" id="q0P-b5-FIl"/>
@@ -199,7 +199,7 @@
                             <constraint firstItem="akv-ey-JiO" firstAttribute="centerX" secondItem="pJI-h0-gc7" secondAttribute="centerX" id="7U8-lD-MgE"/>
                             <constraint firstItem="akv-ey-JiO" firstAttribute="centerX" secondItem="pJI-h0-gc7" secondAttribute="centerX" id="8ff-Kt-vzK"/>
                             <constraint firstItem="5u3-df-UsG" firstAttribute="leading" secondItem="1EO-Zb-1lr" secondAttribute="leading" id="Az0-pA-Qh8"/>
-                            <constraint firstItem="5u3-df-UsG" firstAttribute="top" secondItem="pJI-h0-gc7" secondAttribute="top" constant="124" id="DCE-4F-2em"/>
+                            <constraint firstItem="5u3-df-UsG" firstAttribute="top" secondItem="qF6-gL-C2R" secondAttribute="bottom" constant="5" id="DCE-4F-2em"/>
                             <constraint firstItem="1EO-Zb-1lr" firstAttribute="trailing" secondItem="qF6-gL-C2R" secondAttribute="trailing" constant="10" id="FNb-ml-26B"/>
                             <constraint firstItem="akv-ey-JiO" firstAttribute="top" secondItem="5u3-df-UsG" secondAttribute="bottom" constant="23" id="L56-s9-d56"/>
                             <constraint firstItem="qF6-gL-C2R" firstAttribute="top" secondItem="1EO-Zb-1lr" secondAttribute="top" constant="10" id="RH3-jo-EYY"/>

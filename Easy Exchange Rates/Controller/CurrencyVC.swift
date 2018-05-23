@@ -355,7 +355,7 @@ class CurrencyVC: UIViewController, AddNewCurrencyDelegate {
   
   @objc func cancelButtonBaseTextField() {
     baseAmountTextField.text = "\(amountToCompare)"
-   baseAmountTextField.resignFirstResponder()
+    baseAmountTextField.resignFirstResponder()
   }
   
   @objc func doneButtonBaseTextField() {
@@ -371,7 +371,7 @@ class CurrencyVC: UIViewController, AddNewCurrencyDelegate {
     let dots = enteredAmount?.filter(){ $0 == "." }
     let count = dots?.count
     
-    if count! > 1 {
+    if count! > 1 || enteredAmount == "." {
       baseAmountTextField.text = "Wrong format..."
     } else {
       

@@ -19,7 +19,6 @@ extension UIView {
     animation.subtype = kCATransitionFromTop
     animation.duration = duration
     layer.add(animation, forKey: kCATransitionPush)
-    
   }
 }
 
@@ -32,7 +31,6 @@ extension UIColor {
     
     self.init(red: CGFloat(red) / 255.0, green: CGFloat(green) / 255.0, blue: CGFloat(blue) / 255.0, alpha: 1.0)
   }
-  
   convenience init(rgb: Int) {
     self.init(
       red: (rgb >> 16) & 0xFF,
@@ -49,6 +47,7 @@ extension Double {
     return (self * divisor).rounded() / divisor
   }
 }
+
 extension UITextField {
   func addDoneCancelToolbar(onDone: (target: Any, action: Selector)? = nil, onCancel: (target: Any, action: Selector)? = nil) {
     let onCancel = onCancel ?? (target: self, action: #selector(cancelButtonTapped))
@@ -61,7 +60,6 @@ extension UITextField {
       UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: self, action: nil),
       UIBarButtonItem(title: "Done", style: .done, target: onDone.target, action: onDone.action)
     ]
-    
     toolbar.sizeToFit()
     self.inputAccessoryView = toolbar
   }
