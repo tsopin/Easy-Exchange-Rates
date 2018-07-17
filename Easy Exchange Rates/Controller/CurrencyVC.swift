@@ -10,80 +10,85 @@ import UIKit
 import Charts
 
 
-class CurrencyVC: UIViewController, AddNewCurrencyDelegate {
+class CurrencyVC: UIViewController, AddNewCurrencyDelegate, IAxisValueFormatter {
   
   static let instance = CurrencyVC()
   
   //  MARK: Outlets
-  @IBOutlet weak var segmentedControlOutlet: UISegmentedControl!
-  @IBOutlet weak var doneBtnOutlet: UIButton!
-  @IBOutlet weak var baseVIew: UIView!
-  @IBOutlet weak var basePicker: UIPickerView!
-  @IBOutlet weak var blurView: UIVisualEffectView!
-  @IBOutlet weak var chartView: LineChartView!
-  @IBOutlet weak var currencyTableView: UITableView!
-  @IBOutlet weak var selectCurrencyView: UIView!
-  @IBOutlet weak var addNewCurrenncy: UIBarButtonItem!
-  @IBOutlet weak var baseLabel: UILabel!
-  @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
-  @IBOutlet weak var baseAmountTextField: UITextField! {
+  @IBOutlet weak private var segmentedControlOutlet: UISegmentedControl!
+  @IBOutlet weak private var doneBtnOutlet: UIButton!
+  @IBOutlet weak private var baseVIew: UIView!
+  @IBOutlet weak private var basePicker: UIPickerView!
+  @IBOutlet weak private var blurView: UIVisualEffectView!
+  @IBOutlet weak private var chartView: LineChartView!
+  @IBOutlet weak private var currencyTableView: UITableView!
+  @IBOutlet weak private var selectCurrencyView: UIView!
+  @IBOutlet weak private var addNewCurrenncy: UIBarButtonItem!
+  @IBOutlet weak private var baseLabel: UILabel!
+  @IBOutlet weak private var activityIndicator: UIActivityIndicatorView!
+  @IBOutlet weak private var baseAmountTextField: UITextField! {
     didSet {
       baseAmountTextField?.addDoneCancelToolbar(onDone: (target: self, action: #selector(doneButtonBaseTextField)), onCancel: (target: self, action: #selector(cancelButtonBaseTextField)) )
     }
   }
-  @IBOutlet weak var baseFlag: UILabel!
-  @IBOutlet weak var baseAmountView: UIView!
+  @IBOutlet weak private var baseFlag: UILabel!
+  @IBOutlet weak private var baseAmountView: UIView!
   
   //  MARK: Variables
-  let defaults = UserDefaults()
-  var blurEffect: UIVisualEffect!
-  var countryArray = [Country]()
-  var numbers = [Double]()
-  var selectedCurrencyRow = Int()
-  var pickedRow = Int()
-  var selectedPickedProw = Int()
-  var startDate = String()
-  var endDate = String()
+  private let defaults = UserDefaults()
+  private let colors = Colors()
+  private let fonts = Fonts()
+  private var blurEffect: UIVisualEffect!
+  private var countryArray = [Country]()
+  private var numbers = [Double]()
+  private var selectedCurrencyRow = Int()
+  private var pickedRow = Int()
+  private var selectedPickedProw = Int()
+  private var startDate = String()
+  private var endDate = String()
+  private var units = [String]()
   
-  let currenciesFilePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("ChosenCurrencies.plist")
-  let API_KEY = ""
-  let greySubtitleColor = UIColor(rgb: 0x929292)
-  let lightGrey = UIColor(rgb: 0xEBEBEB)
-  let mainColor = UIColor(rgb: 0x1f61ff)
-  var baseCurrencyArray = ["USD", "EUR", "BTC", "GBP", "AUD", "CAD", "JPY", "CHF", "CNY", "SEK", "NZD", "MXN", "SGD", "HKD", "NOK", "KRW", "TRY", "RUB", "INR","BRL","ZAR"]
-  var selectedToCompareCurrency = ""
-  var selectedBaseCurrency = "USD"
-  var pickedBaseCurrency = "USD"
-  var selectedSegment = 2
-  var last = "Week"
-  var amountToCompare = 1.0
+  private let currenciesFilePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("ChosenCurrencies.plist")
+  private let API_KEY = ""
+
+  private var baseCurrencyArray = ["USD", "EUR", "BTC", "GBP", "AUD", "CAD", "JPY", "CHF", "CNY", "SEK", "NZD", "MXN", "SGD", "HKD", "NOK", "KRW", "TRY", "RUB", "INR","BRL","ZAR"]
+  private var selectedToCompareCurrency = ""
+  private var selectedBaseCurrency = "USD"
+  private var pickedBaseCurrency = "USD"
+  private var selectedSegment = 2
+  private var last = "Week"
+  private var amountToCompare = 1.0
   
   override func viewDidLoad() {
     super.viewDidLoad()
     
-    currencyTableView.tableFooterView = UIView()
     blurEffect = blurView.effect
     blurView.effect = nil
     blurView.isHidden = true
+    
     basePicker.delegate = self
     basePicker.dataSource = self
     baseAmountTextField.delegate = self
     
-    currencyTableView.delegate = self
-    definesPresentationContext = false
+    currencyTableView.tableFooterView = UIView()
     currencyTableView.dataSource = self
-    chartView.noDataTextAlignment = .center
-    currencyTableView.sectionHeaderHeight = 32
-    chartView.noDataText = ""
-    segmentedControlOutlet.tintColor = mainColor
-    currencyTableView.separatorColor = lightGrey
+    currencyTableView.separatorColor = colors.lightGrey
     currencyTableView.isMultipleTouchEnabled = false
-    chartView.noDataFont = UIFont(name: "HelveticaNeue-Light", size: 20)!
+    currencyTableView.delegate = self
+    currencyTableView.sectionHeaderHeight = 32
+    
+    segmentedControlOutlet.tintColor = colors.mainColor
+    
+    chartView.noDataText = ""
+    chartView.noDataTextAlignment = .center
+    chartView.noDataFont = fonts.noDataFont
     
     if selectedToCompareCurrency == "" {
       segmentedControlOutlet.isEnabled = false
       activityIndicator.stopAnimating()
     }
+    
+    definesPresentationContext = false
     
     loadUserCurrencies()
     loadDataFromUserDefaults()
@@ -106,14 +111,14 @@ class CurrencyVC: UIViewController, AddNewCurrencyDelegate {
   }
   
   // Load saved data
-  func loadDataFromUserDefaults(){
+  private func loadDataFromUserDefaults(){
     
     let dateFormatter = DateFormatter()
     let date = Date()
     dateFormatter.dateFormat = "yyyy-MM-dd"
     
-    self.navigationItem.leftBarButtonItem?.tintColor = mainColor
-    self.navigationItem.rightBarButtonItem?.tintColor = mainColor
+    self.navigationItem.leftBarButtonItem?.tintColor = colors.mainColor
+    self.navigationItem.rightBarButtonItem?.tintColor = colors.mainColor
     
     let previousWeek = Calendar.current.date(byAdding: .weekOfMonth, value: -1, to: Date())
     endDate = dateFormatter.string(from: date)
@@ -171,8 +176,17 @@ class CurrencyVC: UIViewController, AddNewCurrencyDelegate {
     self.navigationController?.popToRootViewController(animated: true)
   }
   
+  
   //MARK: Charts
-  func updateChart(){
+  func stringForValue(_ value: Double, axis: AxisBase?) -> String {
+    if Int(value) < units.count {
+    return units[Int(value)]
+    } else {
+      return "L"
+    }
+  }
+  
+  private func updateChart(){
     chartView.fitScreen()
     
     var lineChartEntry  = [ChartDataEntry]() //this is the Array that will eventually be displayed on the graph.
@@ -182,8 +196,9 @@ class CurrencyVC: UIViewController, AddNewCurrencyDelegate {
     switch selectedSegment {
     case 0:
       for (index, value) in numbers.enumerated() {
-        if index % 30 == 0 {
+        if index % 29 == 0 {
           filtredNumbers.append(value)
+          units = ["12m", "11m", "10m", "9m", "8m", "7m", "6m", "5m", "4m", "3m", "2m", "1m", "Now"]
         }
       }
       
@@ -191,11 +206,13 @@ class CurrencyVC: UIViewController, AddNewCurrencyDelegate {
       for (index, value) in numbers.enumerated() {
         if index % 3 == 0 {
           filtredNumbers.append(value)
+          units = ["30d", "27d", "24d", "21d", "18d", "15d", "12d", "9d", "6d", "3d", "Now"]
         }
       }
       
     case 2:
       filtredNumbers = numbers
+      units = ["7d", "6d", "5d", "4d", "3d", "2d", "1d", "Now"]
       
     default:
       break
@@ -203,13 +220,22 @@ class CurrencyVC: UIViewController, AddNewCurrencyDelegate {
     
     //here is the for loop
     for i in 0..<filtredNumbers.count {
-      
       let value = ChartDataEntry(x: Double(i), y: filtredNumbers[i]) // here we set the X and Y status in a data chart entry
       lineChartEntry.append(value) // here we add it to the data set
     }
-    
+
     let rateLine = LineChartDataSet(values: lineChartEntry, label: "\(selectedBaseCurrency)/\(selectedToCompareCurrency) Rates for Last \(last)") //Here we convert lineChartEntry to a LineChartDataSet
     
+    let chartData = LineChartData(dataSet: rateLine)
+    
+    let marker = BalloonMarker(color: colors.lightGrey,
+                               font: fonts.legendFont,
+                               textColor: colors.black,
+                               insets: UIEdgeInsets(top: 8, left: 8, bottom: 20, right: 8))
+    marker.chartView = chartView
+    marker.minimumSize = CGSize(width: 80, height: 40)
+    chartView.marker = marker
+  
     rateLine.valueFormatter = DigitValueFormatter()
     rateLine.mode = .cubicBezier
     rateLine.cubicIntensity = 0.17
@@ -219,62 +245,78 @@ class CurrencyVC: UIViewController, AddNewCurrencyDelegate {
     rateLine.drawCirclesEnabled = true
     rateLine.circleRadius = 3
     rateLine.circleHoleRadius = 2
-    rateLine.circleColors = [mainColor]
+    rateLine.circleColors = [colors.mainColor]
     rateLine.drawFilledEnabled = true
-    rateLine.fillColor = mainColor.withAlphaComponent(0.7)
+    rateLine.fillColor = colors.mainColor.withAlphaComponent(0.7)
     rateLine.drawValuesEnabled = false
-    rateLine.valueFont = UIFont(name: "HelveticaNeue-Light", size: 11)!
-    rateLine.valueTextColor = greySubtitleColor
-    rateLine.colors = [mainColor] //Set Line Color
+    rateLine.valueFont = fonts.valueFont
+    rateLine.valueTextColor = colors.greySubtitleColor
+    rateLine.colors = [colors.mainColor] //Set Line Color
     
-    chartView.legend.font = UIFont(name: "HelveticaNeue-Light", size: 15)!
-    chartView.legend.textColor = greySubtitleColor
+    //Legend
+    chartView.legend.font = fonts.legendFont
+    chartView.legend.textColor = colors.greySubtitleColor
     chartView.legend.form = .line
     chartView.legend.xOffset = 0
-    chartView.minOffset = 10
+    chartView.minOffset = 15
     chartView.chartDescription?.text = ""
+    
+    //X Axis
+    chartView.xAxis.labelFont = fonts.valueFont
+    chartView.xAxis.labelTextColor = colors.greySubtitleColor
     chartView.xAxis.drawGridLinesEnabled = false
     chartView.xAxis.drawAxisLineEnabled = false
-    chartView.xAxis.drawLabelsEnabled = false
+    chartView.xAxis.drawLabelsEnabled = true
+    chartView.xAxis.labelPosition = .bottom
+//    chartView.xAxis.granularityEnabled = true
+//    
+//    chartView.xAxis.granularity = 1
+    chartView.xAxis.valueFormatter = self
+    
+    //Left Axis
     chartView.leftAxis.drawGridLinesEnabled = true
-    chartView.rightAxis.drawGridLinesEnabled = false
-    chartView.leftAxis.gridColor = lightGrey
+    chartView.leftAxis.gridLineWidth = 0.5
+    chartView.leftAxis.gridColor = colors.lightGrey
     chartView.leftAxis.axisLineWidth = 0
     chartView.leftAxis.labelPosition = .insideChart
+    chartView.leftAxis.drawLabelsEnabled = true
+    chartView.leftAxis.labelFont = fonts.valueFont
+    chartView.leftAxis.labelTextColor = colors.greySubtitleColor
+    
+    //Rigth Axis
+    chartView.rightAxis.drawGridLinesEnabled = false
     chartView.rightAxis.axisLineWidth = 0
-    chartView.leftAxis.gridLineWidth = 0.5
+    chartView.rightAxis.drawLabelsEnabled = false
     
     if filtredNumbers.count > 0 {
-      chartView.leftAxis.axisMaximum = (filtredNumbers.max()! * 1.03) //Max Range for Y
-      chartView.leftAxis.axisMinimum = (filtredNumbers.min()! / 1.03) //Min Range for Y
+      chartView.leftAxis.axisMaximum = (filtredNumbers.max()! * 1.02) //Max Range for Y
+      chartView.leftAxis.axisMinimum = (filtredNumbers.min()! / 1.02) //Min Range for Y
     }
     
     let data = LineChartData() //This is the object that will be added to the chart
+   
     data.addDataSet(rateLine) //Adds the line to the dataSet
     
-    chartView.data = data //finally - it adds the chart data to the chart and causes an update
+    chartView.data = chartData //finally - it adds the chart data to the chart and causes an update
     chartView.doubleTapToZoomEnabled = false
     chartView.isUserInteractionEnabled = true
-    chartView.rightAxis.drawLabelsEnabled = false
-    chartView.leftAxis.drawLabelsEnabled = true
-    chartView.leftAxis.labelFont = UIFont(name: "HelveticaNeue-Light", size: 11)!
-    chartView.leftAxis.labelTextColor = greySubtitleColor
-    chartView.highlightPerTapEnabled = false
-    chartView.highlightPerDragEnabled = false
+    
+    chartView.highlightPerTapEnabled = true
+    chartView.highlightPerDragEnabled = true
     
   }
   
   //  MARK: Actions
   
-  @IBAction func dismissBaseView(_ sender: Any) {
+  @IBAction private func dismissBaseView(_ sender: Any) {
     animateOutBase()
   }
   
-  @IBAction func chooseBaseButton(_ sender: Any) {
+  @IBAction private func chooseBaseButton(_ sender: Any) {
     animateInBase()
   }
   
-  func setBaseFlag() {
+  private func setBaseFlag() {
     var flag = String()
     flag = Service.instance.flag(country: selectedBaseCurrency)
     
@@ -288,7 +330,7 @@ class CurrencyVC: UIViewController, AddNewCurrencyDelegate {
     }
   }
   
-  @IBAction func baseDoneButton(_ sender: Any) {
+  @IBAction private func baseDoneButton(_ sender: Any) {
     
     selectedBaseCurrency = pickedBaseCurrency
     
@@ -307,7 +349,7 @@ class CurrencyVC: UIViewController, AddNewCurrencyDelegate {
   }
   
   
-  @IBAction func segmentedControl(_ sender: Any) {
+  @IBAction private func segmentedControl(_ sender: Any) {
     
     let dateFormatter = DateFormatter()
     let date = Date()
@@ -353,17 +395,17 @@ class CurrencyVC: UIViewController, AddNewCurrencyDelegate {
     }
   }
   
-  @objc func cancelButtonBaseTextField() {
+  @objc private func cancelButtonBaseTextField() {
     baseAmountTextField.text = "\(amountToCompare)"
     baseAmountTextField.resignFirstResponder()
   }
   
-  @objc func doneButtonBaseTextField() {
+  @objc private func doneButtonBaseTextField() {
     var enteredAmount = baseAmountTextField.text
     
     if (enteredAmount?.count)! < 1 {
       enteredAmount = "\(0)"
-      baseAmountTextField.text = "\(0)"
+      baseAmountTextField.text = "\(enteredAmount!)"
     }
     
     guard let amount = enteredAmount else { return }
@@ -389,7 +431,7 @@ class CurrencyVC: UIViewController, AddNewCurrencyDelegate {
   }
   
   //Save user data to userDefauts
-  func saveData(){
+  private func saveData(){
     defaults.set(startDate, forKey: "startDate")
     defaults.set(endDate, forKey: "endDate")
     defaults.set(selectedSegment, forKey: "selectedSegment")
@@ -449,7 +491,7 @@ extension CurrencyVC: UITableViewDelegate, UITableViewDataSource {
     }
     
     let view = UIView(frame: CGRect(x: 0, y: 0, width: tableView.frame.size.width, height: 32))
-    view.backgroundColor = lightGrey
+    view.backgroundColor = colors.lightGrey
     let label = UILabel(frame: CGRect(x: 8, y: 0, width: tableView.frame.size.width, height: 32))
     label.textAlignment = .left
     label.font = UIFont(name: "HelveticaNeue-Light", size: 18)!
@@ -473,7 +515,7 @@ extension CurrencyVC: UITableViewDelegate, UITableViewDataSource {
     let cell = currencyTableView.dequeueReusableCell(withIdentifier: "currencyCell") as! CurrencyCell
     
     let cellSelection = UIView()
-    cellSelection.backgroundColor = lightGrey
+    cellSelection.backgroundColor = colors.lightGrey
     cell.selectedBackgroundView = cellSelection
     
     //Get rates for each currency in TableView
@@ -546,14 +588,14 @@ extension CurrencyVC: UIPickerViewDelegate, UIPickerViewDataSource  {
 extension CurrencyVC: UITextFieldDelegate {
   
   //Animation for Select Base Currency View
-  func animateInBase()  {
+  private func animateInBase()  {
     
     self.view.addSubview(baseVIew)
     baseVIew.center = self.view.center
     baseVIew.transform = CGAffineTransform.init(scaleX: 1.32, y: 1.32)
     baseVIew.alpha = 0
     baseVIew.layer.borderWidth = 1
-    baseVIew.layer.borderColor = lightGrey.cgColor
+    baseVIew.layer.borderColor = colors.lightGrey.cgColor
     blurView.isHidden = false
     baseAmountView.isHidden = true
     
@@ -570,7 +612,7 @@ extension CurrencyVC: UITextFieldDelegate {
     self.navigationController?.setNavigationBarHidden(true, animated: true)
   }
   
-  func animateOutBase() {
+  private func animateOutBase() {
     UIView.animate(withDuration: 0.22, animations: {
       self.baseVIew.transform = CGAffineTransform.init(scaleX: 1.32, y: 1.32)
       self.baseVIew.alpha = 0
@@ -584,7 +626,7 @@ extension CurrencyVC: UITextFieldDelegate {
   }
   
   //Save User Currencies using PropertyListEncoder
-  func saveUserCurrencies() {
+  private func saveUserCurrencies() {
     
     let encoder = PropertyListEncoder()
     
@@ -599,7 +641,7 @@ extension CurrencyVC: UITextFieldDelegate {
     currencyTableView.reloadData()
   }
   
-  func loadUserCurrencies() {
+  private func loadUserCurrencies() {
     
     if let data = try? Data(contentsOf: currenciesFilePath!) {
       let decoder = PropertyListDecoder()
@@ -612,7 +654,7 @@ extension CurrencyVC: UITextFieldDelegate {
   }
   
   // Get rates for pair of currencies
-  func getRates(from: String, to: String, handler: @escaping (Double) -> Void) -> Void {
+  private func getRates(from: String, to: String, handler: @escaping (Double) -> Void) -> Void {
     
     var rate = Double()
     let rateUrl = URL(string: "https://currencyconverterapi.com/api/v5/convert?q=\(from)_\(to)&compact=ultra&apiKey=\(API_KEY)")
@@ -633,7 +675,7 @@ extension CurrencyVC: UITextFieldDelegate {
   }
   
   // Get range of rates for date range
-  func getRatesForDataRange(from: String, to: String, startDate: String, endDate: String,  handler: @escaping ([Double]) -> Void) -> Void {
+  private func getRatesForDataRange(from: String, to: String, startDate: String, endDate: String,  handler: @escaping ([Double]) -> Void) -> Void {
     
     activityIndicator.startAnimating()
     

@@ -14,17 +14,16 @@ protocol AddNewCurrencyDelegate {
 
 class AddCurrencyVC: UIViewController, UISearchResultsUpdating {
   
-  @IBOutlet weak var selectTableView: UITableView!
-  @IBOutlet weak var bottomConstraint: NSLayoutConstraint!
+  @IBOutlet private weak var selectTableView: UITableView!
+  @IBOutlet private weak var bottomConstraint: NSLayoutConstraint!
   
-  var countryArray = [Country]()
-  var addedCountries = [Country]()
-  var filtredCountryArray = [Country]()
-  var choosenCountryArray = [Country]()
+  private var countryArray = [Country]()
+  private var addedCountries = [Country]()
+  private var filtredCountryArray = [Country]()
+  private var choosenCountryArray = [Country]()
   var delegate: AddNewCurrencyDelegate?
-  let searchController = UISearchController(searchResultsController: nil)
-  let dataFilePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("ChosenCurrencies.plist")
-  
+  private let searchController = UISearchController(searchResultsController: nil)
+  private let dataFilePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("ChosenCurrencies.plist")
   
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -54,7 +53,7 @@ class AddCurrencyVC: UIViewController, UISearchResultsUpdating {
     searchController.isActive = false
   }
   
-  func loadUserCurrencies() {
+  private func loadUserCurrencies() {
     
     if let data = try? Data(contentsOf: dataFilePath!) {
       let decoder = PropertyListDecoder()
@@ -73,7 +72,7 @@ class AddCurrencyVC: UIViewController, UISearchResultsUpdating {
     }
   }
   
-  func getCountryList(){
+  private func getCountryList(){
     let decoder = JSONDecoder()
     let file = Bundle.main.url(forResource: "currencyList", withExtension: "json")
     do {
@@ -93,7 +92,7 @@ class AddCurrencyVC: UIViewController, UISearchResultsUpdating {
   
   // MARK: Search
   
-  func updateSearchResults(for searchController: UISearchController) {
+   func updateSearchResults(for searchController: UISearchController) {
     filterContentForSearchText(searchController.searchBar.text!)
   }
   
