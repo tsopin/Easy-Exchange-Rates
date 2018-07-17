@@ -50,7 +50,7 @@ class CurrencyVC: UIViewController, AddNewCurrencyDelegate, IAxisValueFormatter 
   
   private let currenciesFilePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("ChosenCurrencies.plist")
   private let API_KEY = ""
-
+  
   private var baseCurrencyArray = ["USD", "EUR", "BTC", "GBP", "AUD", "CAD", "JPY", "CHF", "CNY", "SEK", "NZD", "MXN", "SGD", "HKD", "NOK", "KRW", "TRY", "RUB", "INR","BRL","ZAR"]
   private var selectedToCompareCurrency = ""
   private var selectedBaseCurrency = "USD"
@@ -180,7 +180,7 @@ class CurrencyVC: UIViewController, AddNewCurrencyDelegate, IAxisValueFormatter 
   //MARK: Charts
   func stringForValue(_ value: Double, axis: AxisBase?) -> String {
     if Int(value) < units.count {
-    return units[Int(value)]
+      return units[Int(value)]
     } else {
       return "L"
     }
@@ -188,7 +188,6 @@ class CurrencyVC: UIViewController, AddNewCurrencyDelegate, IAxisValueFormatter 
   
   private func updateChart(){
     chartView.fitScreen()
-    
     var lineChartEntry  = [ChartDataEntry]() //this is the Array that will eventually be displayed on the graph.
     var filtredNumbers = [Double]()
     
@@ -220,10 +219,10 @@ class CurrencyVC: UIViewController, AddNewCurrencyDelegate, IAxisValueFormatter 
     
     //here is the for loop
     for i in 0..<filtredNumbers.count {
-      let value = ChartDataEntry(x: Double(i), y: filtredNumbers[i]) // here we set the X and Y status in a data chart entry
+      let value = ChartDataEntry(x: Double(i), y: filtredNumbers[i].rounded(toPlaces: 3)) // here we set the X and Y status in a data chart entry
       lineChartEntry.append(value) // here we add it to the data set
     }
-
+    
     let rateLine = LineChartDataSet(values: lineChartEntry, label: "\(selectedBaseCurrency)/\(selectedToCompareCurrency) Rates for Last \(last)") //Here we convert lineChartEntry to a LineChartDataSet
     
     let chartData = LineChartData(dataSet: rateLine)
@@ -232,10 +231,18 @@ class CurrencyVC: UIViewController, AddNewCurrencyDelegate, IAxisValueFormatter 
                                font: fonts.legendFont,
                                textColor: colors.black,
                                insets: UIEdgeInsets(top: 8, left: 8, bottom: 20, right: 8))
+    
     marker.chartView = chartView
-    marker.minimumSize = CGSize(width: 80, height: 40)
+    
+    //Chart View
     chartView.marker = marker
-  
+    chartView.doubleTapToZoomEnabled = false
+    chartView.scaleXEnabled = false
+    chartView.scaleYEnabled = false
+    chartView.highlightPerTapEnabled = true
+    chartView.highlightPerDragEnabled = true
+    
+    //Rate Line
     rateLine.valueFormatter = DigitValueFormatter()
     rateLine.mode = .cubicBezier
     rateLine.cubicIntensity = 0.17
@@ -268,9 +275,6 @@ class CurrencyVC: UIViewController, AddNewCurrencyDelegate, IAxisValueFormatter 
     chartView.xAxis.drawAxisLineEnabled = false
     chartView.xAxis.drawLabelsEnabled = true
     chartView.xAxis.labelPosition = .bottom
-//    chartView.xAxis.granularityEnabled = true
-//    
-//    chartView.xAxis.granularity = 1
     chartView.xAxis.valueFormatter = self
     
     //Left Axis
@@ -294,16 +298,9 @@ class CurrencyVC: UIViewController, AddNewCurrencyDelegate, IAxisValueFormatter 
     }
     
     let data = LineChartData() //This is the object that will be added to the chart
-   
+    
     data.addDataSet(rateLine) //Adds the line to the dataSet
-    
     chartView.data = chartData //finally - it adds the chart data to the chart and causes an update
-    chartView.doubleTapToZoomEnabled = false
-    chartView.isUserInteractionEnabled = true
-    
-    chartView.highlightPerTapEnabled = true
-    chartView.highlightPerDragEnabled = true
-    
   }
   
   //  MARK: Actions
@@ -696,6 +693,7 @@ extension CurrencyVC: UITextFieldDelegate {
         self.numbers = Array(res.values)
         handler(self.numbers)
         self.activityIndicator.stopAnimating()
+        self.chartView.highlightValue(nil, callDelegate: false)
       }
       }.resume()
   }

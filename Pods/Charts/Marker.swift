@@ -31,7 +31,7 @@ open class BalloonMarker: MarkerImage
     self.font = font
     self.textColor = textColor
     self.insets = insets
-    
+
     _paragraphStyle = NSParagraphStyle.default.mutableCopy() as? NSMutableParagraphStyle
     _paragraphStyle?.alignment = .center
     super.init()
