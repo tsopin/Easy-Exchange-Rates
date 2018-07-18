@@ -150,7 +150,7 @@ extension AddCurrencyVC: UITableViewDelegate, UITableViewDataSource {
       symbol = ""
     }
     
-    cell.configeureCell(flag: getFlag, countryName: countryName, currencyName: description, symbol: symbol, currencyCode: currencyCode)
+    cell.configureCell(flag: getFlag, countryName: countryName, currencyName: description, symbol: symbol, currencyCode: currencyCode)
     
     return cell
   }

@@ -16,7 +16,7 @@ class CurrencyCell: UITableViewCell {
   @IBOutlet weak var currencyFlag: UILabel!
   @IBOutlet weak var rateLabel: UILabel!
   
-  func configeureCell(currencyName: String, currencyDescription: String, currencyRate: String, flag: String, symbol: String) {
+  func configureCell(currencyName: String, currencyDescription: String, currencyRate: String, flag: String, symbol: String) {
 
     self.symbol.text = symbol
     self.currencyName.text = currencyName

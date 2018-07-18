@@ -539,7 +539,7 @@ extension CurrencyVC: UITableViewDelegate, UITableViewDataSource {
       }
       
       rate = (returnedRate * self.amountToCompare).rounded(toPlaces: 2)
-      cell.configeureCell(currencyName: name, currencyDescription: description, currencyRate: "\(rate)", flag: getFlag, symbol: symbol)
+      cell.configureCell(currencyName: name, currencyDescription: description, currencyRate: "\(rate)", flag: getFlag, symbol: symbol)
       
     }
     return cell
