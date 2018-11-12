@@ -157,8 +157,8 @@ extension AddCurrencyVC: UITableViewDelegate, UITableViewDataSource {
   
   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     
-    let country: Country
-    
+    var country: Country
+
     //    Checking if USD or EUR already exist in the list
     if isFiltering() {
       

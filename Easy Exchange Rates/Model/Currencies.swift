@@ -24,14 +24,16 @@ struct Country: Codable {
   let currencySymbol: String?
   let id: String
   let name: String
+  var isSelected: Bool?
   
-  init(currencyId :String, currencyName: String, currencySymbol: String, id: String, name: String ) {
+  init(currencyId :String, currencyName: String, currencySymbol: String, id: String, name: String, isSelected: Bool ) {
     
     self.currencyId = currencyId
     self.currencyName = currencyName
     self.currencySymbol = currencySymbol
     self.id = id
     self.name = name
+    self.isSelected = isSelected  
     
   }
 }

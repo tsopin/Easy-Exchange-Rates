@@ -41,7 +41,7 @@ class CurrencyVC: UIViewController, AddNewCurrencyDelegate, IAxisValueFormatter 
   private var blurEffect: UIVisualEffect!
   private var countryArray = [Country]()
   private var numbers = [Double]()
-  private var selectedCurrencyRow = Int()
+//  private var selectedCurrency = String()
   private var pickedRow = Int()
   private var selectedPickedProw = Int()
   private var startDate = String()
@@ -87,12 +87,24 @@ class CurrencyVC: UIViewController, AddNewCurrencyDelegate, IAxisValueFormatter 
       segmentedControlOutlet.isEnabled = false
       activityIndicator.stopAnimating()
     }
-    
+  
     definesPresentationContext = false
     
     loadUserCurrencies()
     loadDataFromUserDefaults()
     
+    if countryArray.count > 0 {
+      for i in 0...countryArray.count - 1 {
+        if countryArray[i].currencyId == selectedToCompareCurrency {
+          countryArray[i].isSelected = true
+          DispatchQueue.main.async {
+            self.currencyTableView.reloadData()
+          }
+        } else {
+          countryArray[i].isSelected = false
+        }
+      }
+    }
   }
   
   //Get added currencies from AddCurrencyVC
@@ -101,11 +113,20 @@ class CurrencyVC: UIViewController, AddNewCurrencyDelegate, IAxisValueFormatter 
     countryArray.append(currency)
     let lastCountry = countryArray.count - 1
     selectedToCompareCurrency = countryArray[lastCountry].currencyId
+    
+    for i in 0...lastCountry {
+      countryArray[i].isSelected = false
+    }
+    
+    countryArray[lastCountry].isSelected = true
     defaults.set(selectedToCompareCurrency, forKey: "selectedToCompareCurrency")
-    selectedCurrencyRow = lastCountry
+//    selectedCurrency = lastCountry
     currencyTableView.selectRow(at: IndexPath.init(row: countryArray.count, section: 0), animated: false, scrollPosition: .none)
     getRatesForDataRange(from: selectedBaseCurrency, to: countryArray[lastCountry].currencyId, startDate: startDate, endDate: endDate) { (ooo) in
       self.updateChart()
+    }
+    DispatchQueue.main.async {
+      self.currencyTableView.reloadData()
     }
     saveUserCurrencies()
   }
@@ -142,16 +163,16 @@ class CurrencyVC: UIViewController, AddNewCurrencyDelegate, IAxisValueFormatter 
     if let savedLast = defaults.string(forKey: "last") {
       last = savedLast
     }
-    if let savedSelectedCurrency = defaults.string(forKey: "selectedCurrencyRow") {
-      selectedCurrencyRow = Int(savedSelectedCurrency)!
-    }
+//    if let savedSelectedCurrency = defaults.string(forKey: "selectedCurrencyRow") {
+//      selectedCurrencyRow = Int(savedSelectedCurrency)!
+//    }
     if let savedAmountToCompare = defaults.string(forKey: "amountToCompare") {
       amountToCompare = Double(savedAmountToCompare)!
     }
     
     baseAmountTextField.text = "\(amountToCompare)"
     segmentedControlOutlet.selectedSegmentIndex = selectedSegment
-    currencyTableView.selectRow(at: IndexPath.init(row: selectedCurrencyRow, section: 0), animated: false, scrollPosition: .none)
+//    currencyTableView.selectRow(at: IndexPath.init(row: selectedCurrencyRow, section: 0), animated: false, scrollPosition: .none)
     
     if countryArray.count > 0 {
       getRatesForDataRange(from: selectedBaseCurrency, to: selectedToCompareCurrency, startDate: startDate, endDate: endDate) { (ooo) in
@@ -191,13 +212,43 @@ class CurrencyVC: UIViewController, AddNewCurrencyDelegate, IAxisValueFormatter 
     var lineChartEntry  = [ChartDataEntry]() //this is the Array that will eventually be displayed on the graph.
     var filtredNumbers = [Double]()
     
+    
+    func fromDate(to: Int, byMonth: Bool) -> String {
+      
+      
+      
+      let formatter = DateFormatter()
+      let currentDate = Date()
+      
+      if byMonth {
+        formatter.dateFormat = "MMM"
+        if let fromDate = Calendar.current.date(byAdding: .month, value: to, to: currentDate) {
+          return formatter.string(from: fromDate)
+        } else {
+          return ""
+        }
+      } else {
+        formatter.dateFormat = "MMM d"
+        if let fromDate = Calendar.current.date(byAdding: .day, value: to, to: currentDate) {
+          return formatter.string(from: fromDate)
+        } else {
+          return ""
+        }
+        
+      }
+
+    }
+
     //Filter number of values
     switch selectedSegment {
     case 0:
       for (index, value) in numbers.enumerated() {
         if index % 29 == 0 {
           filtredNumbers.append(value)
-          units = ["12m", "11m", "10m", "9m", "8m", "7m", "6m", "5m", "4m", "3m", "2m", "1m", "Now"]
+          
+          units = [fromDate(to: -12, byMonth: true), fromDate(to: -11, byMonth: true), fromDate(to: -10, byMonth: true), fromDate(to: -9, byMonth: true), fromDate(to: -8, byMonth: true), fromDate(to: -7, byMonth: true), fromDate(to: -6, byMonth: true), fromDate(to: -5, byMonth: true),fromDate(to: -4, byMonth: true), fromDate(to: -3, byMonth: true), fromDate(to: -2, byMonth: true), fromDate(to: -1, byMonth: true), "Now"]
+          
+//          units = ["12m", "11m", "10m", "9m", "8m", "7m", "6m", "5m", "4m", "3m", "2m", "1m", "Now"]
         }
       }
       
@@ -205,13 +256,16 @@ class CurrencyVC: UIViewController, AddNewCurrencyDelegate, IAxisValueFormatter 
       for (index, value) in numbers.enumerated() {
         if index % 3 == 0 {
           filtredNumbers.append(value)
-          units = ["30d", "27d", "24d", "21d", "18d", "15d", "12d", "9d", "6d", "3d", "Now"]
+          
+          units = [fromDate(to: -30, byMonth: false), fromDate(to: -27, byMonth: false), fromDate(to: -24, byMonth: false), fromDate(to: -21, byMonth: false), fromDate(to: -18, byMonth: false), fromDate(to: -15, byMonth: false),fromDate(to: -12, byMonth: false), fromDate(to: -9, byMonth: false), fromDate(to: -6, byMonth: false), fromDate(to: -3, byMonth: false), "Now"]
+//          units = ["30d", "27d", "24d", "21d", "18d", "15d", "12d", "9d", "6d", "3d", "Now"]
         }
       }
       
     case 2:
       filtredNumbers = numbers
-      units = ["7d", "6d", "5d", "4d", "3d", "2d", "1d", "Now"]
+      units = [fromDate(to: -7, byMonth: false), fromDate(to: -6, byMonth: false), fromDate(to: -5, byMonth: false), fromDate(to: -4, byMonth: false),fromDate(to: -3, byMonth: false), fromDate(to: -2, byMonth: false), fromDate(to: -1, byMonth: false), "Now"]
+//      units = ["7d", "6d", "5d", "4d", "3d", "2d", "1d", "Now"]
       
     default:
       break
@@ -453,19 +507,27 @@ extension CurrencyVC: UITableViewDelegate, UITableViewDataSource {
     
     if countryArray.count >= 1  {
       
-      if indexPath.row == selectedCurrencyRow {
+//      let selected = countryArray[indexPath.row].currencyId
+      
+//      if selected == selectedToCompareCurrency {
+      
         selectedToCompareCurrency = countryArray[0].currencyId
+      
+      for i in 0...countryArray.count - 1 {
+        countryArray[i].isSelected = false
+      }
+      
+      countryArray[0].isSelected = true
+      
         defaults.set(selectedToCompareCurrency, forKey: "selectedToCompareCurrency")
-        selectedCurrencyRow = 0
+//        selectedCurrencyRow = 0
         
         getRatesForDataRange(from: selectedBaseCurrency, to: selectedToCompareCurrency, startDate: startDate, endDate: endDate) { (_) in
           self.updateChart()
         }
         updateChart()
-      }
-    }
-    
-    if countryArray.count < 1{
+//      }
+    } else if countryArray.count < 1{
       selectedToCompareCurrency = ""
       defaults.set(selectedToCompareCurrency, forKey: "selectedToCompareCurrency")
       segmentedControlOutlet.isEnabled = false
@@ -539,7 +601,7 @@ extension CurrencyVC: UITableViewDelegate, UITableViewDataSource {
       }
       
       rate = (returnedRate * self.amountToCompare).rounded(toPlaces: 2)
-      cell.configureCell(currencyName: name, currencyDescription: description, currencyRate: "\(rate)", flag: getFlag, symbol: symbol)
+      cell.configureCell(currencyName: name, currencyDescription: description, currencyRate: "\(rate)", flag: getFlag, symbol: symbol, isSelected: country.isSelected ?? false)
       
     }
     return cell
@@ -547,13 +609,24 @@ extension CurrencyVC: UITableViewDelegate, UITableViewDataSource {
   
   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     
-    selectedToCompareCurrency = countryArray[indexPath.row].currencyId
-    defaults.set(selectedToCompareCurrency, forKey: "selectedToCompareCurrency")
-    selectedCurrencyRow = indexPath.row
-    defaults.set(selectedCurrencyRow, forKey: "selectedCurrencyRow")
     
-    getRatesForDataRange(from: selectedBaseCurrency, to: selectedToCompareCurrency, startDate: startDate, endDate: endDate) { (ppp) in
-      self.updateChart()
+    selectedToCompareCurrency = countryArray[indexPath.row].currencyId
+    
+    for i in 0...countryArray.count - 1 {
+      
+      
+        countryArray[i].isSelected = false
+      
+    }
+    countryArray[indexPath.row].isSelected = true
+    defaults.set(selectedToCompareCurrency, forKey: "selectedToCompareCurrency")
+
+    getRatesForDataRange(from: selectedBaseCurrency, to: selectedToCompareCurrency, startDate: startDate, endDate: endDate) { (_) in
+       self.updateChart()
+    }
+    
+    DispatchQueue.main.async {
+      self.currencyTableView.reloadData()
     }
   }
 }
@@ -593,13 +666,14 @@ extension CurrencyVC: UITextFieldDelegate {
     baseVIew.alpha = 0
     baseVIew.layer.borderWidth = 1
     baseVIew.layer.borderColor = colors.lightGrey.cgColor
-    blurView.isHidden = false
+//    blurView.isHidden = false
+    blurView.fadeIn()
     baseAmountView.isHidden = true
     
     let selectRow = defaults.integer(forKey: "selectedPickedProw")
     basePicker.selectRow(selectRow, inComponent: 0, animated: false)
     
-    UIView.animate(withDuration: 0.22) {
+    UIView.animate(withDuration: 0.2) {
       self.blurView.effect = self.blurEffect
       self.baseVIew.alpha = 0.9
       self.doneBtnOutlet.isEnabled = false
@@ -610,11 +684,12 @@ extension CurrencyVC: UITextFieldDelegate {
   }
   
   private func animateOutBase() {
-    UIView.animate(withDuration: 0.22, animations: {
+    UIView.animate(withDuration: 0.2, animations: {
       self.baseVIew.transform = CGAffineTransform.init(scaleX: 1.32, y: 1.32)
       self.baseVIew.alpha = 0
       self.blurView.effect = nil
-      self.blurView.isHidden = true
+//      self.blurView.isHidden = true
+      self.blurView.fadeOut()
       self.baseAmountView.isHidden = false
     }) { (success: Bool) in
       self.baseVIew.removeFromSuperview()
@@ -644,6 +719,7 @@ extension CurrencyVC: UITextFieldDelegate {
       let decoder = PropertyListDecoder()
       do {
         countryArray = try decoder.decode([Country].self, from: data)
+        
       } catch {
         print("Error \(error)")
       }
